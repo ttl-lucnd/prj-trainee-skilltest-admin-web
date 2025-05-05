@@ -1,0 +1,123 @@
+{
+  "date": {
+    "year": "年",
+    "month": "月",
+    "day": "日"
+  },
+  "gender": {
+    "male": "男性",
+    "female": "女性",
+    "others": "その他"
+  },
+  "string_filter": {
+    "matches": "一致",
+    "includes": "含む",
+    "excludes": "除く",
+    "no_data": "データ無し",
+    "data_available": "データ有り"
+  },
+  "number_filter": {
+    "more_than_or_equal": "以上",
+    "less_than_or_equal": "以下",
+    "equal": "一致",
+    "less_than": "未満"
+  },
+  "date_filter": {
+    "more_than_or_equal": "以上",
+    "less_than_or_equal": "以下",
+    "equal": "一致"
+  },
+  "boolean_option": {
+    "yes": "あり",
+    "no": "なし"
+  },
+  "pagination": {
+    "items_count": "検索結果：<totalItems></totalItems>  件数",
+    "items_per_page": {
+      "10": "10件",
+      "100": "100件",
+      "200": "200件",
+      "300": "300件"
+    },
+    "navigation": {
+      "first": "≪",
+      "previous": "＜",
+      "next": "＞",
+      "last": "≫"
+    }
+  },
+  "table": {
+    "no_data": "検索条件と一致する結果が見つかりません"
+  },
+  "buttons": {
+    "add": "追加",
+    "clear": "クリア",
+    "cancel": "キャンセル",
+    "stop": "停止",
+    "filter_view": "フィルタ表示",
+    "delete": "削除",
+    "save": "保存",
+    "back": "戻る",
+    "register": "登録",
+    "close": "閉じる",
+    "download": "ダウンロード",
+    "filter_view_full": "フィルター表示"
+  },
+  "messages": {
+    "error": "エラーが発生しました",
+    "create_success": "作成が成功しました",
+    "update_success": "編集が成功しました",
+    "create_failed": "作成に失敗しました",
+    "update_failed": "エラー　保存できませんでした",
+    "delete_success": "削除が成功しました",
+    "delete_failed": "削除に失敗しました",
+    "data_sync": "データの同期中です。しばらくしてから再度お試しください。",
+    "notification_not_supported": "このブラウザは通知をサポートしていません。",
+    "require_notification_permission": "通知を受け取るには、ブラウザの通知設定を許可に変更してください。",
+    "export_request_success": "CSVのエクスポートをリクエストしました。処理が完了したら通知されます。",
+    "download_csv": "CSVファイルが準備できました。ダウンロードするには、こちらをクリックしてください。"
+  },
+  "noData": "データがありません",
+  "editInformation": "情報の編集",
+  "pick_a_date": "日付を選択",
+  "account_status": {
+    "registered": "ログイン可 登録",
+    "regular_member": "ログイン可-通常会員",
+    "management_staff": "ログイン可-運営スタッフ用ユーザーアカウント",
+    "membership_suspended": "ログイン不可-休会中",
+    "membership_terminated": "ログイン不可-退会済み",
+    "suspended_by_management": "ログイン不可-運営によるアカウント停止中",
+    "temporary": "仮登録"
+  },
+  "message_template_type": {
+    "paid": "有料",
+    "free": "無料"
+  },
+  "notification_option": {
+    "allow": "許可",
+    "deny": "拒否"
+  },
+  "file": {
+    "max_size": "画像ファイルをアップロード（最大{maxSize}MB）",
+    "upload": "アップロードボタン"
+  },
+  "update_content": "更新内容",
+  "updated_by": "最終更新者名",
+  "updated_at": "最終更新日",
+  "delete_confirmation": "本当に削除しますか？",
+  "file_registration": "ファイル登録",
+  "file_size_exceeded": "{maxSize}MB以内のファイルにしてください。",
+  "number": "番号",
+  "image": "画像",
+  "content": "内容",
+  "video": "動画",
+  "viewFullText": "全文を見る",
+  "actions": "操作",
+  "pointTypes": {
+    "normal": "通常",
+    "bonus": "ボーナス"
+  },
+  "searchPlaceholder": "検索...",
+  "selectAll": "すべて選択",
+  "not_set": "未設定"
+}
