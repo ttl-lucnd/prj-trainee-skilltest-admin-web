@@ -1,11 +1,6 @@
-import { AuthProvider } from './constants';
-
 export interface ILoginGoogleBody {
-  provider: AuthProvider.GOOGLE;
-  googlePayload: {
-    token: string;
-    redirectUri: string;
-  };
+  token: string;
+  redirectUri: string;
 }
 
 export interface IProfile {

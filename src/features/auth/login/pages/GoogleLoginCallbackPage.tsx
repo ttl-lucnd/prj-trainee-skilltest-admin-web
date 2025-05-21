@@ -3,7 +3,6 @@
 import { LoadingCircleIcon } from '@/components/icons';
 import { isJson, PageRouter } from '@/utils';
 import { useEffect } from 'react';
-import { AuthProvider } from '../../constants';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { authService } from '../../services/auth.service';
 import { setCredentials, setProfileData } from '@/utils/cookies';
@@ -56,11 +55,8 @@ export function GoogleLoginCallbackPage() {
       }
 
       const response = await authService.login({
-        provider: AuthProvider.GOOGLE,
-        googlePayload: {
           token,
           redirectUri: NEXT_PUBLIC_GOOGLE_LOGIN_CALLBACK_URL ?? '',
-        },
       });
       if (response?.success) {
         setCredentials({
