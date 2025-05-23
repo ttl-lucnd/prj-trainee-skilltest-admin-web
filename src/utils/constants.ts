@@ -21,15 +21,14 @@ export enum ErrorCode {
 }
 
 export enum OrderDirection {
-  ASC = 'ASC',
-  DESC = 'DESC',
+  ASC = 'asc',
+  DESC = 'desc',
 }
 
 export enum OrderBy {
-  ID = 'id',
+  ID = '_id',
   CREATED_AT = 'createdAt',
   UPDATED_AT = 'updatedAt',
-  NAME = 'name',
 }
 
 export enum SupportLanguage {
@@ -121,6 +120,8 @@ export const Regex = {
   DOCUMENT: /^<!DOCTYPE\s+html>/i,
   // Check for simple HTML tags using atomic groups
   TAG: /^(?:(?=<([a-z][a-z0-9]*))(?:(?!<\/\1>).)*<\/\1>)$/i,
+  // Sheet url
+  SHEET_URL: /^https:\/\/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)(?:\/[^?#]*)?(?:\?[^#]*?gid=(\d+)[^#]*)?(?:#.*?gid=(\d+))?$/
 };
 
 export enum AccountType {

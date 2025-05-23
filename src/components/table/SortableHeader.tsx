@@ -7,12 +7,14 @@ interface SortableHeaderProps {
   column: Column<any, unknown>;
   title: string;
   className?: string;
+  onSortChange?: (order: OrderDirection | null) => Promise<void>;
 }
 
 export function SortableHeader({
   column,
   title,
   className,
+  onSortChange,
 }: Readonly<SortableHeaderProps>) {
   return (
     <button
@@ -28,8 +30,10 @@ export function SortableHeader({
             e.stopPropagation();
             if (column.getIsSorted() === OrderDirection.ASC.toLowerCase()) {
               column.clearSorting();
+              onSortChange?.(null); 
             } else {
               column.toggleSorting(false);
+              onSortChange?.(OrderDirection.ASC);
             }
           }}
         />
@@ -40,8 +44,10 @@ export function SortableHeader({
             e.stopPropagation();
             if (column.getIsSorted() === OrderDirection.DESC.toLowerCase()) {
               column.clearSorting();
+              onSortChange?.(null); 
             } else {
               column.toggleSorting(true);
+              onSortChange?.(OrderDirection.DESC);
             }
           }}
         />

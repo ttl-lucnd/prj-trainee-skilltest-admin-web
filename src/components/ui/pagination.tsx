@@ -19,7 +19,7 @@ interface ItemsCountProps {
 }
 
 function ItemsCount({ totalItems }: ItemsCountProps) {
-  return <div className="text-red pr-1 font-bold">{` ${totalItems} `}</div>;
+  return <div className="text-[#232625] pr-1 font-medium">{` ${totalItems} `}</div>;
 }
 
 export function Pagination({
@@ -41,25 +41,27 @@ export function Pagination({
       <div className="w-full flex items-center gap-6 justify-between">
         <div className="flex gap-6">
           <div className="flex items-center gap-4">
-            <div className="h-8 flex items-center px-4 text-main-primary-2 bg-main-secondary-2 rounded-[6px] text-medium">
+            <div className="h-8 flex items-center px-4 text-main-primary-2 rounded-[6px] text-medium">
               {totalItemsComponent}
             </div>
-            <div className="flex gap-2 text-textDefaultColor">
-              {ITEMS_PER_PAGE.map((limit) => (
-                <Button
-                  key={limit}
-                  variant={itemsPerPage === limit ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => onItemsPerPageChange?.(limit)}
-                  className={cn(
-                    `rounded-[6px] text-body-md`,
-                    itemsPerPage === limit && '!text-white',
-                  )}
-                >
-                  {t(`pagination.items_per_page.${limit}`)}
-                </Button>
-              ))}
-            </div>
+            {onItemsPerPageChange &&            
+              <div className="flex gap-2 text-textDefaultColor">
+                {ITEMS_PER_PAGE.map((limit) => (
+                  <Button
+                    key={limit}
+                    variant={itemsPerPage === limit ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => onItemsPerPageChange?.(limit)}
+                    className={cn(
+                      `rounded-[6px] text-body-md`,
+                      itemsPerPage === limit && '!text-white',
+                    )}
+                  >
+                    {t(`pagination.items_per_page.${limit}`)}
+                  </Button>
+                ))}
+              </div>
+            }
           </div>
           {totalItems > itemsPerPage && (
             <div className="flex items-center gap-2">

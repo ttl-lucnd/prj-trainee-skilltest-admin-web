@@ -77,5 +77,7 @@
   "storedIn": "Stored In",
   "registeredBy": "Registered By",
   "interactionItemFile": "Item Material",
-  "stage": "Stage"
+  "stage": "Stage",
+  "sheetLink": "データ取得リンク",
+  "lastReadRow": "同期済み最終行"
 }

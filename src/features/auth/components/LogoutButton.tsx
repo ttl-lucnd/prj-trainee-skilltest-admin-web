@@ -27,7 +27,7 @@ export function LogoutButton() {
       onClick={logout}
       disabled={isLoggingOut}
       className={cn(
-        'w-full flex items-center justify-between hover:bg-sidebar-menu-button rounded-none px-6 py-3.5',
+        'w-full flex items-center justify-between hover:bg-accent rounded-none px-6 py-3.5',
         !open && 'justify-center',
       )}
     >

@@ -111,5 +111,7 @@
   "performerAdjustmentPointMemo": "理由",
   "performerAdjustmentPointRecipientId": "ユーザーID",
   "performerAdjustmentPointIpAddress": "処理IP",
-  "stage": "ステージ"
+  "stage": "ステージ",
+  "sheetLink": "データ取得リンク",
+  "lastReadRow": "同期済み最終行"
 }

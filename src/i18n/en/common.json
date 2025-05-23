@@ -59,7 +59,9 @@
     "register": "Register",
     "close": "Close",
     "download": "Download",
-    "filter_view_full": "Filter View Full"
+    "filter_view_full": "Filter View Full",
+    "setting_url": "データを編集",
+    "sync_data": "データを更新"
   },
   "messages": {
     "error": "Error",

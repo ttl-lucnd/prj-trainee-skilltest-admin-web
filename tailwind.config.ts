@@ -29,14 +29,14 @@ export default {
           },
           secondary: {
             1: '#33AAFF', // Secondary 1
-            2: '#C7D2FE', // Secondary 2
+            2: '#1F56CC', // Secondary 2
           },
         },
         // Status Colors
         status: {
           success: '#439F6E',
           success_bg: '#F1FFF4',
-          error: '#ED3A3A',
+          error: '#E9034E',
           error_bg: '#FFF5F5',
         },
 
@@ -89,7 +89,7 @@ export default {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
           1: '#404958',
-          2: '#545F71',
+          2: '#2665EF',
           3: '#9BA5B7',
           4: '#EEF1F4',
         },
@@ -129,7 +129,7 @@ export default {
         },
         button: {
           secondary: {
-            DEFAULT: '#545F71',
+            DEFAULT: '#2665EF',
             foreground: '#FFFFFF',
           },
         },
@@ -142,7 +142,7 @@ export default {
           'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
           border: 'var(--sidebar-border)',
           ring: 'hsl(var(--sidebar-ring))',
-          'menu-button': '#C7D2FE',
+          'menu-button': '#2665EF',
           'chevron-down': '#667080',
           'menu-sub-button-active': '#8DA6FA',
           'menu-sub-button-active-foreground': '#FFFFFF',
