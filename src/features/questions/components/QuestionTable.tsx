@@ -220,7 +220,7 @@ export function QuestionTable() {
           <SortableHeader column={column} title={t('questions.table.arrange')} 
             onSortChange={ async (orderDirection) => {
             const query = orderDirection ? {
-              orderBy: QuestionOrderBy.SUBJECT,
+              orderBy: QuestionOrderBy.ARRANGE,
               orderDirection,
             }: {}
             await handleSort(query);
