@@ -5,6 +5,7 @@ import { useGlobalStore } from '@/utils/globalStore';
 import { useShallow } from 'zustand/react/shallow';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
+import { Toaster } from '@/components/ui/toaster';
 
 export default function MainLayout({
   children,
@@ -21,5 +22,8 @@ export default function MainLayout({
     setCurrentPath(pathname);
   }, [pathname]);
 
-  return <MainLayoutWrapper>{children}</MainLayoutWrapper>;
+  return <MainLayoutWrapper>
+    {children}
+    <Toaster/>
+  </MainLayoutWrapper>;
 }

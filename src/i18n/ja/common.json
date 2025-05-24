@@ -32,7 +32,7 @@
     "no": "なし"
   },
   "pagination": {
-    "items_count": "検索結果：<totalItems></totalItems>  件数",
+    "items_count": "表示結果：<totalItems></totalItems>  件数",
     "items_per_page": {
       "10": "10件",
       "100": "100件",
@@ -61,7 +61,10 @@
     "register": "登録",
     "close": "閉じる",
     "download": "ダウンロード",
-    "filter_view_full": "フィルター表示"
+    "filter_view_full": "フィルター表示",
+    "setting_url": "データを編集",
+    "sync_data": "データを更新",
+    "ok": "同期"
   },
   "messages": {
     "error": "エラーが発生しました",
@@ -117,7 +120,8 @@
     "normal": "通常",
     "bonus": "ボーナス"
   },
-  "searchPlaceholder": "検索...",
+  "searchPlaceholder": "検索",
   "selectAll": "すべて選択",
-  "not_set": "未設定"
+  "not_set": "未設定",
+  "sync_data_alert": "データの同期を行うには、データ取得に仕様されるスプレッドシートへの閲覧権限以上、およびスプレッドシート内に添付されている画像が保存されているドライブへの閲覧権限以上が必要です。"
 }

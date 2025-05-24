@@ -1,7 +1,14 @@
+import { QuestionsPage } from '@/features/questions/pages/QuestionsPage';
+import { Suspense } from 'react';
+
 export default function Page() {
   return (
-    <div>
-      <h1>Quiz-management</h1>
+    <div className="w-full overflow-hidden flex flex-col bg-white">
+      <main className="p-6 flex-1 flex flex-col gap-2.5">
+        <Suspense fallback={<div>Loading...</div>}>
+          <QuestionsPage />
+        </Suspense>
+      </main>
     </div>
   );
 }

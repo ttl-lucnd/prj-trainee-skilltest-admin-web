@@ -9,6 +9,7 @@ export function BaseDialog({
   className,
   showCloseButton,
   onOpenChange,
+  headerClassName = 'hidden',
 }: Readonly<{
   open: boolean;
   title?: string;
@@ -17,6 +18,7 @@ export function BaseDialog({
   className?: string;
   showCloseButton?: boolean;
   onOpenChange?: (open: boolean) => void;
+  headerClassName?: string,
 }>) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -31,7 +33,7 @@ export function BaseDialog({
         }}
       >
 
-        <DialogHeader className="px-6 hidden">
+        <DialogHeader className={cn("px-6", headerClassName)}>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>

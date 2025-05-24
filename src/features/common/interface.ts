@@ -16,3 +16,8 @@ export interface IFile {
   url?: string;
   status?: FileUploadStatus;
 }
+
+export interface ISubjectDropdown {
+  id: string,
+  name: string,
+}

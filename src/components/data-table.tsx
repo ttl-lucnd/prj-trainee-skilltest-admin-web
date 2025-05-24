@@ -79,6 +79,7 @@ interface DataTableProps<TData, TValue> {
   totalItems?: number;
   containerClassName?: string;
   showBorderVertical?: boolean;
+  headerClassName?: string;
 }
 
 export const DataTable = forwardRef<any, DataTableProps<any, any>>(function DataTable(
@@ -98,6 +99,7 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
     totalItems,
     containerClassName,
     showBorderVertical = false,
+    headerClassName,
   },
   ref,
 ) {
@@ -256,6 +258,7 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
                     }}
                     className={cn(
                       'bg-white',
+                      headerClassName,
                       header.id === 'index' && 'text-center',
                       showBorderVertical &&
                         header.index !== headerGroup.headers.length - 1 &&

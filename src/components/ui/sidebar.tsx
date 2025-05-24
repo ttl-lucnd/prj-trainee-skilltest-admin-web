@@ -501,11 +501,11 @@ const SidebarMenuItem = React.forwardRef<HTMLLIElement, React.ComponentProps<'li
 SidebarMenuItem.displayName = 'SidebarMenuItem';
 
 const sidebarMenuButtonVariants = cva(
-  'peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-lg py-2 px-4 text-left text-body-md font-normal outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-menu-button active:text-sidebar-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-menu-button data-[active=true]:font-medium data-[active=true]:text-sidebar-foreground data-[state=open]:font-semibold data-[state=open]:hover:bg-sidebar-menu-button data-[state=open]:hover:text-sidebar-foreground data-[state=closed]:bg-transparent data-[state=closed]:hover:bg-sidebar-menu-button group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
+  'peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-lg py-2 px-4 text-left text-body-md font-normal outline-none ring-sidebar-ring transition-[width,height,padding] focus-visible:ring-2 active:bg-sidebar-menu-button active:text-white disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-menu-button data-[active=true]:font-medium data-[active=true]:text-white data-[state=open]:font-semibold data-[state=open]:hover:bg-sidebar-menu-button data-[state=open]:hover:text-white data-[state=closed]:bg-transparent data-[state=closed]:hover:bg-sidebar-menu-button group-data-[collapsible=icon]:!size-10 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0',
   {
     variants: {
       variant: {
-        default: '',
+        default: 'hover:bg-sidebar-accent data-[active=true]:hover:bg-main-secondary-2',
         outline:
           'bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]',
       },

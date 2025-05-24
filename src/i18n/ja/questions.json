@@ -1,0 +1,27 @@
+{
+  "form": {
+    "title":"データを編集",
+    "sheetLink": "データ取得リンク",
+    "lastReadRow": "同期済み最終行"
+  },
+  "filter": {
+    "subject": "学科で絞り込む",
+    "arrange": "アレンジ"
+  },
+  "table": {
+    "question": "質問",
+    "description": "ローマ字",
+    "subject": "学科",
+    "arrange": "アレンジ",
+    "original": "オリジナル",
+    "image": "図",
+    "answer": "正答",
+    "action": "削除"
+  },
+  "delete": {
+    "title": "本当にこの質問を削除しますか？"
+  }, 
+  "error": {
+    "sheetLink": "データ取得リンクの形式が正しくありません"
+  }
+}
