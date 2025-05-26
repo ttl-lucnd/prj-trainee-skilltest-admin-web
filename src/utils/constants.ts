@@ -51,6 +51,7 @@ export enum PageRouter {
   QUIZ_MANAGEMENT = '/quiz-management',
   WORD_MANAGEMENT = '/word-management',
   ADMIN_ACCOUNTS = '/admin-accounts',
+  SUBJECT_MANAGEMENT = '/subject-management',
 }
 
 export enum Gender {

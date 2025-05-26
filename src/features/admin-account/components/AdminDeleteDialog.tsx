@@ -3,14 +3,51 @@ import { Button } from '@/components/ui/button';
 import { useAdminStore } from '../stores/useAdminStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
+import { adminService } from '../services/admin.service';
+import { useState } from 'react';
+import { IBodyResponse } from '@/utils/interfaces';
+import { toast } from '@/hooks/use-toast';
 export function AdminDeleteDialog() {
   const t = useTranslations();
-  const { isOpenDeleteAdminDialog, setOpenDeleteAdminDialog } = useAdminStore(
+  const { selectedAdmin, isOpenDeleteAdminDialog, setOpenDeleteAdminDialog, getAdminList } = useAdminStore(
     useShallow((state) => ({
+      selectedAdmin: state.selectedAdmin,
       isOpenDeleteAdminDialog: state.isOpenDeleteAdminDialog,
       setOpenDeleteAdminDialog: state.setOpenDeleteAdminDialog,
+      getAdminList: state.getAdminList,
     })),
   );
+
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteAdmin = async () => {
+    setOpenDeleteAdminDialog(false);
+    if(isDeleting) return;
+    setIsDeleting(true);
+    try {
+      const response: IBodyResponse<unknown> = await adminService._delete(selectedAdmin?.id ?? '');
+
+      if(response.success) {
+        toast({
+          title: t('common.messages.delete_success'),
+          variant: 'success',
+        })
+        await getAdminList();
+      }else {
+        toast({
+          title: t('common.messages.delete_failed'),
+          variant:'destructive',
+        })
+      }
+    }catch {
+        toast({
+          title: t('common.messages.error'),
+          variant:'destructive',
+        })
+    }finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <BaseDialog
@@ -25,7 +62,7 @@ export function AdminDeleteDialog() {
           <Button variant="outline" className="flex-1" onClick={() => setOpenDeleteAdminDialog(false)}>
             {t('common.buttons.cancel')}
           </Button>
-          <Button variant="destructive" className="flex-1" onClick={() => setOpenDeleteAdminDialog(false)}>
+          <Button variant="destructive" className="flex-1" onClick={() => handleDeleteAdmin()}>
             {t('common.buttons.delete')}
           </Button>
         </div>

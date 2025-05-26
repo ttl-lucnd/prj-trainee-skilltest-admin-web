@@ -2,13 +2,13 @@ import { TruncatedText } from '@/components/TruncateText';
 import { DataTable } from '@/components/data-table';
 import { TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
-import { DEFAULT_FIRST_PAGE, DEFAULT_ORDER_BY, DEFAULT_ORDER_DIRECTION } from '@/utils/constants';
+import { DEFAULT_FIRST_PAGE, DEFAULT_ORDER_BY, DEFAULT_ORDER_DIRECTION, OrderDirection } from '@/utils/constants';
 import { CellContext, ColumnDef } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { IQuestion, IQuestionGetListQuery, QuestionOrderBy } from '../interfaces';
+import { IQuestion, QuestionOrderBy } from '../interfaces';
 import { useQuestionStore } from '../stores/useQuestionStore';
 import { SortableHeader } from '@/components/table/SortableHeader';
 import { Badge } from '@/components/ui/badge';
@@ -57,10 +57,11 @@ export function QuestionTable() {
     };
   }, []);
 
-  const handleSort = async (data: IQuestionGetListQuery = {}) => {
-    if(isSorting) return;
+  const handleSort = async (orderBy: string, orderDirection: OrderDirection | null) => {
     try {
+      if(isSorting) return;
       setIsSorting(true);
+      const data = orderDirection ? {orderBy, orderDirection} : {};
       const query = getQuestionQueryFromUrl();
       const newQuery = {
         ...query,
@@ -200,13 +201,7 @@ export function QuestionTable() {
       {
         header: ({ column }) => (
           <SortableHeader column={column} title={t('questions.table.subject') } 
-          onSortChange={ async (orderDirection) => {
-            const query = orderDirection ? {
-              orderBy: QuestionOrderBy.SUBJECT,
-              orderDirection,
-            }: {}
-            await handleSort(query);
-          }}
+            onSortChange={ (orderDirection) => handleSort(QuestionOrderBy.SUBJECT, orderDirection)}
           />
         ),
         accessorKey: 'subject',
@@ -218,13 +213,7 @@ export function QuestionTable() {
         enableSorting: true,
         header: ({ column }) => (
           <SortableHeader column={column} title={t('questions.table.arrange')} 
-            onSortChange={ async (orderDirection) => {
-            const query = orderDirection ? {
-              orderBy: QuestionOrderBy.ARRANGE,
-              orderDirection,
-            }: {}
-            await handleSort(query);
-          }}
+            onSortChange={ (orderDirection) => handleSort(QuestionOrderBy.ARRANGE, orderDirection)}
           />
         ),
         accessorKey: 'arrange',
@@ -274,6 +263,5 @@ export function QuestionTable() {
     loading={loading} 
     rowClassName={'h-16'} 
     headerClassName={'bg-[#FBFDFF]'}
-    customRowClassName={() => '!bg-white'}
   />;
 }

@@ -10,7 +10,7 @@ import { questionSettingYupResolver } from '../schema';
 import { questionService } from '../services/question.service';
 import { IBodyResponse } from '@/utils/interfaces';
 import { toast } from '@/hooks/use-toast';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { IUpdateQuestionSettingBody } from '../interfaces';
 
 export function QuestionSettingForm() {
@@ -35,6 +35,8 @@ export function QuestionSettingForm() {
     }
   });
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (!isOpenSettingFormDialog) return;
 
@@ -53,6 +55,7 @@ export function QuestionSettingForm() {
 
   const onSubmit = async (data: IUpdateQuestionSettingBody) => {
     try {
+      setLoading(true);
       const response: IBodyResponse<any> = await questionService.updateQuestionSetting(data);
 
       if(response.success) {
@@ -69,10 +72,13 @@ export function QuestionSettingForm() {
         })
       }
     }catch {
+        setOpenSettingFormDialog(false);
         toast({
-          title: t('common.messages.delete_success'),
+          title: t('common.messages.error'),
           variant:'destructive',
         })
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -118,7 +124,7 @@ export function QuestionSettingForm() {
             type='submit'
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
-            disabled={!form.formState.isDirty || !form.formState.isValid}
+            disabled={!form.formState.isDirty || !form.formState.isValid || loading}
           >
             {t('common.buttons.save')}
           </Button>

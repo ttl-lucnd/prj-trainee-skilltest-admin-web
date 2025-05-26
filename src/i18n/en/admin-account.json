@@ -1,15 +1,20 @@
 {
   "form": {
     "name": "名称",
-    "email": "メールアドレス",
+    "email": "メール",
     "search": "検索"
   },
   "table": {
     "number": "番号",
-    "created_at": "作成日時",
-    "staff_name": "スタッフ名"
+    "email": "メールアドレス",
+    "staff_name": "名称",
+    "action": "アクション"
   },
   "delete": {
     "title": "本当にこの管理者を削除しますか？"
+  },
+  "title": {
+    "create": "管理者を追加",
+    "update": "編集"
   }
 }

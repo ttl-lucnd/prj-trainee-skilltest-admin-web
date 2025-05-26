@@ -2,7 +2,7 @@ import axiosService from '@/plugins/axios';
 import { ApiService } from '@/plugins/axios/api';
 import { IBodyResponse, IGetListResponse } from '@/utils/interfaces';
 import { ISubjectDropdown } from '../interface';
-import { DEFAULT_LIMIT_FOR_DROPDOWN } from '@/utils';
+import { DEFAULT_LIMIT_FOR_DROPDOWN, OrderDirection } from '@/utils';
 
 class CommonService extends ApiService {
     getSubjectDropdown(): Promise<IBodyResponse<IGetListResponse<ISubjectDropdown>>> {
@@ -10,7 +10,7 @@ class CommonService extends ApiService {
     };
 
     getArrangeDropdown(): Promise<IBodyResponse<IGetListResponse<number>>> {
-        return this.client.get(`${this.baseUrl}/arrange`, { params: { limit: DEFAULT_LIMIT_FOR_DROPDOWN } })
+        return this.client.get(`${this.baseUrl}/arrange`, { params: { limit: DEFAULT_LIMIT_FOR_DROPDOWN, orderDirection: OrderDirection.ASC } })
     };
 }
 

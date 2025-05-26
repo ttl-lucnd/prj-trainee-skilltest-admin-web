@@ -1,18 +1,18 @@
 import { DEFAULT_GET_LIST_QUERY } from '@/utils/constants';
 import { create } from 'zustand';
-import { IAdminAccount, IAdminDropdown, IAdminGetListQuery } from '../interfaces';
 import { adminService } from '../services/admin.service';
+import { IAdminAccount } from '../interfaces';
+import { ICommonListQuery } from '@/utils/interfaces';
 
 // State types
 interface States {
   isOpenAdminFormDialog: boolean;
   isOpenDeleteAdminDialog: boolean;
-  adminGetListQuery: IAdminGetListQuery;
+  adminGetListQuery: ICommonListQuery;
   totalItems: number;
   adminList: IAdminAccount[];
   loading: boolean;
   selectedAdmin: IAdminAccount | null;
-  adminDropdownList: IAdminDropdown[];
 }
 
 // Action types
@@ -20,7 +20,7 @@ interface Actions {
   setOpenAdminFormDialog: (open: boolean) => void;
   setOpenDeleteAdminDialog: (open: boolean) => void;
   setAdminGetListQuery: (
-    query: IAdminGetListQuery,
+    query: ICommonListQuery,
     opt?: { reloadList?: boolean },
   ) => void;
   setLoading: (loading: boolean) => void;
@@ -41,7 +41,6 @@ const initialState: States = {
   adminList: [],
   loading: false,
   selectedAdmin: null,
-  adminDropdownList: [],
 };
 
 // useAdminStore
@@ -51,7 +50,7 @@ export const useAdminStore = create<States & Actions>((set, get) => ({
   // Actions
   setOpenAdminFormDialog: (open: boolean) => set({ isOpenAdminFormDialog: open }),
   setOpenDeleteAdminDialog: (open: boolean) => set({ isOpenDeleteAdminDialog: open }),
-  setAdminGetListQuery: (query: IAdminGetListQuery, opt?: { reloadList?: boolean }) => {
+  setAdminGetListQuery: (query: ICommonListQuery, opt?: { reloadList?: boolean }) => {
     set((state) => ({
       adminGetListQuery: { ...state.adminGetListQuery, ...query },
     }));
