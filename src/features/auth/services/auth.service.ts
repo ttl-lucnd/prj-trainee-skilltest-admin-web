@@ -2,6 +2,7 @@ import { ApiService } from '@/plugins/axios/api';
 import axiosService from '@/plugins/axios';
 import { IBodyResponse } from '@/utils/interfaces';
 import { IGoogleLoginResponse, ILoginGoogleBody } from '../interfaces';
+import { IAdminAccount } from '@/features/admin-account/interfaces';
 
 class AuthService extends ApiService {
   login(body: ILoginGoogleBody): Promise<IBodyResponse<IGoogleLoginResponse>> {
@@ -28,6 +29,10 @@ class AuthService extends ApiService {
         state,
       },
     });
+  }
+
+  getProfile(): Promise<IBodyResponse<{ profile: IAdminAccount }>> {
+    return this.client.get(`${this.baseUrl}/profile`);
   }
 }
 

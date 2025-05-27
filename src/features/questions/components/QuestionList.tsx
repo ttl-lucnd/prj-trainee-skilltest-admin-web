@@ -35,7 +35,7 @@ export function QuestionList() {
 
   return (
     <div className="h-full flex flex-col gap-2.5">
-      <div className="flex-1">
+      <div className="flex">
         <QuestionTable />
       </div>
       <Pagination

@@ -26,14 +26,15 @@ export function QuestionDeleteDialog() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDeleteQuestion = async () => {
+    setOpenDeleteQuestionDialog(false);
     if(isDeleting) return;
     setIsDeleting(true);
-    
+
     try {
       const response: IBodyResponse<any> = await questionService._delete(selectedQuestion?.id ?? '');
 
       if(response.success) {
-                setOpenDeleteQuestionDialog(false);
+                
         toast({
           title: t('common.messages.delete_success'),
           variant: 'success',
@@ -41,7 +42,7 @@ export function QuestionDeleteDialog() {
         await getQuestionList();
       }else {
         toast({
-          title: t('common.messages.delete_success'),
+          title: t('common.messages.delete_failed'),
           variant:'destructive',
         })
       }

@@ -1,4 +1,4 @@
-import { StarIcon, UserGroupIcon } from '@/components/icons';
+import { UserGroupIcon, VocabularyListIcon, QuestionListIcon, SubjectListIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { PageRouter } from '@/utils/constants';
 import { useTranslations } from 'next-intl';
@@ -14,12 +14,12 @@ import {
 
 const items = [
   {
-    icon: StarIcon,
+    icon: QuestionListIcon,
     title: 'sidebar.quiz_management',
     path: PageRouter.QUIZ_MANAGEMENT,
   },
   {
-    icon: StarIcon,
+    icon: VocabularyListIcon,
     title: 'sidebar.word_management',
     path: PageRouter.WORD_MANAGEMENT,
   },
@@ -27,6 +27,11 @@ const items = [
     title: 'sidebar.admin_account',
     icon: UserGroupIcon,
     path: PageRouter.ADMIN_ACCOUNTS,
+  },
+    {
+    title: 'sidebar.subject_management',
+    icon: SubjectListIcon,
+    path: PageRouter.SUBJECT_MANAGEMENT,
   },
 ];
 

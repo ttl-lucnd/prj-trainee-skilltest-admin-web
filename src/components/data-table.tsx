@@ -32,8 +32,6 @@ declare module '@tanstack/table-core' {
   }
 }
 
-const ROWS_PER_STRIPE = 5;
-
 const getBoxShadow = (column: Column<any>): string | undefined => {
   const isPinned = column.getIsPinned();
   if (isPinned === 'left' && column.getIsLastColumn('left')) {
@@ -288,10 +286,8 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
                     <TableCell
                       key={cell.id}
                       className={cn(
-                        Math.floor(row.index / ROWS_PER_STRIPE) % 2 === 0
-                          ? 'bg-white'
-                          : 'bg-primary-4',
-                        'group-hover:bg-main-secondary-2',
+                        'bg-white',
+                        'group-hover:bg-accent',
                         customRowClassName?.(row.original),
                         showBorderVertical &&
                           cell.column.getSize() !== 0 &&

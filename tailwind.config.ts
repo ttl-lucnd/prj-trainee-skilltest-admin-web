@@ -56,7 +56,7 @@ export default {
         // Additional Colors from the image
         white: '#FFFFFF',
         black: '#000000',
-        textDefaultColor: '#545F71',
+        textDefaultColor: '#232625',
         red: {
           DEFAULT: '#FF7676',
           300: '#FFD5D5',

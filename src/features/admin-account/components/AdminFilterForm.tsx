@@ -9,7 +9,6 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useShallow } from 'zustand/react/shallow';
-import { adminFilterYupResolver } from '../schema';
 import { useAdminStore } from '../stores/useAdminStore';
 export function AdminFilterForm() {
   const t = useTranslations();
@@ -21,9 +20,7 @@ export function AdminFilterForm() {
       getAdminList: s.getAdminList,
     })),
   );
-  const form = useForm({
-    resolver: adminFilterYupResolver,
-  });
+  const form = useForm();
 
   const {
     getQueryFromUrl: getAdminAccountQueryFromUrl,
@@ -58,16 +55,17 @@ export function AdminFilterForm() {
 
   return (
     <Form {...form}>
-      <form className="flex gap-2.5 items-start" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="flex gap-2.5 items-end justify-end mb-5" onSubmit={form.handleSubmit(onSubmit)}>
         <InputText
-          name="name"
-          size="sm"
+          name="keyword"
+          size="md"
           placeholder={t('adminAccount.form.search')}
-          className="max-w-[200px]"
+          className="max-w-[282px]"
           label=""
           control={form.control}
           disabled={isFiltering}
           suffixIcon={<SearchIcon size={22} />}
+          onSuffixIconClick={form.handleSubmit(onSubmit)}
         />
       </form>
     </Form>

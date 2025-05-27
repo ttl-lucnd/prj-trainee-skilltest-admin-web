@@ -1,6 +1,7 @@
 {
   "quiz_management": "Quiz Management",
   "word_management": "Word Management",
+  "subject_management": "Subject Management",
   "admin_account": "Admin Account",
   "logout": "Logout"
 }
