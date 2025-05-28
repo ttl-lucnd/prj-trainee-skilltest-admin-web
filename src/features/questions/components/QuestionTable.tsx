@@ -57,28 +57,37 @@ export function QuestionTable() {
     };
   }, []);
 
-  const handleSort = async (orderBy: string, orderDirection: OrderDirection | null) => {
-    try {
-      if(isSorting) return;
-      setIsSorting(true);
-      const data = orderDirection ? {orderBy, orderDirection} : {};
-      const query = getQuestionQueryFromUrl();
-      const newQuery = {
-        ...query,
-        orderBy: DEFAULT_ORDER_BY,
-        orderDirection: DEFAULT_ORDER_DIRECTION,
-        ...data,
-      }
+  const handleSort = useCallback(
+    async (orderBy: string, orderDirection: OrderDirection | null) => {
+      try {
+        if (isSorting) return;
+        setIsSorting(true);
+        const data = orderDirection ? { orderBy, orderDirection } : {};
+        const query = getQuestionQueryFromUrl();
+        const newQuery = {
+          ...query,
+          orderBy: DEFAULT_ORDER_BY,
+          orderDirection: DEFAULT_ORDER_DIRECTION,
+          ...data,
+        };
 
-      setQuestionGetListQuery(newQuery, { reloadList: false });
-      updateQuestionUrlWithQuery(newQuery);
-      await getQuestionList();
-    } catch {
-      setIsSorting(false);
-    } finally {
-      setIsSorting(false);
-    }
-  };
+        setQuestionGetListQuery(newQuery, { reloadList: false });
+        updateQuestionUrlWithQuery(newQuery);
+        await getQuestionList();
+      } catch {
+        setIsSorting(false);
+      } finally {
+        setIsSorting(false);
+      }
+    },
+    [
+      isSorting,
+      getQuestionQueryFromUrl,
+      setQuestionGetListQuery,
+      updateQuestionUrlWithQuery,
+      getQuestionList,
+    ]
+  );
 
   const questionCell = useCallback(
     ({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
@@ -143,7 +152,7 @@ export function QuestionTable() {
         </div>
       : <TruncatedText text={'---'} />;
     },
-    [],
+    [setOpenImageDetail, setSelectedQuestion],
   );
 
   const answerCell = useCallback(
@@ -202,6 +211,7 @@ export function QuestionTable() {
         header: ({ column }) => (
           <SortableHeader column={column} title={t('questions.table.subject') } 
             onSortChange={ (orderDirection) => handleSort(QuestionOrderBy.SUBJECT, orderDirection)}
+            disabled={isSorting}
           />
         ),
         accessorKey: 'subject',
@@ -214,6 +224,7 @@ export function QuestionTable() {
         header: ({ column }) => (
           <SortableHeader column={column} title={t('questions.table.arrange')} 
             onSortChange={ (orderDirection) => handleSort(QuestionOrderBy.ARRANGE, orderDirection)}
+            disabled={isSorting}
           />
         ),
         accessorKey: 'arrange',
@@ -247,6 +258,7 @@ export function QuestionTable() {
     ]);
   }, [
     t,
+    isSorting,
     questionCell,
     descriptionCell,
     subjectCell,
@@ -255,6 +267,7 @@ export function QuestionTable() {
     imageCell,
     answerCell,
     QuestionActions,
+    handleSort,
   ]);
 
   return <DataTable 

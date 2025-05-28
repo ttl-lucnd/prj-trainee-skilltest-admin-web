@@ -1,7 +1,7 @@
 {
   "email": "メール",
   "emailAddress": "メールアドレス",
-  "name": "名前",
+  "name": "名称",
   "roleDesignation": "ロール指定",
   "allowedIps": "アクセス許可IP",
   "publishStartDate": "掲載開始日",
@@ -113,5 +113,9 @@
   "performerAdjustmentPointIpAddress": "処理IP",
   "stage": "ステージ",
   "sheetLink": "データ取得リンク",
-  "lastReadRow": "同期済み最終行"
+  "lastReadRow": "同期済み最終行",
+  "subject": "学科",
+  "monthlyFee": "月額",
+  "logo": "ロゴ",
+  "image": "画像"
 }

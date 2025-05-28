@@ -1,0 +1,23 @@
+{
+  "form": {
+    "subject": "学科",
+    "monthlyFee": "月額",
+    "logo": "ロゴ",
+    "image": "画像"
+  },
+  "table": {
+    "subject": "学科",
+    "monthlyFee": "月額会員料金",
+    "logo": "ロゴ",
+    "image": "画像",
+    "action": "削除"
+  },
+  "delete": {
+    "title": "本当にこの学科を削除しますか？",
+    "error": "この学科には関連する質問や単語が存在するため、削除できません。"
+  },
+    "title": {
+    "create": "学科を追加",
+    "update": "編集"
+  }
+}

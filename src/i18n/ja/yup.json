@@ -8,6 +8,7 @@
     "notOneOf": "{path}は、次の値を取ることはできません: {values}",
     "notType": "{path}は必須です",
     "notTypeMixed": "{path}は設定された型と一致する必要があります",
+    "file_size_exceeded": "{maxSize}MB以内のファイルにしてください。",
     "imageFileType": "{path}有効なタイプではありません"
   },
   "string": {

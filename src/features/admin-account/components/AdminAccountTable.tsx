@@ -81,7 +81,7 @@ export function AdminAccountTable() {
             <PencilIcon size={22} />
           </span>
           <button
-            hidden={row.original?.role === AdminRole.SUPPER_ADMIN}
+            hidden={row.original?.id === profile?.id}
             onClick={() => {
               setOpenDeleteAdminDialog(true);
               setSelectedAdmin(row.original);
@@ -93,7 +93,7 @@ export function AdminAccountTable() {
         </div>
       );
     },
-    [setOpenAdminFormDialog, setOpenDeleteAdminDialog, setSelectedAdmin],
+    [profile, setOpenAdminFormDialog, setOpenDeleteAdminDialog, setSelectedAdmin],
   );
 
   const columns: ColumnDef<IAdminAccount>[] = useMemo(() => {

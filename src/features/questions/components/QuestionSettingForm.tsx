@@ -100,6 +100,7 @@ export function QuestionSettingForm() {
           placeholder={t('questions.form.sheetLink')} 
           layout='vertical'
           className='w-full'
+          required={true}
           />
 
           <InputText 
@@ -110,6 +111,7 @@ export function QuestionSettingForm() {
           layout='vertical'
           type='number'
           className='w-full mb-5'
+          required={true}
           />
         </Form>
         <div className="w-full flex gap-2.5 justify-center">
