@@ -191,6 +191,10 @@ export function SubjectForm() {
             disabled={loading}
           />
         </Form>
+        {formType === SubjectFormType.UPDATE && 
+        <div className='text-[#E9034E]'>
+            {t('subjects.form.message')}
+        </div>}
         <div className="w-full flex gap-2.5 justify-center mt-5">
           <Button
             variant="outline"

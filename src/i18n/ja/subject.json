@@ -3,7 +3,8 @@
     "subject": "学科",
     "monthlyFee": "月額",
     "logo": "ロゴ",
-    "image": "画像"
+    "image": "画像",
+    "message": "※保存ボタンを押すと、月額会員の料金が適用されます。"
   },
   "table": {
     "subject": "学科",

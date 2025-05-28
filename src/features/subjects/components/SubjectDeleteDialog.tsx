@@ -9,12 +9,13 @@ import { IBodyResponse } from '@/utils/interfaces';
 import { toast } from '@/hooks/use-toast';
 export function SubjectDeleteDialog() {
   const t = useTranslations();
-  const { selectedSubject, isOpenDeleteSubjectDialog, setOpenDeleteSubjectDialog, getSubjectList } = useSubjectStore(
+  const { selectedSubject, isOpenDeleteSubjectDialog, setOpenDeleteSubjectDialog, getSubjectList, setOpenSubjectMessageDialog } = useSubjectStore(
     useShallow((state) => ({
       selectedSubject: state.selectedSubject,
       isOpenDeleteSubjectDialog: state.isOpenDeleteSubjectDialog,
       setOpenDeleteSubjectDialog: state.setOpenDeleteSubjectDialog,
       getSubjectList: state.getSubjectList,
+      setOpenSubjectMessageDialog: state.setOpenSubjectMessageDialog,
     })),
   );
 
@@ -25,7 +26,7 @@ export function SubjectDeleteDialog() {
     if(isDeleting) return;
     setIsDeleting(true);
     try {
-      const response: IBodyResponse<unknown> = await subjectService._delete(selectedSubject?.id ?? '');
+      const response: IBodyResponse<any> = await subjectService._delete(selectedSubject?.id ?? '');
 
       if(response.success) {
         toast({
@@ -34,6 +35,13 @@ export function SubjectDeleteDialog() {
         })
         await getSubjectList();
       }else {
+        
+        const isQuestionExist = response.errors?.findIndex(item => item.errorKey.includes('questionExisted')) ?? -1;
+        const isVocabExist = response.errors?.findIndex(item => item.errorKey.includes('vocabularyExisted')) ?? -1;
+        if(isQuestionExist >= 0 || isVocabExist >=0 ) {
+          setOpenSubjectMessageDialog(true);
+        }
+
         toast({
           title: t('common.messages.delete_failed'),
           variant:'destructive',
@@ -58,11 +66,14 @@ export function SubjectDeleteDialog() {
     >
       <div className="flex flex-col items-center justify-end gap-2.5 ">
         <h5 className="font-bold">{t('subjects.delete.title')}</h5>
-        <div className="w-full flex gap-2.5 justify-between">
+        <div className="w-full flex gap-2.5 justify-between mt-4">
           <Button variant="outline" className="flex-1" onClick={() => setOpenDeleteSubjectDialog(false)}>
             {t('common.buttons.cancel')}
           </Button>
-          <Button variant="destructive" className="flex-1" onClick={() => handleDeleteSubject()}>
+          <Button variant="destructive" className="flex-1" onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteSubject();
+            }}>
             {t('common.buttons.delete')}
           </Button>
         </div>

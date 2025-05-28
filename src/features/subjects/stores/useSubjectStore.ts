@@ -8,6 +8,7 @@ import { ICommonListQuery } from '@/utils/interfaces';
 interface States {
   isOpenSubjectFormDialog: boolean;
   isOpenDeleteSubjectDialog: boolean;
+  isOpenSubjectMessageDialog: boolean;
   isOpenImageDetail: boolean;
   subjectGetListQuery: ICommonListQuery;
   totalItems: number;
@@ -21,6 +22,7 @@ interface States {
 interface Actions {
   setOpenSubjectFormDialog: (open: boolean) => void;
   setOpenDeleteSubjectDialog: (open: boolean) => void;
+  setOpenSubjectMessageDialog: (open: boolean) => void;
   setOpenImageDetail: (open: boolean) => void;
   setSubjectGetListQuery: (
     query: ICommonListQuery,
@@ -38,6 +40,7 @@ interface Actions {
 const initialState: States = {
   isOpenSubjectFormDialog: false,
   isOpenDeleteSubjectDialog: false,
+  isOpenSubjectMessageDialog: false,
   isOpenImageDetail: false,
   subjectGetListQuery: {
     ...DEFAULT_GET_LIST_QUERY,
@@ -56,6 +59,7 @@ export const useSubjectStore = create<States & Actions>((set, get) => ({
   // Actions
   setOpenSubjectFormDialog: (open: boolean) => set({ isOpenSubjectFormDialog: open }),
   setOpenDeleteSubjectDialog: (open: boolean) => set({ isOpenDeleteSubjectDialog: open }),
+  setOpenSubjectMessageDialog: (open: boolean) => set({ isOpenSubjectMessageDialog: open }),
   setOpenImageDetail: (open: boolean) => set({ isOpenImageDetail: open }),
   setSubjectGetListQuery: (query: ICommonListQuery, opt?: { reloadList?: boolean }) => {
     set((state) => ({
