@@ -1,15 +1,15 @@
 'use client';
 
-import { Control } from 'react-hook-form';
+import { Control, useWatch } from 'react-hook-form';
 import { FormField, FormItem } from '../ui/form';
 import { FormFieldLayout } from './form-field-layout';
 import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
-import { UploadCloudIcon, X } from 'lucide-react';
-import { IFile } from '@/features/common/interface';
+import { X } from 'lucide-react';
 import { GalleryUpIcon, LoadingCircleIcon } from '../icons';
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { DEFAULT_MAX_SIZE } from '@/utils/constants';
+import Image from 'next/image';
 
 export type ValidationErrorType = 'max_size' | 'invalid_file_type';
 export type FileUploadStatus = 'start_upload' | 'uploading' | 'done' | 'failed';
@@ -17,7 +17,6 @@ interface UploadFieldProps {
   label?: string;
   name: string;
   description?: string;
-  placeholder?: string;
   accept?: string;
   maxSize?: number;
   required?: boolean;
@@ -25,11 +24,11 @@ interface UploadFieldProps {
   layout?: 'horizontal' | 'vertical';
   className?: string;
   onChange?: (file: File) => void;
-  onRemove?: (file?: IFile | null) => void;
+  onRemove?: (file?: File | null) => void;
   onValidationFail?: (errorType: ValidationErrorType) => void;
-  fileList?: (IFile | null | undefined)[];
   allowClear?: boolean;
   disabled?: boolean;
+  loading?: boolean;
 }
 
 export function UploadField({
@@ -45,12 +44,14 @@ export function UploadField({
   onChange,
   onRemove,
   onValidationFail,
-  fileList,
   allowClear = true,
   disabled = false,
+  loading = false,
 }: Readonly<UploadFieldProps>) {
   const inputRef = useRef<HTMLInputElement>(null);
   const t = useTranslations();
+
+  const imageUrl = useWatch({ control, name });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -85,6 +86,22 @@ export function UploadField({
     onChange?.(file);
   };
 
+  const uploadFieldImage = useCallback(() => {
+    return imageUrl 
+      ? <div className="w-full aspect-square relative">
+          <Image
+            src={imageUrl}
+            alt=""
+            fill
+            className="object-cover object-center"
+          />
+          <div className="absolute inset-0 border border-primary rounded-lg pointer-events-none" />
+        </div>
+      : <div className="flex flex-col items-center justify-center gap-2">
+        <GalleryUpIcon size={20} />
+      </div>
+  }, [imageUrl])
+
   return (
     <FormField
       control={control}
@@ -99,20 +116,24 @@ export function UploadField({
             errorMessage={fieldError?.message}
             description={description}
           >
-            <div className="flex flex-col gap-2">
+            <div className={cn(
+              "flex gap-2 overflow-hidden pt-0.5",
+            )}>
               <button
                 type="button"
                 data-testid="upload-area"
                 disabled={disabled}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   if (!disabled && inputRef.current) {
                     inputRef.current.click();
                   }
                 }}
                 className={cn(
-                  'w-full border border-dashed border-primary rounded-lg p-4 text-center bg-white',
+                  'w-full text-center bg-white aspect-square border rounded-lg relative group',
                   fieldError && 'border-destructive',
                   disabled && 'cursor-not-allowed opacity-50',
+                  !imageUrl && 'border-dashed border-primary'
                 )}
               >
                 <input
@@ -126,6 +147,7 @@ export function UploadField({
                   aria-label={t('common.file.upload')}
                   disabled={disabled}
                 />
+                {loading ? <LoadingCircleIcon size={16} className="animate-spin" /> : 
                 <div
                   className={cn(
                     'cursor-pointer',
@@ -133,58 +155,29 @@ export function UploadField({
                   )}
                   aria-disabled={disabled}
                 >
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="rounded-full bg-gray-100 p-[11px]">
-                      <GalleryUpIcon size={20} />
-                    </div>
-
-                    <div className="text-xs text-secondary-foreground">
-                      {t('common.file.max_size', { maxSize })}
-                    </div>
-                    <div
-                      className={cn(
-                        'flex items-center gap-2.5 cursor-pointer bg-button-secondary text-button-secondary-foreground hover:bg-button-secondary/80 px-4 py-1.5 rounded-lg',
-                        disabled && 'bg-button-secondary cursor-not-allowed',
-                      )}
-                    >
-                      <UploadCloudIcon />
-                      <span>{t('common.file.upload')}</span>
-                    </div>
+                  {uploadFieldImage()}
+                </div>
+                }
+                {(imageUrl && allowClear) && (
+                  <div className='absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity'>
+                  <div className="bg-black/60 p-1 rounded-full">
+                  <X
+                    size={16}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRemove?.();
+                      if (inputRef.current) {
+                        inputRef.current.value = '';
+                      }
+                    }}
+                    className="cursor-pointer text-white"
+                    data-testid="remove-file-button"
+                    aria-label={t('common.buttons.clear')}
+                  />
                   </div>
-                </div>
+                  </div>
+                  )}
               </button>
-              {fileList && fileList.length > 0 && (
-                <div className="flex flex-col gap-0">
-                  {fileList.map((file) => (
-                    <div
-                      key={`${file?.s3Key ?? file?.storedName ?? file?.originalName}`}
-                      className="flex items-center justify-between bg-gray-100 px-4 py-3 rounded-lg"
-                    >
-                      <div className="truncate">{file?.originalName}</div>
-                      <div className="flex items-center gap-2">
-                        {(file?.status === 'uploading' ||
-                          file?.status === 'start_upload') && (
-                          <LoadingCircleIcon size={16} className="animate-spin" />
-                        )}
-                        {allowClear && (
-                          <X
-                            size={16}
-                            onClick={() => {
-                              onRemove?.(file);
-                              if (inputRef.current) {
-                                inputRef.current.value = '';
-                              }
-                            }}
-                            className="cursor-pointer"
-                            data-testid="remove-file-button"
-                            aria-label={t('common.buttons.clear')}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           </FormFieldLayout>
         </FormItem>

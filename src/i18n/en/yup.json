@@ -7,6 +7,7 @@
     "oneOf": "{path} must be one of the following values: {values}",
     "notOneOf": "{path} must not be one of the following values: {values}",
     "notType": "{path} must be a {type} type",
+    "file_size_exceeded": "{maxSize}MB以内のファイルにしてください。",
     "notTypeMixed": "{path} must match the configured type"
   },
   "string": {

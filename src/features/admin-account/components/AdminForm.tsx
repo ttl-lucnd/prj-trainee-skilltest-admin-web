@@ -111,6 +111,7 @@ export function AdminForm() {
             placeholder={t('adminAccount.form.email')} 
             layout='vertical'
             className='w-full'
+            required={true}
           />
           <InputText 
             name="name" 
@@ -119,6 +120,7 @@ export function AdminForm() {
             placeholder={t('adminAccount.form.name')} 
             layout='vertical'
             className='w-full mb-5'
+            required={true}
           />
         </Form>
         <div className="w-full flex gap-2.5 justify-center">

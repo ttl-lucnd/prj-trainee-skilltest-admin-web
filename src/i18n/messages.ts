@@ -16,6 +16,8 @@ import sidebarJa from './ja/sidebar.json';
 import yupJa from './ja/yup.json';
 import questionsJa from './ja/questions.json';
 import questionsEn from './en/questions.json';
+import subjectJa from './ja/subject.json';
+import subjectEn from './en/subject.json';
 
 const messages = {
   ja: {
@@ -28,6 +30,7 @@ const messages = {
     field: fieldJa,
     app: appJa,
     questions: questionsJa,
+    subjects: subjectJa,
   },
   en: {
     login: loginEn,
@@ -39,6 +42,7 @@ const messages = {
     app: appEn,
     error: errorEn,
     questions: questionsEn,
+    subjects: subjectEn,
   },
 };
 

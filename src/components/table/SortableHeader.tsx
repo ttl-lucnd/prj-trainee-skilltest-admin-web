@@ -8,6 +8,7 @@ interface SortableHeaderProps {
   title: string;
   className?: string;
   onSortChange?: (order: OrderDirection | null) => Promise<void>;
+  disabled?: boolean;
 }
 
 export function SortableHeader({
@@ -15,11 +16,15 @@ export function SortableHeader({
   title,
   className,
   onSortChange,
+  disabled
 }: Readonly<SortableHeaderProps>) {
   return (
     <button
       className={cn('w-full flex items-center gap-2', className)}
-      onClick={() => column.toggleSorting()}
+      onClick={() =>{
+        if(disabled) return
+        column.toggleSorting()
+      }}
       data-testid="sortable-header-button"
     >
       {title}
@@ -27,6 +32,7 @@ export function SortableHeader({
         <SortIcon
           isActive={column.getIsSorted() === OrderDirection.ASC.toLowerCase()}
           onClick={(e) => {
+            if(disabled) return
             e.stopPropagation();
             if (column.getIsSorted() === OrderDirection.ASC.toLowerCase()) {
               column.clearSorting();
@@ -41,6 +47,7 @@ export function SortableHeader({
           isActive={column.getIsSorted() === OrderDirection.DESC.toLowerCase()}
           className="rotate-180"
           onClick={(e) => {
+            if(disabled) return
             e.stopPropagation();
             if (column.getIsSorted() === OrderDirection.DESC.toLowerCase()) {
               column.clearSorting();
