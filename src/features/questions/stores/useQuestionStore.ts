@@ -1,6 +1,6 @@
 import { DEFAULT_GET_LIST_QUERY } from '@/utils/constants';
 import { create } from 'zustand';
-import { IQuestion, IQuestionGetListQuery } from '../interfaces';
+import { IQuestion, IQuestionGetListQuery, IQuestionSetting } from '../interfaces';
 import { questionService } from '../services/question.service';
 import { ISubjectDropdown } from '@/features/common/interface';
 import { commonService } from '@/features/common/service/dropdown.service';
@@ -18,6 +18,7 @@ interface States {
   subjectDropdownList: ISubjectDropdown[];
   arrangeDropdownList: number[];
   selectedQuestion: IQuestion | null;
+  questionSetting: IQuestionSetting | null;
 }
 
 // Action types
@@ -40,6 +41,7 @@ interface Actions {
   setSubjectDropdownList: (subjectDropdownList?: ISubjectDropdown[]) => void;
   setArrangeDropdownList: (arrangeDropdownList?: number[]) => void;
   setSelectedQuestion: (admin: IQuestion | null) => void;
+  getQuestionSetting: () => Promise<void>;
   resetState: () => void;
 }
 
@@ -57,6 +59,7 @@ const initialState: States = {
   subjectDropdownList: [],
   arrangeDropdownList: [],
   selectedQuestion: null,
+  questionSetting: null,
 };
 
 // useAdminStore
@@ -110,5 +113,11 @@ export const useQuestionStore = create<States & Actions>((set, get) => ({
   setSubjectDropdownList: (subjectDropdownList: ISubjectDropdown[] = []) => set({ subjectDropdownList }),
   setArrangeDropdownList: (arrangeDropdownList: number[] = []) => set({ arrangeDropdownList }),
   setSelectedQuestion: (selectedQuestion: IQuestion | null) => set({ selectedQuestion }),
+  getQuestionSetting: async () => {
+    const response = await questionService.getQuestionSetting();
+    set(() => ({
+      questionSetting: response?.data ?? null,
+    }));
+  },
   resetState: () => set({ ...initialState }),
 }));

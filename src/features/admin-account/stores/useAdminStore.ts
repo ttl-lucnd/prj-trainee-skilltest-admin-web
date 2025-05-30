@@ -3,9 +3,11 @@ import { create } from 'zustand';
 import { adminService } from '../services/admin.service';
 import { IAdminAccount } from '../interfaces';
 import { ICommonListQuery } from '@/utils/interfaces';
+import { authService } from '@/features/auth/services/auth.service';
 
 // State types
 interface States {
+  profile: IAdminAccount | null;
   isOpenAdminFormDialog: boolean;
   isOpenDeleteAdminDialog: boolean;
   adminGetListQuery: ICommonListQuery;
@@ -17,6 +19,7 @@ interface States {
 
 // Action types
 interface Actions {
+  getProfile: () => Promise<void>
   setOpenAdminFormDialog: (open: boolean) => void;
   setOpenDeleteAdminDialog: (open: boolean) => void;
   setAdminGetListQuery: (
@@ -32,6 +35,7 @@ interface Actions {
 }
 
 const initialState: States = {
+  profile: null,
   isOpenAdminFormDialog: false,
   isOpenDeleteAdminDialog: false,
   adminGetListQuery: {
@@ -48,6 +52,15 @@ export const useAdminStore = create<States & Actions>((set, get) => ({
   // States
   ...initialState,
   // Actions
+  getProfile: async () => {
+    try {
+      const response = await authService.getProfile();
+      set(() => ({
+        profile: response?.data?.profile ?? null,
+      }));
+    } catch {
+    }
+  },
   setOpenAdminFormDialog: (open: boolean) => set({ isOpenAdminFormDialog: open }),
   setOpenDeleteAdminDialog: (open: boolean) => set({ isOpenDeleteAdminDialog: open }),
   setAdminGetListQuery: (query: ICommonListQuery, opt?: { reloadList?: boolean }) => {

@@ -1,23 +1,23 @@
 import { BaseDialog } from '@/components/BaseDialog';
 import { Button } from '@/components/ui/button';
-import { useQuestionStore } from '../stores/useQuestionStore';
+import { useVocabularyStore } from '../stores/useVocabularyStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
-import { questionService } from '../services/question.service';
+import { vocabularyService } from '../services/vocabulary.service';
 import { toast } from '@/hooks/use-toast';
 import { IBodyResponse } from '@/utils/interfaces';
 import { useState } from 'react';
-export function QuestionSyncDataDialog() {
+export function VocabularySyncDataDialog() {
   const t = useTranslations();
   const { 
     isOpenSyncDataDialog, 
     setOpenSyncDataDialog, 
-    getQuestionSetting,
-  } = useQuestionStore(
+    getVocabularySetting,
+  } = useVocabularyStore(
     useShallow((state) => ({
       isOpenSyncDataDialog: state.isOpenSyncDataDialog,
       setOpenSyncDataDialog: state.setOpenSyncDataDialog,
-      getQuestionSetting: state.getQuestionSetting,
+      getVocabularySetting: state.getVocabularySetting,
     })),
   );
 
@@ -29,8 +29,8 @@ export function QuestionSyncDataDialog() {
     
     try {
       setOpenSyncDataDialog(false);
-      const response: IBodyResponse<any> = await questionService.syncData();
-      await getQuestionSetting();
+      const response: IBodyResponse<any> = await vocabularyService.syncData();
+      await getVocabularySetting();
 
       if(response.success) {
         

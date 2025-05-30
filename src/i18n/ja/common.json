@@ -54,7 +54,7 @@
     "clear": "クリア",
     "cancel": "キャンセル",
     "stop": "停止",
-    "filter_view": "フィルタ表示",
+    "filter_view": "絞り込む",
     "delete": "削除",
     "save": "保存",
     "back": "戻る",
@@ -74,7 +74,7 @@
     "update_failed": "エラー　保存できませんでした",
     "delete_success": "削除が成功しました",
     "delete_failed": "削除に失敗しました",
-    "data_sync": "データの同期中です。しばらくしてから再度お試しください。",
+    "data_sync": "データを同期中です。しばらくお待ちください。",
     "notification_not_supported": "このブラウザは通知をサポートしていません。",
     "require_notification_permission": "通知を受け取るには、ブラウザの通知設定を許可に変更してください。",
     "export_request_success": "CSVのエクスポートをリクエストしました。処理が完了したら通知されます。",
@@ -123,5 +123,13 @@
   "searchPlaceholder": "検索",
   "selectAll": "すべて選択",
   "not_set": "未設定",
+  "sync_data_at_format": "YYYY年MM月DD日HH時mm分",
+  "sync_data_at": "最終データ更新日時：",
+  "sync_data_status": {
+    "pending": "データ同期中",
+    "complete": "データ同期完了",
+    "permission_denied": "ドライブへのアクセスが拒否された",
+    "server_error": "サーバーエラーが発生した"
+  },
   "sync_data_alert": "データの同期を行うには、データ取得に仕様されるスプレッドシートへの閲覧権限以上、およびスプレッドシート内に添付されている画像が保存されているドライブへの閲覧権限以上が必要です。"
 }

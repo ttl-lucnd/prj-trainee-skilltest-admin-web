@@ -66,6 +66,7 @@ export function AdminFilterForm() {
           disabled={isFiltering}
           suffixIcon={<SearchIcon size={22} />}
           onSuffixIconClick={form.handleSubmit(onSubmit)}
+          isTrim={true}
         />
       </form>
     </Form>

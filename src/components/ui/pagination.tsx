@@ -101,7 +101,7 @@ export function Pagination({
                 .map((page, index, array) => (
                   <React.Fragment key={page}>
                     {index > 0 && array[index - 1] !== page - 1 && (
-                      <div className="px-2 border border-textDefaultColor bg-white w-8 h-8 flex items-center justify-center rounded-md">
+                      <div className="px-2 border border-primary-3 bg-white w-8 h-8 flex items-center justify-center rounded-md">
                         ...
                       </div>
                     )}

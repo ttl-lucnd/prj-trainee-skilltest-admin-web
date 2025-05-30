@@ -7,8 +7,10 @@ import { useUpdateUrlWithQuery } from '@/utils/url';
 import { Button } from '@/components/ui/button';
 import { useShallow } from 'zustand/react/shallow';
 import { ICommonListQuery } from '@/utils/interfaces';
+import { AdminRole } from '@/features/admin-account/constants';
 export function AdminAccountList() {
-  const { totalItems, adminGetListQuery, setAdminGetListQuery, setOpenAdminFormDialog, setSelectedAdmin } = useAdminStore(useShallow((s) => ({
+  const { profile, totalItems, adminGetListQuery, setAdminGetListQuery, setOpenAdminFormDialog, setSelectedAdmin } = useAdminStore(useShallow((s) => ({
+    profile: s.profile,
     totalItems: s.totalItems,
     adminGetListQuery: s.adminGetListQuery,
     setAdminGetListQuery: s.setAdminGetListQuery,
@@ -35,7 +37,11 @@ export function AdminAccountList() {
         onPageChange={(page) => setAdminAccountGetListQuery({ page })}
       >
         <div className="flex items-center justify-end">
-          <Button size="sm" onClick={() => {setOpenAdminFormDialog(true); setSelectedAdmin(null)}}>管理者を追加</Button>
+          <Button 
+          hidden={profile?.role !== AdminRole.SUPPER_ADMIN}
+          size="lg" 
+          onClick={() => {setOpenAdminFormDialog(true); setSelectedAdmin(null)}}
+          >管理者を追加</Button>
         </div>
       </Pagination>
     </div>

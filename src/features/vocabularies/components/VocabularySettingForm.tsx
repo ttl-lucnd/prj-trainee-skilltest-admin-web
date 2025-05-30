@@ -1,25 +1,25 @@
 import { BaseDialog } from '@/components/BaseDialog';
-import { useQuestionStore } from '../stores/useQuestionStore';
+import { useVocabularyStore } from '../stores/useVocabularyStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { Form } from '@/components/ui/form';
 import { InputText } from '@/components/form/input';
 import { useTranslations } from 'next-intl';
-import { questionSettingYupResolver } from '../schema';
-import { questionService } from '../services/question.service';
+import { vocabularySettingYupResolver } from '../schema';
+import { vocabularyService } from '../services/vocabulary.service';
 import { IBodyResponse } from '@/utils/interfaces';
 import { toast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
-import { IUpdateQuestionSettingBody } from '../interfaces';
+import { IUpdateVocabularySettingBody } from '../interfaces';
 import { InputNumber } from '@/components/form/input-number';
 
-export function QuestionSettingForm() {
+export function VocabularySettingForm() {
   const t = useTranslations();
   const { 
     isOpenSettingFormDialog, 
     setOpenSettingFormDialog,
-  } = useQuestionStore(
+  } = useVocabularyStore(
     useShallow((state) => ({
       isOpenSettingFormDialog: state.isOpenSettingFormDialog,
       setOpenSettingFormDialog: state.setOpenSettingFormDialog,
@@ -27,7 +27,7 @@ export function QuestionSettingForm() {
   );
   
   const form = useForm({
-    resolver: questionSettingYupResolver,
+    resolver: vocabularySettingYupResolver,
     mode: 'onChange', 
     reValidateMode: 'onChange',
   });
@@ -37,8 +37,8 @@ export function QuestionSettingForm() {
   useEffect(() => {
     if (!isOpenSettingFormDialog) return;
 
-    const getQuestionSetting = async () => {
-      const response = await questionService.getQuestionSetting();
+    const getVocabularySetting = async () => {
+      const response = await vocabularyService.getVocabularySetting();
       if (response.success) {
         form.reset({
           sheetLink: response.data.sheetLink,
@@ -47,13 +47,13 @@ export function QuestionSettingForm() {
       }
     };
 
-    getQuestionSetting();
+    getVocabularySetting();
   }, [isOpenSettingFormDialog]);
 
-  const onSubmit = async (data: IUpdateQuestionSettingBody) => {
+  const onSubmit = async (data: IUpdateVocabularySettingBody) => {
     try {
       setLoading(true);
-      const response: IBodyResponse<any> = await questionService.updateQuestionSetting(data);
+      const response: IBodyResponse<any> = await vocabularyService.updateVocabularySetting(data);
 
       if(response.success) {
         setOpenSettingFormDialog(false);
@@ -84,27 +84,29 @@ export function QuestionSettingForm() {
       open={isOpenSettingFormDialog}
       onOpenChange={setOpenSettingFormDialog}
       showCloseButton={true}
-      title={t('questions.form.title')} 
+      title={t('vocabularies.form.title')} 
       className="max-w-[500px]"
       headerClassName='block'
     >
       <div className="flex flex-col items-center justify-end gap-2.5 ">
         <Form {...form}>
           <InputText 
+          key={"sheetLink"}
           name="sheetLink" 
           control={form.control} 
-          label={t('questions.form.sheetLink')} 
-          placeholder={t('questions.form.sheetLink')} 
+          label={t('vocabularies.form.sheetLink')} 
+          placeholder={t('vocabularies.form.sheetLink')} 
           layout='vertical'
           className='w-full'
           required={true}
           />
 
           <InputNumber 
+          key={"lastReadRow"}
           name="lastReadRow" 
           control={form.control} 
-          label={t('questions.form.lastReadRow')} 
-          placeholder={t('questions.form.lastReadRow')} 
+          label={t('vocabularies.form.lastReadRow')} 
+          placeholder={t('vocabularies.form.lastReadRow')} 
           layout='vertical'
           className='w-full mb-5'
           required={true}

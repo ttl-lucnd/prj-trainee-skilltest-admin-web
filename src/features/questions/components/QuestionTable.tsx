@@ -59,9 +59,9 @@ export function QuestionTable() {
 
   const handleSort = useCallback(
     async (orderBy: string, orderDirection: OrderDirection | null) => {
+      if (isSorting) return;
+      setIsSorting(true);
       try {
-        if (isSorting) return;
-        setIsSorting(true);
         const data = orderDirection ? { orderBy, orderDirection } : {};
         const query = getQuestionQueryFromUrl();
         const newQuery = {
@@ -199,7 +199,7 @@ export function QuestionTable() {
         header: t('questions.table.question'),
         accessorKey: 'question',
         cell: questionCell,
-        size: 180,
+        size: 150,
       },
       {
         header: t('questions.table.description'),
@@ -208,16 +208,11 @@ export function QuestionTable() {
         size: 180,
       },
       {
-        header: ({ column }) => (
-          <SortableHeader column={column} title={t('questions.table.subject') } 
-            onSortChange={ (orderDirection) => handleSort(QuestionOrderBy.SUBJECT, orderDirection)}
-            disabled={isSorting}
-          />
-        ),
+        header: t('questions.table.subject'),
         accessorKey: 'subject',
         enableSorting: true,
         cell: subjectCell,
-        size: 180,
+        size: 150,
       },
       {
         enableSorting: true,
@@ -241,18 +236,18 @@ export function QuestionTable() {
         header: t('questions.table.image'),
         accessorKey: 'image',
         cell: imageCell,
-        size: 80,
+        size: 100,
       },
       {
         header: t('questions.table.answer'),
         accessorKey: 'answer',
         cell: answerCell,
-        size: 50,
+        size: 100,
       },
       {
         header: t('questions.table.action'),
         id: 'actions',
-        size: 50,
+        size: 80,
         cell: QuestionActions,
       },
     ]);

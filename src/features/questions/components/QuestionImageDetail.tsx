@@ -17,7 +17,7 @@ export function QuestionImageDetail() {
       open={isOpenImageDetail}
       onOpenChange={setOpenImageDetail}
       showCloseButton={true}
-      className="max-w-[452px]"
+      className="max-w-[700px]"
     >
       <div className="flex flex-col items-center justify-end gap-2.5 mt-4">
         <Image
@@ -25,6 +25,7 @@ export function QuestionImageDetail() {
           width={452}
           height={452}
           alt="question-image"
+          className='max-h-[452px]'
         />
       </div>
     </BaseDialog>

@@ -1,11 +1,11 @@
 import yup from '@/plugins/yup';
 import { shortStringSchema } from '@/plugins/yup/utils';
-import { Regex } from '@/utils';
+import { MAX_INTEGER, Regex } from '@/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 const questionSettingSchema = yup.object({
   sheetLink: yup.string().matches(Regex.SHEET_URL, 'questions.error.sheetLink').required(),
-  lastReadRow: yup.number().min(1).required(),
+  lastReadRow: yup.number().min(1).max(MAX_INTEGER).required(),
 });
 
 export const questionSettingYupResolver = yupResolver(questionSettingSchema);

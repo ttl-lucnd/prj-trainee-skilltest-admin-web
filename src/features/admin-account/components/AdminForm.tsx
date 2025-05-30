@@ -30,10 +30,6 @@ export function AdminForm() {
     resolver: updateAdminYupResolver,
     mode: 'onChange', 
     reValidateMode: 'onChange',
-    defaultValues: {
-      email: '',
-      name: '',
-    }
   });
 
   useEffect(() => {

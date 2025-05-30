@@ -3,9 +3,12 @@ import { create } from 'zustand';
 import { subjectService } from '../services/subject.service';
 import { ISubject } from '../interfaces';
 import { ICommonListQuery } from '@/utils/interfaces';
+import { IAdminAccount } from '@/features/admin-account/interfaces';
+import { authService } from '@/features/auth/services/auth.service';
 
 // State types
 interface States {
+  profile: IAdminAccount | null;
   isOpenSubjectFormDialog: boolean;
   isOpenDeleteSubjectDialog: boolean;
   isOpenSubjectMessageDialog: boolean;
@@ -20,6 +23,7 @@ interface States {
 
 // Action types
 interface Actions {
+  getProfile: () => Promise<void>;
   setOpenSubjectFormDialog: (open: boolean) => void;
   setOpenDeleteSubjectDialog: (open: boolean) => void;
   setOpenSubjectMessageDialog: (open: boolean) => void;
@@ -38,6 +42,7 @@ interface Actions {
 }
 
 const initialState: States = {
+  profile: null,
   isOpenSubjectFormDialog: false,
   isOpenDeleteSubjectDialog: false,
   isOpenSubjectMessageDialog: false,
@@ -57,6 +62,15 @@ export const useSubjectStore = create<States & Actions>((set, get) => ({
   // States
   ...initialState,
   // Actions
+  getProfile: async () => {
+    try {
+      const response = await authService.getProfile();
+      set(() => ({
+        profile: response?.data?.profile ?? null,
+      }));
+    } catch {
+    }
+  },
   setOpenSubjectFormDialog: (open: boolean) => set({ isOpenSubjectFormDialog: open }),
   setOpenDeleteSubjectDialog: (open: boolean) => set({ isOpenDeleteSubjectDialog: open }),
   setOpenSubjectMessageDialog: (open: boolean) => set({ isOpenSubjectMessageDialog: open }),

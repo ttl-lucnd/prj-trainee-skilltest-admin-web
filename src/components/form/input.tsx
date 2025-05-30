@@ -39,6 +39,7 @@ interface InputFormProps {
   customClassName?: string;
   suffixIcon?: React.ReactNode;
   onSuffixIconClick?: () => void;
+  isTrim?: boolean;
 }
 
 export function InputText({
@@ -62,6 +63,7 @@ export function InputText({
   customClassName,
   suffixIcon,
   onSuffixIconClick,
+  isTrim = false,
 }: Readonly<InputFormProps>) {
   const t = useTranslations();
 
@@ -117,6 +119,10 @@ export function InputText({
                 onBlur={() => {
                   handleBlur();
                   field.onBlur();
+                  const trimmed = (field.value || '').trim();
+                  if (trimmed !== field.value && isTrim) {
+                    field.onChange(trimmed);
+                  }
                 }}
                 allowClear={allowClear}
                 onChange={(e) => {

@@ -18,6 +18,8 @@ import questionsJa from './ja/questions.json';
 import questionsEn from './en/questions.json';
 import subjectJa from './ja/subject.json';
 import subjectEn from './en/subject.json';
+import vocabulariesJa from './ja/vocabularies.json';
+import vocabulariesEn from './en/vocabularies.json';
 
 const messages = {
   ja: {
@@ -31,6 +33,7 @@ const messages = {
     app: appJa,
     questions: questionsJa,
     subjects: subjectJa,
+    vocabularies: vocabulariesJa,
   },
   en: {
     login: loginEn,
@@ -43,6 +46,7 @@ const messages = {
     error: errorEn,
     questions: questionsEn,
     subjects: subjectEn,
+    vocabularies: vocabulariesEn,
   },
 };
 

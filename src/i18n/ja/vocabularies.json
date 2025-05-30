@@ -1,0 +1,27 @@
+{
+  "form": {
+    "title":"データを編集",
+    "sheetLink": "データ取得リンク",
+    "lastReadRow": "同期済み最終行"
+  },
+  "filter": {
+    "subject": "学科で絞り込む"
+  },
+  "table": {
+    "vocabulary": "単語",
+    "pronunciation": "読み方",
+    "subject": "学科",
+    "image": "図",
+    "action": "削除",
+    "meaning_vi": "意味（ベトナム語）",
+    "description_vi": "説明文（ベトナム語）",
+    "meaning_en": "意味（英語）",
+    "description_en": "説明文（英語）"
+  },
+  "delete": {
+    "title": "本当にこの質問を削除しますか？"
+  }, 
+  "error": {
+    "sheetLink": "データ取得リンクの形式が正しくありません"
+  }
+}

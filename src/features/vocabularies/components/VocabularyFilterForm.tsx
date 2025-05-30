@@ -9,40 +9,39 @@ import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useShallow } from 'zustand/react/shallow';
-import { questionFilterYupResolver } from '../schema';
-import { useQuestionStore } from '../stores/useQuestionStore';
+import { vocabularyFilterYupResolver } from '../schema';
+import { useVocabularyStore } from '../stores/useVocabularyStore';
 import { MultiSelectField } from '@/components/form/multi-select';
 import { Button } from '@/components/ui/button';
-import dayjs from 'dayjs';
 import { cn } from '@/lib/utils';
-export function QuestionFilterForm() {
+import dayjs from 'dayjs';
+export function VocabularyFilterForm() {
   const t = useTranslations();
   const [isFiltering, setIsFiltering] = useState(false);
 
-  const { subjectDropdownList, arrangeDropdownList, questionSetting, setQuestionGetListQuery, getQuestionList, getQuestionSetting } = useQuestionStore(
+  const { subjectDropdownList, vocabularySetting, setVocabularyGetListQuery, getVocabularyList, getVocabularySetting } = useVocabularyStore(
     useShallow((s) => ({
+      vocabularySetting: s.vocabularySetting,
       subjectDropdownList: s.subjectDropdownList,
-      arrangeDropdownList: s.arrangeDropdownList,
-      questionSetting: s.questionSetting,
-      setQuestionGetListQuery: s.setQuestionGetListQuery,
-      getQuestionList: s.getQuestionList,
-      getQuestionSetting: s.getQuestionSetting
+      setVocabularyGetListQuery: s.setVocabularyGetListQuery,
+      getVocabularyList: s.getVocabularyList,
+      getVocabularySetting: s.getVocabularySetting,
     })),
   );
   const form = useForm({
-    resolver: questionFilterYupResolver,
+    resolver: vocabularyFilterYupResolver,
   });
 
   const {
-    getQueryFromUrl: getQuestionQueryFromUrl,
-    updateUrlWithQuery: updateQuestionUrlWithQuery,
+    getQueryFromUrl: getVocabularyQueryFromUrl,
+    updateUrlWithQuery: updateVocabularyUrlWithQuery,
   } = useUpdateUrlWithQuery();
 
   useEffect(() => {
-    const query = getQuestionQueryFromUrl();
+    const query = getVocabularyQueryFromUrl();
     form.reset(query);
-    setQuestionGetListQuery(query, { reloadList: false });
-    getQuestionSetting();
+    setVocabularyGetListQuery(query, { reloadList: false });
+    getVocabularySetting();
   }, []);
 
   const onSubmit = async (data: any) => {
@@ -52,9 +51,9 @@ export function QuestionFilterForm() {
         ...data,
         page: DEFAULT_FIRST_PAGE,
       };
-      setQuestionGetListQuery(query, { reloadList: false });
-      updateQuestionUrlWithQuery(query);
-      await getQuestionList();
+      setVocabularyGetListQuery(query, { reloadList: false });
+      updateVocabularyUrlWithQuery(query);
+      await getVocabularyList();
     } catch {
       setIsFiltering(false);
     } finally {
@@ -62,24 +61,24 @@ export function QuestionFilterForm() {
     }
   };
 
-  const syncDataInfo = () => {
-    return <div className='flex flex-col min-w-[200px]'>
-      {questionSetting?.lastSyncDataAt &&
-      <div className='flex flex-wrap'>
-        {t('common.sync_data_at')}
-        <p className='text-[#FF0053]'>{dayjs(questionSetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))}</p>
+   const syncDataInfo = () => {
+      return <div className='flex flex-col min-w-[200px]'>
+        {vocabularySetting?.lastSyncDataAt &&
+        <div className='flex flex-wrap'>
+          {t('common.sync_data_at')}
+          <p className='text-[#FF0053]'>{dayjs(vocabularySetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))}</p>
+        </div>
+        }
+        {vocabularySetting?.status && <p className='text-[#FF0053]'>{t(`common.sync_data_status.${vocabularySetting.status}`)}</p>}
       </div>
-      }
-      {questionSetting?.status && <p className='text-[#FF0053]'>{t(`common.sync_data_status.${questionSetting.status}`)}</p>}
-    </div>
-  }
+    }
 
   return (
     <div className={cn(
       'flex flex-wrap w-full items-start gap-10 mb-5',
-      questionSetting? 'justify-between' : 'justify-end'
+      vocabularySetting? 'justify-between' : 'justify-end'
     )}>
-    {questionSetting && syncDataInfo()}
+    {vocabularySetting && syncDataInfo()}
     <Form {...form}>
       <form className={cn("flex gap-2.5 items-start justify-end flex-1")} onSubmit={form.handleSubmit(onSubmit)}>
         <MultiSelectField
@@ -89,17 +88,7 @@ export function QuestionFilterForm() {
             value: item.id,
           }))}
           name='subjectIds'
-          placeholder={t('questions.filter.subject')}
-          control={form.control}
-        />
-        <MultiSelectField
-          className="w-[130px] h-[40px]"
-          options={arrangeDropdownList.map(item => ({
-            label: `${item}`,
-            value: `${item}`,
-          }))}
-          name='arranges'
-          placeholder={t('questions.filter.arrange')}
+          placeholder={t('vocabularies.filter.subject')}
           control={form.control}
         />
         <InputText
