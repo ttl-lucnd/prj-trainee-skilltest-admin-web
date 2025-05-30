@@ -200,12 +200,11 @@ export function VocabularyTable() {
       size: 200,
     },
     ]
-  }) 
+  });
 
 
-  const columns: ColumnDef<IVocabulary>[] = useMemo(() => {
-    return compact([
-      {
+  const customTableCol: any = [
+          {
         header: t('common.number'),
         accessorKey: 'index',
         cell: (props: any) =>
@@ -240,6 +239,11 @@ export function VocabularyTable() {
         size: 200,
       },
       ...translateCol,
+  ] 
+
+  const columns: ColumnDef<IVocabulary>[] = useMemo(() => {
+    return compact([
+      ...customTableCol,
       {
         header: t('vocabularies.table.subject'),
         accessorKey: 'subject',
@@ -263,7 +267,7 @@ export function VocabularyTable() {
   }, [
     t,
     isSorting,
-    translateCol,
+    customTableCol,
     vocabularyCell,
     descriptionCell,
     subjectCell,
