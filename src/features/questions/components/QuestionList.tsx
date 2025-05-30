@@ -46,7 +46,7 @@ export function QuestionList() {
       >
         <div className="flex items-center gap-2.5 justify-end">
           <Button size="lg" variant={'outline'} onClick={() => setOpenSettingFormDialog(true)}>{t('common.buttons.setting_url')}</Button>
-          <Button size="lg" onClick={() => setOpenSyncDataDialog(true)}>{t('common.buttons.setting_url')}</Button>
+          <Button size="lg" onClick={() => setOpenSyncDataDialog(true)}>{t('common.buttons.sync_data')}</Button>
         </div>
       </Pagination>
     </div>

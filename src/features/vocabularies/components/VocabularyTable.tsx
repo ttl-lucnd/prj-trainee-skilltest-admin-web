@@ -14,6 +14,22 @@ import { SortableHeader } from '@/components/table/SortableHeader';
 import Image from 'next/image';
 import { useUpdateUrlWithQuery } from '@/utils/url';
 
+function MeaningCellFactory(lang: TranslateLanguages) {
+  const Cell = ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => (
+    <TruncatedText text={row.original.vocabulary[lang] ?? ''} />
+  );
+  Cell.displayName = `MeaningCell_${lang}`;
+  return Cell;
+}
+
+function DescriptionCellFactory(lang: TranslateLanguages) {
+  const Cell = ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => (
+    <TruncatedText text={row.original.description[lang] ?? ''} />
+  );
+  Cell.displayName = `DescriptionCell_${lang}`;
+  return Cell;
+}
+
 export function VocabularyTable() {
   const t = useTranslations();
   const {
@@ -100,25 +116,8 @@ export function VocabularyTable() {
     [],
   );
 
-  const meaningCell = useCallback(
-    (lang: TranslateLanguages) =>{
-    const Cell = ({ row }: Readonly<CellContext<IVocabulary, unknown>>) =>
-      <TruncatedText text={row.original.vocabulary[lang] ?? ''} />;
-    Cell.displayName = `MeaningCell_${lang}`;
-    return Cell;
-    },
-    []
-  );
-
-  const descriptionCell = useCallback(
-  (lang: TranslateLanguages) => {
-    const Cell = ({ row }: Readonly<CellContext<IVocabulary, unknown>>) =>
-      <TruncatedText text={row.original.description[lang] ?? ''} />;
-    Cell.displayName = `DescriptionCell_${lang}`;
-    return Cell;
-  },
-    []
-  );
+  const meaningCell = (lang: TranslateLanguages) => MeaningCellFactory(lang);
+  const descriptionCell = (lang: TranslateLanguages) => DescriptionCellFactory(lang);
 
   const subjectCell = useCallback(
     ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
@@ -175,46 +174,36 @@ export function VocabularyTable() {
     [setOpenDeleteVocabularyDialog, setSelectedVocabulary],
   );
 
-  function MeaningSortableHeader({ column, title, onSortChange, disabled }: any) {
-    return (
-      <SortableHeader
-        column={column}
-        title={title}
-        onSortChange={onSortChange}
-        disabled={disabled}
-      />
-    );
-  }
+  const translateCol: any[] = Object.entries(TranslateLanguages).flatMap(([key, lang]) => {
+    return [
+      {
+      header: (props: { column: any }) => (
+        <SortableHeader
+          column={props.column}
+          title={t(`vocabularies.table.meaning_${lang}`)}
+          onSortChange={(orderDirection: any) =>
+            handleSort(VocabularyOrderBy[`MEANING_${key}` as keyof typeof VocabularyOrderBy], orderDirection)
+          }
+          disabled={isSorting}
+        />
+      ),
+      accessorKey: `meaning_${lang}`,
+      enableSorting: true,
+      cell: meaningCell(lang),
+      size: 200,
+    },
+    {
+      header: t(`vocabularies.table.description_${lang}`),
+      accessorKey: `description_${lang}`,
+      enableSorting: true,
+      cell: descriptionCell(lang),
+      size: 200,
+    },
+    ]
+  }) 
+
 
   const columns: ColumnDef<IVocabulary>[] = useMemo(() => {
-    const translateCol: any[] = Object.entries(TranslateLanguages).flatMap(([key, lang]) => {
-      return [
-        {
-        header: (props: { column: any }) => (
-          <MeaningSortableHeader
-            column={props.column}
-            title={t(`vocabularies.table.meaning_${lang}`)}
-            onSortChange={(orderDirection: any) =>
-              handleSort(VocabularyOrderBy[`MEANING_${key}` as keyof typeof VocabularyOrderBy], orderDirection)
-            }
-            disabled={isSorting}
-          />
-        ),
-        accessorKey: `meaning_${lang}`,
-        enableSorting: true,
-        cell: meaningCell(lang),
-        size: 200,
-      },
-      {
-        header: t(`vocabularies.table.description_${lang}`),
-        accessorKey: `description_${lang}`,
-        enableSorting: true,
-        cell: descriptionCell(lang),
-        size: 200,
-      },
-      ]
-    }) 
-    
     return compact([
       {
         header: t('common.number'),
@@ -274,6 +263,7 @@ export function VocabularyTable() {
   }, [
     t,
     isSorting,
+    translateCol,
     vocabularyCell,
     descriptionCell,
     subjectCell,

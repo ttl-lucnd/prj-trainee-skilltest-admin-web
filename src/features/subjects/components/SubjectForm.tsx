@@ -209,7 +209,7 @@ export function SubjectForm() {
             onClick={form.handleSubmit(onSubmit)}
             disabled={!form.formState.isDirty || !form.formState.isValid || loading}
           >
-            {t('common.buttons.save')}
+            {t(`common.buttons.${formType ===SubjectFormType.CREATE ? 'add' : 'save'}`)}
           </Button>
         </div>
       </div>
