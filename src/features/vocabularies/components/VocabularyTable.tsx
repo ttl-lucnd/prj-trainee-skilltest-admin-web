@@ -174,33 +174,36 @@ export function VocabularyTable() {
     [setOpenDeleteVocabularyDialog, setSelectedVocabulary],
   );
 
-  const translateCol: any[] = Object.entries(TranslateLanguages).flatMap(([key, lang]) => {
-    return [
+  
+  const translateCol = useMemo((): ColumnDef<IVocabulary>[] =>{
+    return Object.entries(TranslateLanguages).flatMap(([key, lang]) => {
+      return [
+        {
+        header: ({ column }) => (
+          <SortableHeader
+            column={column}
+            title={t(`vocabularies.table.meaning_${lang}`)}
+            onSortChange={(orderDirection: any) =>
+              handleSort(VocabularyOrderBy[`MEANING_${key}` as keyof typeof VocabularyOrderBy], orderDirection)
+            }
+            disabled={isSorting}
+          />
+        ),
+        accessorKey: `meaning_${lang}`,
+        enableSorting: true,
+        cell: meaningCell(lang),
+        size: 200,
+      },
       {
-      header: (props: { column: any }) => (
-        <SortableHeader
-          column={props.column}
-          title={t(`vocabularies.table.meaning_${lang}`)}
-          onSortChange={(orderDirection: any) =>
-            handleSort(VocabularyOrderBy[`MEANING_${key}` as keyof typeof VocabularyOrderBy], orderDirection)
-          }
-          disabled={isSorting}
-        />
-      ),
-      accessorKey: `meaning_${lang}`,
-      enableSorting: true,
-      cell: meaningCell(lang),
-      size: 200,
-    },
-    {
-      header: t(`vocabularies.table.description_${lang}`),
-      accessorKey: `description_${lang}`,
-      enableSorting: true,
-      cell: descriptionCell(lang),
-      size: 200,
-    },
-    ]
-  });
+        header: t(`vocabularies.table.description_${lang}`),
+        accessorKey: `description_${lang}`,
+        enableSorting: true,
+        cell: descriptionCell(lang),
+        size: 200,
+      },
+      ]
+    });
+  },[handleSort, descriptionCell, meaningCell])
 
   const columns: ColumnDef<IVocabulary>[] = useMemo(() => {
     return compact([
@@ -216,8 +219,9 @@ export function VocabularyTable() {
         size: 50,
       },
       {
-        header: (props: { column: any }) => (
-          <SortableHeader column={props.column} title={t('vocabularies.table.vocabulary') } 
+        enableSorting: true,
+        header: ({ column }) => (
+          <SortableHeader column={column} title={t('vocabularies.table.vocabulary') } 
             onSortChange={ (orderDirection) => handleSort(VocabularyOrderBy.VOCABULARY, orderDirection)}
             disabled={isSorting}
           />
@@ -227,8 +231,8 @@ export function VocabularyTable() {
         size: 200,
       },
       {
-        header: (props: { column: any }) => (
-          <SortableHeader column={props.column} title={t('vocabularies.table.pronunciation') } 
+        header: ({ column }) => (
+          <SortableHeader column={column} title={t('vocabularies.table.pronunciation') } 
             onSortChange={ (orderDirection) => handleSort(VocabularyOrderBy.PRONUNCIATION, orderDirection)}
             disabled={isSorting}
           />
@@ -242,7 +246,6 @@ export function VocabularyTable() {
       {
         header: t('vocabularies.table.subject'),
         accessorKey: 'subject',
-        enableSorting: true,
         cell: subjectCell,
         size: 150,
       },
@@ -264,13 +267,11 @@ export function VocabularyTable() {
     isSorting,
     translateCol,
     vocabularyCell,
-    descriptionCell,
     subjectCell,
     VocabularyActions,
     handleSort,
     imageCell,
     pronunciationCell,
-    meaningCell,
   ]);
 
   return <DataTable 
@@ -279,6 +280,5 @@ export function VocabularyTable() {
     loading={loading} 
     rowClassName={'h-16'} 
     headerClassName={'bg-[#FBFDFF]'}
-    // columnPinning={{right: ['actions']}}
   />;
 }

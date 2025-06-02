@@ -210,7 +210,6 @@ export function QuestionTable() {
       {
         header: t('questions.table.subject'),
         accessorKey: 'subject',
-        enableSorting: true,
         cell: subjectCell,
         size: 150,
       },
