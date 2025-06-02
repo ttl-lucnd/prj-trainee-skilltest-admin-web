@@ -4,18 +4,17 @@ import { IBodyResponse, IGetListResponse } from '@/utils/interfaces';
 import {
   IQuestion,
   IQuestionGetListQuery,
-  IQuestionSetting,
-  IUpdateQuestionSettingBody,
 } from '../interfaces';
+import { ISyncSettingBody, ISyncSettingDetail } from '@/features/common/interface';
 
 class QuestionService extends ApiService {
-  getQuestionSetting(): Promise<IBodyResponse<IQuestionSetting>> {
+  getQuestionSetting(): Promise<IBodyResponse<ISyncSettingDetail>> {
     return this.client.get(`${this.baseUrl}/setting`)
   }
 
   updateQuestionSetting(
-    body: IUpdateQuestionSettingBody,
-  ): Promise<IBodyResponse<IQuestionSetting>> {
+    body: ISyncSettingBody,
+  ): Promise<IBodyResponse<ISyncSettingDetail>> {
     return this.client.post(`${this.baseUrl}/setting`, body)
   }
 

@@ -4,18 +4,17 @@ import { IBodyResponse, IGetListResponse } from '@/utils/interfaces';
 import {
   IVocabulary,
   IVocabularyGetListQuery,
-  IVocabularySetting,
-  IUpdateVocabularySettingBody,
 } from '../interfaces';
+import { ISyncSettingBody, ISyncSettingDetail } from '@/features/common/interface';
 
 class VocabularyService extends ApiService {
-  getVocabularySetting(): Promise<IBodyResponse<IVocabularySetting>> {
+  getVocabularySetting(): Promise<IBodyResponse<ISyncSettingDetail>> {
     return this.client.get(`${this.baseUrl}/setting`)
   }
 
   updateVocabularySetting(
-    body: IUpdateVocabularySettingBody,
-  ): Promise<IBodyResponse<IVocabularySetting>> {
+    body: ISyncSettingBody,
+  ): Promise<IBodyResponse<ISyncSettingDetail>> {
     return this.client.post(`${this.baseUrl}/setting`, body)
   }
 

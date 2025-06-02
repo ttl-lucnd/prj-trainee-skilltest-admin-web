@@ -1,25 +1,21 @@
 import { BaseDialog } from '@/components/BaseDialog';
 import { Button } from '@/components/ui/button';
-import { useQuestionStore } from '../stores/useQuestionStore';
-import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
-import { questionService } from '../services/question.service';
 import { toast } from '@/hooks/use-toast';
 import { IBodyResponse } from '@/utils/interfaces';
 import { useState } from 'react';
-export function QuestionSyncDataDialog() {
+export function SyncDataDialog({
+  isOpenSyncDataDialog,
+  setOpenSyncDataDialog,
+  getSetting,
+  handleSync,
+} : {
+  isOpenSyncDataDialog: boolean,
+  setOpenSyncDataDialog: (open: boolean) => void,
+  getSetting: () => Promise<void>,
+  handleSync: () => Promise<IBodyResponse<any>>,
+}) {
   const t = useTranslations();
-  const { 
-    isOpenSyncDataDialog, 
-    setOpenSyncDataDialog, 
-    getQuestionSetting,
-  } = useQuestionStore(
-    useShallow((state) => ({
-      isOpenSyncDataDialog: state.isOpenSyncDataDialog,
-      setOpenSyncDataDialog: state.setOpenSyncDataDialog,
-      getQuestionSetting: state.getQuestionSetting,
-    })),
-  );
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -29,8 +25,8 @@ export function QuestionSyncDataDialog() {
     
     try {
       setOpenSyncDataDialog(false);
-      const response: IBodyResponse<any> = await questionService.syncData();
-      await getQuestionSetting();
+      const response  = await handleSync();
+      await getSetting();
 
       if(response.success) {
         
@@ -67,7 +63,7 @@ export function QuestionSyncDataDialog() {
           <Button variant="outline" className="w-[120px] h-[40px]" onClick={() => setOpenSyncDataDialog(false)}>
             {t('common.buttons.cancel')}
           </Button>
-          <Button className="w-[120px] h-[40px]" onClick={handleSyncData}>
+          <Button className="w-[120px] h-[40px]" onClick={() => handleSyncData()}>
             {t('common.buttons.ok')}
           </Button>
         </div>

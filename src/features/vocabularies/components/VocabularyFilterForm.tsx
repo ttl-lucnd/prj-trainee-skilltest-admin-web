@@ -1,10 +1,7 @@
 'use client';
 
-import { InputText } from '@/components/form/input';
-import { Form } from '@/components/ui/form';
 import { DEFAULT_FIRST_PAGE } from '@/utils/constants';
 import { useUpdateUrlWithQuery } from '@/utils/url';
-import { SearchIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,9 +9,9 @@ import { useShallow } from 'zustand/react/shallow';
 import { vocabularyFilterYupResolver } from '../schema';
 import { useVocabularyStore } from '../stores/useVocabularyStore';
 import { MultiSelectField } from '@/components/form/multi-select';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
+import { BasicFilterForm } from '@/components/BasicFilterForm';
 export function VocabularyFilterForm() {
   const t = useTranslations();
   const [isFiltering, setIsFiltering] = useState(false);
@@ -45,8 +42,10 @@ export function VocabularyFilterForm() {
   }, []);
 
   const onSubmit = async (data: any) => {
+    if(isFiltering) return;
+    setIsFiltering(true);
     try {
-      setIsFiltering(true);
+      
       const query = {
         ...data,
         page: DEFAULT_FIRST_PAGE,
@@ -62,7 +61,7 @@ export function VocabularyFilterForm() {
   };
 
    const syncDataInfo = () => {
-      return <div className='flex flex-col min-w-[200px]'>
+      return <div className='flex flex-col min-w-[200px] mb-2'>
         {vocabularySetting?.lastSyncDataAt &&
         <div className='flex flex-wrap'>
           {t('common.sync_data_at')}
@@ -79,36 +78,23 @@ export function VocabularyFilterForm() {
       vocabularySetting? 'justify-between' : 'justify-end'
     )}>
     {vocabularySetting && syncDataInfo()}
-    <Form {...form}>
-      <form className={cn("flex gap-2.5 items-start justify-end flex-1")} onSubmit={form.handleSubmit(onSubmit)}>
-        <MultiSelectField
-          className="w-[200px] h-[40px]"
-          options={subjectDropdownList.map(item => ({
-            label: item.name,
-            value: item.id,
-          }))}
-          name='subjectIds'
-          placeholder={t('vocabularies.filter.subject')}
-          control={form.control}
-        />
-        <InputText
-          name="keyword"
-          size="md"
-          placeholder={t('common.searchPlaceholder')}
-          className="max-w-[282px]"
-          label=""
-          control={form.control}
-          suffixIcon={<SearchIcon size={22} />}
-          onSuffixIconClick={form.handleSubmit(onSubmit)}
-          isTrim={true}
-        />
-        <Button 
-          size="lg" 
-          onClick={form.handleSubmit(onSubmit)}
-          disabled={isFiltering}
-        >{t('common.buttons.filter_view')}</Button>
-      </form>
-    </Form>
+    <BasicFilterForm
+      form={form}
+      onSubmit={(data) => onSubmit(data)}
+      searchBtn={true}
+      isFiltering={isFiltering}
+    >
+      <MultiSelectField
+        className="w-[160px] h-[40px]"
+        options={subjectDropdownList.map(item => ({
+          label: item.name,
+          value: item.id,
+        }))}
+        name='subjectIds'
+        placeholder={t('vocabularies.filter.subject')}
+        control={form.control}
+      />
+    </BasicFilterForm>
     </div>
   );
 }

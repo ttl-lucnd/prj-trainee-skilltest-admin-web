@@ -1,8 +1,8 @@
 import { DEFAULT_GET_LIST_QUERY, OrderDirection } from '@/utils/constants';
 import { create } from 'zustand';
-import { IVocabulary, IVocabularyGetListQuery, IVocabularySetting, VocabularyOrderBy } from '../interfaces';
+import { IVocabulary, IVocabularyGetListQuery, VocabularyOrderBy } from '../interfaces';
 import { vocabularyService } from '../services/vocabulary.service';
-import { ISubjectDropdown } from '@/features/common/interface';
+import { ISubjectDropdown, ISyncSettingDetail } from '@/features/common/interface';
 import { commonService } from '@/features/common/service/dropdown.service';
 
 // State types
@@ -17,7 +17,7 @@ interface States {
   loading: boolean;
   subjectDropdownList: ISubjectDropdown[];
   selectedVocabulary: IVocabulary | null;
-  vocabularySetting: IVocabularySetting | null;
+  vocabularySetting: ISyncSettingDetail | null;
 }
 
 // Action types

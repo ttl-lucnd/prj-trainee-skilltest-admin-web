@@ -1,5 +1,4 @@
 import { ICommonListQuery } from '@/utils/interfaces';
-import { SYNC_DATA_STATUS } from '../common/constants';
 
 export enum TranslateLanguages {
   EN = 'en',
@@ -29,25 +28,8 @@ export interface IVocabulary {
   },
 }
 
-export interface IVocabularySetting {
-  id: string;
-  createdAt: string;
-  createdBy: number;
-  updatedAt: string;
-  updatedBy: number;
-  sheetLink: string,
-  lastReadRow: number,
-  lastSyncDataAt?: Date;
-  status?: SYNC_DATA_STATUS;
-}
-
 export interface IVocabularyGetListQuery extends ICommonListQuery {
   subjectId?: string;
-}
-
-export interface IUpdateVocabularySettingBody {
-  sheetLink: string;
-  lastReadRow: number;
 }
 
 const meaningOrderBy = Object.fromEntries(

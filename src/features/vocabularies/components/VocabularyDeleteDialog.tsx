@@ -69,7 +69,10 @@ export function VocabularyDeleteDialog() {
           <Button variant="outline" className="w-[120px] h-[40px]" onClick={() => setOpenDeleteVocabularyDialog(false)}>
             {t('common.buttons.cancel')}
           </Button>
-          <Button variant="destructive" className="w-[120px] h-[40px]" onClick={handleDeleteVocabulary}>
+          <Button variant="destructive" className="w-[120px] h-[40px]" onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteVocabulary()}
+            }>
             {t('common.buttons.delete')}
           </Button>
         </div>

@@ -1,8 +1,8 @@
 import { DEFAULT_GET_LIST_QUERY } from '@/utils/constants';
 import { create } from 'zustand';
-import { IQuestion, IQuestionGetListQuery, IQuestionSetting } from '../interfaces';
+import { IQuestion, IQuestionGetListQuery } from '../interfaces';
 import { questionService } from '../services/question.service';
-import { ISubjectDropdown } from '@/features/common/interface';
+import { ISubjectDropdown, ISyncSettingDetail } from '@/features/common/interface';
 import { commonService } from '@/features/common/service/dropdown.service';
 
 // State types
@@ -18,7 +18,7 @@ interface States {
   subjectDropdownList: ISubjectDropdown[];
   arrangeDropdownList: number[];
   selectedQuestion: IQuestion | null;
-  questionSetting: IQuestionSetting | null;
+  questionSetting: ISyncSettingDetail | null;
 }
 
 // Action types

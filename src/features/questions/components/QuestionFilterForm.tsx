@@ -1,10 +1,7 @@
 'use client';
 
-import { InputText } from '@/components/form/input';
-import { Form } from '@/components/ui/form';
 import { DEFAULT_FIRST_PAGE } from '@/utils/constants';
 import { useUpdateUrlWithQuery } from '@/utils/url';
-import { SearchIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,9 +9,9 @@ import { useShallow } from 'zustand/react/shallow';
 import { questionFilterYupResolver } from '../schema';
 import { useQuestionStore } from '../stores/useQuestionStore';
 import { MultiSelectField } from '@/components/form/multi-select';
-import { Button } from '@/components/ui/button';
 import dayjs from 'dayjs';
 import { cn } from '@/lib/utils';
+import { BasicFilterForm } from '@/components/BasicFilterForm';
 export function QuestionFilterForm() {
   const t = useTranslations();
   const [isFiltering, setIsFiltering] = useState(false);
@@ -46,8 +43,10 @@ export function QuestionFilterForm() {
   }, []);
 
   const onSubmit = async (data: any) => {
+    if(isFiltering) return;
+    setIsFiltering(true);
     try {
-      setIsFiltering(true);
+      
       const query = {
         ...data,
         page: DEFAULT_FIRST_PAGE,
@@ -63,7 +62,7 @@ export function QuestionFilterForm() {
   };
 
   const syncDataInfo = () => {
-    return <div className='flex flex-col min-w-[200px]'>
+    return <div className='flex flex-col min-w-[200px] mb-2'>
       {questionSetting?.lastSyncDataAt &&
       <div className='flex flex-wrap'>
         {t('common.sync_data_at')}
@@ -76,50 +75,37 @@ export function QuestionFilterForm() {
 
   return (
     <div className={cn(
-      'flex flex-wrap w-full items-start gap-10 mb-5',
+      'flex flex-wrap w-full items-start gap-2.5 mb-5',
       questionSetting? 'justify-between' : 'justify-end'
     )}>
     {questionSetting && syncDataInfo()}
-    <Form {...form}>
-      <form className={cn("flex gap-2.5 items-start justify-end flex-1")} onSubmit={form.handleSubmit(onSubmit)}>
-        <MultiSelectField
-          className="w-[200px] h-[40px]"
-          options={subjectDropdownList.map(item => ({
-            label: item.name,
-            value: item.id,
-          }))}
-          name='subjectIds'
-          placeholder={t('questions.filter.subject')}
-          control={form.control}
-        />
-        <MultiSelectField
-          className="w-[130px] h-[40px]"
-          options={arrangeDropdownList.map(item => ({
-            label: `${item}`,
-            value: `${item}`,
-          }))}
-          name='arranges'
-          placeholder={t('questions.filter.arrange')}
-          control={form.control}
-        />
-        <InputText
-          name="keyword"
-          size="md"
-          placeholder={t('common.searchPlaceholder')}
-          className="max-w-[282px]"
-          label=""
-          control={form.control}
-          suffixIcon={<SearchIcon size={22} />}
-          onSuffixIconClick={form.handleSubmit(onSubmit)}
-          isTrim={true}
-        />
-        <Button 
-          size="lg" 
-          onClick={form.handleSubmit(onSubmit)}
-          disabled={isFiltering}
-        >{t('common.buttons.filter_view')}</Button>
-      </form>
-    </Form>
+    <BasicFilterForm
+      form={form}
+      onSubmit={(data) => onSubmit(data)}
+      searchBtn={true}
+      isFiltering={isFiltering}
+    >
+      <MultiSelectField
+        className="w-[160px] h-[40px]"
+        options={subjectDropdownList.map(item => ({
+          label: item.name,
+          value: item.id,
+        }))}
+        name='subjectIds'
+        placeholder={t('questions.filter.subject')}
+        control={form.control}
+      />
+      <MultiSelectField
+        className="w-[120px] h-[40px]"
+        options={arrangeDropdownList.map(item => ({
+          label: `${item}`,
+          value: `${item}`,
+        }))}
+        name='arranges'
+        placeholder={t('questions.filter.arrange')}
+        control={form.control}
+      />
+    </BasicFilterForm>
     </div>
   );
 }
