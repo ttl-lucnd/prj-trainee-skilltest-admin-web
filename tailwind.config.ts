@@ -90,8 +90,9 @@ export default {
           foreground: 'hsl(var(--primary-foreground))',
           1: '#404958',
           2: '#2665EF',
-          3: '#9BA5B7',
+          3: '#DCDFEA',
           4: '#EEF1F4',
+          5: '#7D89B0',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',

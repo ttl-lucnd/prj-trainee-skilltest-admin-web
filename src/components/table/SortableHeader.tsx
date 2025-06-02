@@ -75,7 +75,7 @@ function SortIcon({ isActive, onClick, className }: Readonly<SortIconProps>) {
       {isActive ? (
         <ArrowSquareUpActiveIcon />
       ) : (
-        <ArrowSquareUpIcon className="text-primary-3" />
+        <ArrowSquareUpIcon className="text-primary-5" />
       )}
     </span>
   );

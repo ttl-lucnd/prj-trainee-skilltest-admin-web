@@ -1,47 +1,45 @@
 'use client';
 
 import { Pagination } from '@/components/ui/pagination';
-import { useQuestionStore } from '../stores/useQuestionStore';
-import { QuestionTable } from './QuestionTable';
-import { IQuestionGetListQuery } from '../interfaces';
+import { useVocabularyStore } from '../stores/useVocabularyStore';
+import { VocabularyTable } from './VocabularyTable';
+import { IVocabularyGetListQuery } from '../interfaces';
 import { useUpdateUrlWithQuery } from '@/utils/url';
 import { Button } from '@/components/ui/button';
 import { useShallow } from 'zustand/react/shallow';
 import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-export function QuestionList() {
+export function VocabularyList() {
   const t = useTranslations();
-  const { totalItems, questionGetListQuery, setQuestionGetListQuery, setOpenSettingFormDialog, getSubjectDropdown, getArrangeDropdown, setOpenSyncDataDialog } = useQuestionStore(useShallow((s) => ({
+  const { totalItems, vocabularyGetListQuery, setVocabularyGetListQuery, setOpenSettingFormDialog, getSubjectDropdown, setOpenSyncDataDialog } = useVocabularyStore(useShallow((s) => ({
     totalItems: s.totalItems,
-    questionGetListQuery: s.questionGetListQuery,
-    setQuestionGetListQuery: s.setQuestionGetListQuery,
+    vocabularyGetListQuery: s.vocabularyGetListQuery,
+    setVocabularyGetListQuery: s.setVocabularyGetListQuery,
     setOpenSettingFormDialog: s.setOpenSettingFormDialog,
     setOpenSyncDataDialog: s.setOpenSyncDataDialog,
     getSubjectDropdown: s.getSubjectDropdown,
-    getArrangeDropdown: s.getArrangeDropdown,
   })));
 
-  const { updateUrlWithQuery: updateQuestionUrlWithQuery } = useUpdateUrlWithQuery();
+  const { updateUrlWithQuery: updateVocabularyUrlWithQuery } = useUpdateUrlWithQuery();
 
-  const setGetListQuery = (query: IQuestionGetListQuery) => {
-    setQuestionGetListQuery(query);
-    updateQuestionUrlWithQuery(query);
+  const setGetListQuery = (query: IVocabularyGetListQuery) => {
+    setVocabularyGetListQuery(query);
+    updateVocabularyUrlWithQuery(query);
   };
 
   useEffect(() => {
-    getArrangeDropdown();
     getSubjectDropdown();
   }, [])
 
   return (
     <div className="h-full flex flex-col gap-2.5">
       <div className="flex">
-        <QuestionTable />
+        <VocabularyTable />
       </div>
       <Pagination
         totalItems={totalItems}
-        currentPage={questionGetListQuery.page}
-        itemsPerPage={questionGetListQuery.limit}
+        currentPage={vocabularyGetListQuery.page}
+        itemsPerPage={vocabularyGetListQuery.limit}
         onPageChange={(page) => setGetListQuery({ page })}
       >
         <div className="flex items-center gap-2.5 justify-end">

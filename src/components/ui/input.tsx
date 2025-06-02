@@ -33,8 +33,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(
-            'flex h-10 w-full rounded-md border border-primary-2 px-3 py-2 text-base text-textDefaultColor file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-primary-3 outline-none  disabled:cursor-not-allowed disabled:bg-primary-4 disabled:text-primary-3 disabled:border-primary-3 md:text-sm noSpinnerClass bg-white',
-            ((allowClear && !!value) || suffixIcon) && 'pr-10',
+            'flex h-10 w-full rounded-md border border-primary-3 px-3 py-2 text-base text-textDefaultColor file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-primary-5 outline-none  disabled:cursor-not-allowed disabled:bg-primary-4 disabled:text-primary-3 disabled:border-primary-3 md:text-sm noSpinnerClass bg-white',
+            ((allowClear && !!value) || suffixIcon) && 'pl-10',
             sizeHeight === 'sm' && 'h-8 py-1',
             className,
           )}
@@ -46,7 +46,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {suffixIcon && (
           <button
             type="button"
-            className="absolute top-1/2 right-3 -translate-y-1/2 text-textDefaultColor"
+            className="absolute top-1/2 left-3 -translate-y-1/2 text-primary-5"
             onClick={onSuffixIconClick}
             aria-label="suffix action"
             tabIndex={0}

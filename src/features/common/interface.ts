@@ -1,4 +1,5 @@
 import { FileUploadStatus } from '@/components/form/upload';
+import { SYNC_DATA_STATUS } from './constants';
 
 export interface IGetFileUrlQuery {
   resourceType: string;
@@ -20,4 +21,21 @@ export interface IFile {
 export interface ISubjectDropdown {
   id: string,
   name: string,
+}
+
+export interface ISyncSettingBody {
+  sheetLink: string;
+  lastReadRow: number;
+}
+
+export interface ISyncSettingDetail {
+  id: string;
+  createdAt: string;
+  createdBy: number;
+  updatedAt: string;
+  updatedBy: number;
+  sheetLink: string;
+  lastReadRow: number;
+  lastSyncDataAt?: Date;
+  status?: SYNC_DATA_STATUS;
 }

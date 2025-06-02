@@ -6,12 +6,12 @@ import { useForm } from 'react-hook-form';
 import { Form } from '@/components/ui/form';
 import { InputText } from '@/components/form/input';
 import { useTranslations } from 'next-intl';
-import { createSubjectYupResolver, updateSubjectYupResolver } from '../schema';
+import { createSubjectYupResolver } from '../schema';
 import { subjectService } from '../services/subject.service';
 import { IBodyResponse } from '@/utils/interfaces';
 import { SubjectFormType, ISubject, ISubjectFormBody } from '../interfaces';
 import { toast } from '@/hooks/use-toast';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UploadField } from '@/components/form/upload';
 export function SubjectForm() {
   const t = useTranslations();
@@ -29,14 +29,8 @@ export function SubjectForm() {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const resolver = useMemo(() => {
-    return formType === SubjectFormType.CREATE
-      ? createSubjectYupResolver
-      : updateSubjectYupResolver;
-  }, [formType]);
-
   const form = useForm<ISubjectFormBody>({
-    resolver,
+    resolver: createSubjectYupResolver,
     mode: 'onChange', 
     reValidateMode: 'onChange',
   });
@@ -125,7 +119,7 @@ export function SubjectForm() {
     <BaseDialog
       open={isOpenSubjectFormDialog}
       onOpenChange={setOpenSubjectFormDialog}
-      showCloseButton={true}
+      showCloseButton={false}
       title={t(`subjects.title.${formType}`)} 
       className="max-w-[500px]"
       headerClassName='block'
@@ -209,7 +203,7 @@ export function SubjectForm() {
             onClick={form.handleSubmit(onSubmit)}
             disabled={!form.formState.isDirty || !form.formState.isValid || loading}
           >
-            {t('common.buttons.save')}
+            {t(`common.buttons.${formType ===SubjectFormType.CREATE ? 'add' : 'save'}`)}
           </Button>
         </div>
       </div>

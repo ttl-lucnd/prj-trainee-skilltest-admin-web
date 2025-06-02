@@ -7,8 +7,10 @@ import { useUpdateUrlWithQuery } from '@/utils/url';
 import { Button } from '@/components/ui/button';
 import { useShallow } from 'zustand/react/shallow';
 import { ICommonListQuery } from '@/utils/interfaces';
+import { AdminRole } from '@/features/admin-account/constants';
 export function SubjectList() {
-  const { totalItems, subjectGetListQuery, setSubjectGetListQuery, setOpenSubjectFormDialog, setSelectedSubject } = useSubjectStore(useShallow((s) => ({
+  const {profile, totalItems, subjectGetListQuery, setSubjectGetListQuery, setOpenSubjectFormDialog, setSelectedSubject } = useSubjectStore(useShallow((s) => ({
+    profile: s.profile,
     totalItems: s.totalItems,
     subjectGetListQuery: s.subjectGetListQuery,
     setSubjectGetListQuery: s.setSubjectGetListQuery,
@@ -35,7 +37,11 @@ export function SubjectList() {
         onPageChange={(page) => setSubjectAccountGetListQuery({ page })}
       >
         <div className="flex items-center justify-end">
-          <Button size="sm" onClick={() => {setOpenSubjectFormDialog(true); setSelectedSubject(null)}}>学科を追加</Button>
+          <Button 
+          hidden={profile?.role !== AdminRole.SUPPER_ADMIN}
+          size="lg" 
+          onClick={() => {setOpenSubjectFormDialog(true); setSelectedSubject(null)}}
+          >学科を追加</Button>
         </div>
       </Pagination>
     </div>

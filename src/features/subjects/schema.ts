@@ -12,13 +12,3 @@ const createSubjectSchema = yup.object({
 });
 
 export const createSubjectYupResolver = yupResolver<ISubjectFormBody>(createSubjectSchema);
-
-
-const updateSubjectSchema = yup.object({
-  name: shortStringSchema.required().label('subject'),
-  monthlyFee: yup.number().min(0).max(MAX_INTEGER).required(),
-  logo: yup.string().optional(),
-  image: yup.string().optional(),
-});
-
-export const updateSubjectYupResolver = yupResolver<ISubjectFormBody>(updateSubjectSchema);

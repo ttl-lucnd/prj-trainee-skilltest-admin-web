@@ -6,18 +6,17 @@ import { DEFAULT_FIRST_PAGE } from '@/utils/constants';
 import { CellContext, ColumnDef } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSubjectStore } from '../stores/useSubjectStore';
 import { ISubject } from '../interfaces';
-import { IAdminAccount } from '@/features/admin-account/interfaces';
-import { authService } from '@/features/auth/services/auth.service';
 import Image from 'next/image';
 import { AdminRole } from '@/features/admin-account/constants';
 
 export function SubjectTable() {
   const t = useTranslations();
   const {
+    profile,
     subjectList,
     loading,
     subjectGetListQuery,
@@ -27,9 +26,11 @@ export function SubjectTable() {
     setOpenDeleteSubjectDialog,
     setSelectedSubject,
     setOpenImageDetail,
-    setSelectedImage
+    setSelectedImage,
+    getProfile,
   } = useSubjectStore(
     useShallow((state) => ({
+      profile: state.profile,
       subjectList: state.subjectList,
       loading: state.loading,
       subjectGetListQuery: state.subjectGetListQuery,
@@ -40,18 +41,11 @@ export function SubjectTable() {
       setSelectedSubject: state.setSelectedSubject,
       setOpenImageDetail: state.setOpenImageDetail,
       setSelectedImage: state.setSelectedImage,
+      getProfile:state.getProfile,
     })),
   );
 
-  const [profile, setProfile] = useState<IAdminAccount>();
-
   useEffect(() => {
-    const getProfile = async () => {
-      const response = await authService.getProfile();
-      if(response.success) {
-        setProfile(response.data.profile);
-      }
-    }
     getProfile();
     getSubjectList();
     return () => {

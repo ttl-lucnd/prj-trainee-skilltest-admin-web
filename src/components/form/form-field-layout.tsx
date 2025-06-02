@@ -34,6 +34,7 @@ export function FormFieldLayout({
         'flex',
         label ? 'items-center gap-2' : 'flex-1',
         layout === 'vertical' && 'w-full flex-col items-start',
+        'rounded-md border border-border focus-within:ring-1 focus-within:ring-primary-2 focus-within:border-primary-2',
         className,
       )}
     >

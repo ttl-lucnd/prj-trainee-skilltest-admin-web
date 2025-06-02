@@ -30,10 +30,6 @@ export function AdminForm() {
     resolver: updateAdminYupResolver,
     mode: 'onChange', 
     reValidateMode: 'onChange',
-    defaultValues: {
-      email: '',
-      name: '',
-    }
   });
 
   useEffect(() => {
@@ -137,7 +133,7 @@ export function AdminForm() {
             onClick={form.handleSubmit(onSubmit)}
             disabled={!form.formState.isDirty || !form.formState.isValid || loading}
           >
-            {t('common.buttons.save')}
+            {t(`common.buttons.${formType ===AdminFormType.CREATE ? 'add' : 'save'}`)}
           </Button>
         </div>
       </div>

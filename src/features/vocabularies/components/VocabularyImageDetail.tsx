@@ -1,12 +1,12 @@
 import { BaseDialog } from '@/components/BaseDialog';
+import { useVocabularyStore } from '../stores/useVocabularyStore';
 import { useShallow } from 'zustand/react/shallow';
 import Image from 'next/image';
-import { useSubjectStore } from '../stores/useSubjectStore';
 
-export function SubjectImageDetail() {
-  const { selectedImage, isOpenImageDetail, setOpenImageDetail } = useSubjectStore(
+export function VocabularyImageDetail() {
+  const { selectedVocabulary, isOpenImageDetail, setOpenImageDetail } = useVocabularyStore(
     useShallow((state) => ({
-      selectedImage: state.selectedImage,
+      selectedVocabulary: state.selectedVocabulary,
       isOpenImageDetail: state.isOpenImageDetail,
       setOpenImageDetail: state.setOpenImageDetail,
     })),
@@ -21,10 +21,10 @@ export function SubjectImageDetail() {
     >
       <div className="flex flex-col items-center justify-end gap-2.5 mt-4">
         <Image
-          src={selectedImage ?? ''}
+          src={selectedVocabulary?.image ?? ''}
           width={452}
           height={452}
-          alt="subject-image"
+          alt="vocabulary-image"
           className='max-h-[452px]'
         />
       </div>

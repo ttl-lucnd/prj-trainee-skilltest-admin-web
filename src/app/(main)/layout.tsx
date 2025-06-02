@@ -3,9 +3,11 @@
 import MainLayoutWrapper from '@/layouts/MainLayout';
 import { useGlobalStore } from '@/utils/globalStore';
 import { useShallow } from 'zustand/react/shallow';
-import { usePathname } from 'next/navigation';
+import { redirect, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import { Toaster } from '@/components/ui/toaster';
+import { PageRouter } from '@/utils';
+import { getCredential } from '@/utils/cookies';
 
 export default function MainLayout({
   children,
@@ -20,6 +22,12 @@ export default function MainLayout({
 
   useEffect(() => {
     setCurrentPath(pathname);
+    if (pathname !== PageRouter.LOGIN) {
+      const refreshToken = getCredential().refreshToken;
+      if (!refreshToken) {
+        redirect(PageRouter.LOGIN);
+      }
+    }
   }, [pathname]);
 
   return <MainLayoutWrapper>

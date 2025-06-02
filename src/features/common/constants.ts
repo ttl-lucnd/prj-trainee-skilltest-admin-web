@@ -40,3 +40,10 @@ export const adminPointAdjustmentsGetListQuery = {
   orderBy: OrderBy.CREATED_AT,
   orderDirection: OrderDirection.DESC,
 };
+
+export enum SYNC_DATA_STATUS {
+  PENDING = 'pending',
+  COMPLETE = 'complete',
+  PERMISSION_DENIED = 'permission_denied',
+  SERVER_ERROR = 'server_error',
+};

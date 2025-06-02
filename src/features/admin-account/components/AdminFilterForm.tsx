@@ -1,17 +1,13 @@
 'use client';
 
-import { InputText } from '@/components/form/input';
-import { Form } from '@/components/ui/form';
 import { DEFAULT_FIRST_PAGE } from '@/utils/constants';
 import { useUpdateUrlWithQuery } from '@/utils/url';
-import { SearchIcon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useShallow } from 'zustand/react/shallow';
 import { useAdminStore } from '../stores/useAdminStore';
+import { BasicFilterForm } from '@/components/BasicFilterForm';
 export function AdminFilterForm() {
-  const t = useTranslations();
   const [isFiltering, setIsFiltering] = useState(false);
 
   const { setAdminGetListQuery, getAdminList } = useAdminStore(
@@ -34,8 +30,10 @@ export function AdminFilterForm() {
   }, []);
 
   const onSubmit = async (data: any) => {
+    if(isFiltering) return;
+    setIsFiltering(true);
     try {
-      setIsFiltering(true);
+      
       const query = {
         ...data,
         createdByIamUserIds: data.createdByIamUserIds?.map((item: string) =>
@@ -54,20 +52,9 @@ export function AdminFilterForm() {
   };
 
   return (
-    <Form {...form}>
-      <form className="flex gap-2.5 items-end justify-end mb-5" onSubmit={form.handleSubmit(onSubmit)}>
-        <InputText
-          name="keyword"
-          size="md"
-          placeholder={t('adminAccount.form.search')}
-          className="max-w-[282px]"
-          label=""
-          control={form.control}
-          disabled={isFiltering}
-          suffixIcon={<SearchIcon size={22} />}
-          onSuffixIconClick={form.handleSubmit(onSubmit)}
-        />
-      </form>
-    </Form>
+    <BasicFilterForm 
+      form={form}
+      onSubmit={(data) => onSubmit(data)}
+    />
   );
 }

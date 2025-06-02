@@ -2,25 +2,25 @@ import axiosService from '@/plugins/axios';
 import { ApiService } from '@/plugins/axios/api';
 import { IBodyResponse, IGetListResponse } from '@/utils/interfaces';
 import {
-  IQuestion,
-  IQuestionGetListQuery,
+  IVocabulary,
+  IVocabularyGetListQuery,
 } from '../interfaces';
 import { ISyncSettingBody, ISyncSettingDetail } from '@/features/common/interface';
 
-class QuestionService extends ApiService {
-  getQuestionSetting(): Promise<IBodyResponse<ISyncSettingDetail>> {
+class VocabularyService extends ApiService {
+  getVocabularySetting(): Promise<IBodyResponse<ISyncSettingDetail>> {
     return this.client.get(`${this.baseUrl}/setting`)
   }
 
-  updateQuestionSetting(
+  updateVocabularySetting(
     body: ISyncSettingBody,
   ): Promise<IBodyResponse<ISyncSettingDetail>> {
     return this.client.post(`${this.baseUrl}/setting`, body)
   }
 
-  getQuestionList(
-    query: IQuestionGetListQuery,
-  ): Promise<IBodyResponse<IGetListResponse<IQuestion>>> {
+  getVocabularyList(
+    query: IVocabularyGetListQuery,
+  ): Promise<IBodyResponse<IGetListResponse<IVocabulary>>> {
     return this._getList(query);
   }
 
@@ -29,7 +29,7 @@ class QuestionService extends ApiService {
   }
 }
 
-export const questionService = new QuestionService(
-  { baseUrl: 'admin/questions' },
+export const vocabularyService = new VocabularyService(
+  { baseUrl: 'admin/vocabularies' },
   axiosService,
 );

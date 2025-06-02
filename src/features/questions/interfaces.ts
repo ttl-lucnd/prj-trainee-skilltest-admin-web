@@ -6,37 +6,22 @@ export interface IQuestion {
   createdBy: number;
   updatedAt: string;
   updatedBy: number;
-  question: string,
-  answer: boolean,
-  description: string,
-  image: string,
-  subjectId: string,
-  arrange: number,
-  original: boolean,
+  question: string;
+  answer: boolean;
+  description: string;
+  image: string;
+  subjectId: string;
+  arrange: number;
+  original: boolean;
   subject: {
-    name: string,
-    id: string,
+    name: string;
+    id: string;
   },
-}
-
-export interface IQuestionSetting {
-  id: string;
-  createdAt: string;
-  createdBy: number;
-  updatedAt: string;
-  updatedBy: number;
-  sheetLink: string,
-  lastReadRow: number,
 }
 
 export interface IQuestionGetListQuery extends ICommonListQuery {
   subjectId?: string;
   arrange?: number;
-}
-
-export interface IUpdateQuestionSettingBody {
-  sheetLink: string;
-  lastReadRow: number;
 }
 
 export enum QuestionOrderBy {

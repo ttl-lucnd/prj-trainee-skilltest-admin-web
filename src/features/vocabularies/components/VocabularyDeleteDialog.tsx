@@ -1,37 +1,37 @@
 import { BaseDialog } from '@/components/BaseDialog';
 import { Button } from '@/components/ui/button';
-import { useQuestionStore } from '../stores/useQuestionStore';
+import { useVocabularyStore } from '../stores/useVocabularyStore';
 import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
-import { questionService } from '../services/question.service';
+import { vocabularyService } from '../services/vocabulary.service';
 import { toast } from '@/hooks/use-toast';
 import { IBodyResponse } from '@/utils/interfaces';
 import { useState } from 'react';
-export function QuestionDeleteDialog() {
+export function VocabularyDeleteDialog() {
   const t = useTranslations();
   const { 
-    selectedQuestion, 
-    isOpenDeleteQuestionDialog, 
-    setOpenDeleteQuestionDialog, 
-    getQuestionList,
-  } = useQuestionStore(
+    selectedVocabulary, 
+    isOpenDeleteVocabularyDialog, 
+    setOpenDeleteVocabularyDialog, 
+    getVocabularyList,
+  } = useVocabularyStore(
     useShallow((state) => ({
-      selectedQuestion: state.selectedQuestion,
-      isOpenDeleteQuestionDialog: state.isOpenDeleteQuestionDialog,
-      setOpenDeleteQuestionDialog: state.setOpenDeleteQuestionDialog,
-      getQuestionList: state.getQuestionList,
+      selectedVocabulary: state.selectedVocabulary,
+      isOpenDeleteVocabularyDialog: state.isOpenDeleteVocabularyDialog,
+      setOpenDeleteVocabularyDialog: state.setOpenDeleteVocabularyDialog,
+      getVocabularyList: state.getVocabularyList,
     })),
   );
 
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDeleteQuestion = async () => {
-    setOpenDeleteQuestionDialog(false);
+  const handleDeleteVocabulary = async () => {
+    setOpenDeleteVocabularyDialog(false);
     if(isDeleting) return;
     setIsDeleting(true);
 
     try {
-      const response: IBodyResponse<any> = await questionService._delete(selectedQuestion?.id ?? '');
+      const response: IBodyResponse<any> = await vocabularyService._delete(selectedVocabulary?.id ?? '');
 
       if(response.success) {
                 
@@ -39,7 +39,7 @@ export function QuestionDeleteDialog() {
           title: t('common.messages.delete_success'),
           variant: 'success',
         })
-        await getQuestionList();
+        await getVocabularyList();
       }else {
         toast({
           title: t('common.messages.delete_failed'),
@@ -58,18 +58,21 @@ export function QuestionDeleteDialog() {
 
   return (
     <BaseDialog
-      open={isOpenDeleteQuestionDialog}
-      onOpenChange={setOpenDeleteQuestionDialog}
+      open={isOpenDeleteVocabularyDialog}
+      onOpenChange={setOpenDeleteVocabularyDialog}
       showCloseButton={false}
       className="max-w-[400px]"
     >
       <div className="flex flex-col items-center justify-end gap-2.5 ">
-        <h5 className="font-bold">{t('questions.delete.title')}</h5>
+        <h5 className="font-bold">{t('vocabularies.delete.title')}</h5>
         <div className="w-full flex gap-2.5 justify-center mt-6">
-          <Button variant="outline" className="w-[120px] h-[40px]" onClick={() => setOpenDeleteQuestionDialog(false)}>
+          <Button variant="outline" className="w-[120px] h-[40px]" onClick={() => setOpenDeleteVocabularyDialog(false)}>
             {t('common.buttons.cancel')}
           </Button>
-          <Button variant="destructive" className="w-[120px] h-[40px]" onClick={handleDeleteQuestion}>
+          <Button variant="destructive" className="w-[120px] h-[40px]" onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteVocabulary()}
+            }>
             {t('common.buttons.delete')}
           </Button>
         </div>

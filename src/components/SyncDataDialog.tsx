@@ -1,23 +1,21 @@
 import { BaseDialog } from '@/components/BaseDialog';
 import { Button } from '@/components/ui/button';
-import { useQuestionStore } from '../stores/useQuestionStore';
-import { useShallow } from 'zustand/react/shallow';
 import { useTranslations } from 'next-intl';
-import { questionService } from '../services/question.service';
 import { toast } from '@/hooks/use-toast';
 import { IBodyResponse } from '@/utils/interfaces';
 import { useState } from 'react';
-export function QuestionSyncDataDialog() {
+export function SyncDataDialog({
+  isOpenSyncDataDialog,
+  setOpenSyncDataDialog,
+  getSetting,
+  handleSync,
+} : {
+  readonly isOpenSyncDataDialog: boolean,
+  readonly setOpenSyncDataDialog: (open: boolean) => void,
+  readonly getSetting: () => Promise<void>,
+  readonly handleSync: () => Promise<IBodyResponse<any>>,
+}) {
   const t = useTranslations();
-  const { 
-    isOpenSyncDataDialog, 
-    setOpenSyncDataDialog, 
-  } = useQuestionStore(
-    useShallow((state) => ({
-      isOpenSyncDataDialog: state.isOpenSyncDataDialog,
-      setOpenSyncDataDialog: state.setOpenSyncDataDialog,
-    })),
-  );
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,10 +24,12 @@ export function QuestionSyncDataDialog() {
     setIsLoading(true);
     
     try {
-      const response: IBodyResponse<any> = await questionService.syncData();
+      setOpenSyncDataDialog(false);
+      const response  = await handleSync();
+      await getSetting();
 
       if(response.success) {
-                setOpenSyncDataDialog(false);
+        
         toast({
           title: t('common.messages.data_sync'),
           variant: 'success',
@@ -63,7 +63,7 @@ export function QuestionSyncDataDialog() {
           <Button variant="outline" className="w-[120px] h-[40px]" onClick={() => setOpenSyncDataDialog(false)}>
             {t('common.buttons.cancel')}
           </Button>
-          <Button className="w-[120px] h-[40px]" onClick={handleSyncData}>
+          <Button className="w-[120px] h-[40px]" onClick={() => handleSyncData()}>
             {t('common.buttons.ok')}
           </Button>
         </div>

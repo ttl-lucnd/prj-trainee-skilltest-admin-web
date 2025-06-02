@@ -1,10 +1,7 @@
 'use client';
 
-import { InputText } from '@/components/form/input';
-import { Form } from '@/components/ui/form';
 import { DEFAULT_FIRST_PAGE } from '@/utils/constants';
 import { useUpdateUrlWithQuery } from '@/utils/url';
-import { SearchIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,16 +9,21 @@ import { useShallow } from 'zustand/react/shallow';
 import { questionFilterYupResolver } from '../schema';
 import { useQuestionStore } from '../stores/useQuestionStore';
 import { MultiSelectField } from '@/components/form/multi-select';
+import dayjs from 'dayjs';
+import { cn } from '@/lib/utils';
+import { BasicFilterForm } from '@/components/BasicFilterForm';
 export function QuestionFilterForm() {
   const t = useTranslations();
   const [isFiltering, setIsFiltering] = useState(false);
 
-  const { subjectDropdownList, arrangeDropdownList, setQuestionGetListQuery, getQuestionList } = useQuestionStore(
+  const { subjectDropdownList, arrangeDropdownList, questionSetting, setQuestionGetListQuery, getQuestionList, getQuestionSetting } = useQuestionStore(
     useShallow((s) => ({
       subjectDropdownList: s.subjectDropdownList,
       arrangeDropdownList: s.arrangeDropdownList,
+      questionSetting: s.questionSetting,
       setQuestionGetListQuery: s.setQuestionGetListQuery,
       getQuestionList: s.getQuestionList,
+      getQuestionSetting: s.getQuestionSetting
     })),
   );
   const form = useForm({
@@ -37,11 +39,14 @@ export function QuestionFilterForm() {
     const query = getQuestionQueryFromUrl();
     form.reset(query);
     setQuestionGetListQuery(query, { reloadList: false });
+    getQuestionSetting();
   }, []);
 
   const onSubmit = async (data: any) => {
+    if(isFiltering) return;
+    setIsFiltering(true);
     try {
-      setIsFiltering(true);
+      
       const query = {
         ...data,
         page: DEFAULT_FIRST_PAGE,
@@ -56,41 +61,51 @@ export function QuestionFilterForm() {
     }
   };
 
+  const syncDataInfo = () => {
+    return <div className='flex flex-col min-w-[200px] mb-2'>
+      {questionSetting?.lastSyncDataAt &&
+      <div className='flex flex-wrap'>
+        {t('common.sync_data_at')}
+        <p className='text-[#FF0053]'>{dayjs(questionSetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))}</p>
+      </div>
+      }
+      {questionSetting?.status && <p className='text-[#FF0053]'>{t(`common.sync_data_status.${questionSetting.status}`)}</p>}
+    </div>
+  }
+
   return (
-    <Form {...form}>
-      <form className="flex gap-2.5 items-start justify-end mb-5" onSubmit={form.handleSubmit(onSubmit)}>
-        <MultiSelectField
-          className="max-w-[200px] h-[40px]"
-          options={subjectDropdownList.map(item => ({
-            label: item.name,
-            value: item.id,
-          }))}
-          name='subjectIds'
-          placeholder={t('questions.filter.subject')}
-          control={form.control}
-        />
-        <MultiSelectField
-          className="max-w-[200px] h-[40px]"
-          options={arrangeDropdownList.map(item => ({
-            label: `${item}`,
-            value: `${item}`,
-          }))}
-          name='arranges'
-          placeholder={t('questions.filter.arrange')}
-          control={form.control}
-        />
-        <InputText
-          name="keyword"
-          size="md"
-          placeholder={t('common.searchPlaceholder')}
-          className="max-w-[282px]"
-          label=""
-          control={form.control}
-          disabled={isFiltering}
-          suffixIcon={<SearchIcon size={22} />}
-          onSuffixIconClick={form.handleSubmit(onSubmit)}
-        />
-      </form>
-    </Form>
+    <div className={cn(
+      'flex flex-wrap w-full items-start gap-2.5 mb-5',
+      questionSetting? 'justify-between' : 'justify-end'
+    )}>
+    {questionSetting && syncDataInfo()}
+    <BasicFilterForm
+      form={form}
+      onSubmit={(data) => onSubmit(data)}
+      searchBtn={true}
+      isFiltering={isFiltering}
+    >
+      <MultiSelectField
+        className="w-[160px] h-[40px]"
+        options={subjectDropdownList.map(item => ({
+          label: item.name,
+          value: item.id,
+        }))}
+        name='subjectIds'
+        placeholder={t('questions.filter.subject')}
+        control={form.control}
+      />
+      <MultiSelectField
+        className="w-[120px] h-[40px]"
+        options={arrangeDropdownList.map(item => ({
+          label: `${item}`,
+          value: `${item}`,
+        }))}
+        name='arranges'
+        placeholder={t('questions.filter.arrange')}
+        control={form.control}
+      />
+    </BasicFilterForm>
+    </div>
   );
 }
