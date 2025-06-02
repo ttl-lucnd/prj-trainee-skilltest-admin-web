@@ -30,8 +30,14 @@ function DescriptionCellFactory(lang: TranslateLanguages) {
   return Cell;
 }
 
-function MeaningSortableHeader({ column, lang, t, handleSort, isSorting, keyName }: any) {
-  return (
+function createMeaningSortHeader (
+  lang: TranslateLanguages,
+  keyName: string,
+  t: ReturnType<typeof useTranslations>,
+  handleSort: (orderBy: string, orderDirection: OrderDirection | null) => Promise<void>,
+  isSorting: boolean
+) {
+  const MeaningSortHeader = ({ column }: { column: any }) => (
     <SortableHeader
       column={column}
       title={t(`vocabularies.table.meaning_${lang}`)}
@@ -41,7 +47,10 @@ function MeaningSortableHeader({ column, lang, t, handleSort, isSorting, keyName
       disabled={isSorting}
     />
   );
-}
+  MeaningSortHeader.displayName = `MeaningSortHeader_${lang}`;
+  return MeaningSortHeader;
+};
+
 
 export function VocabularyTable() {
   const t = useTranslations();
@@ -190,16 +199,7 @@ export function VocabularyTable() {
   const translateCol = useMemo((): ColumnDef<IVocabulary>[] =>{
     const headers = Object.entries(TranslateLanguages).flatMap(([key, lang]) => [
         {
-        header: (props: { column: any }) => (
-          <MeaningSortableHeader
-            column={props.column}
-            lang={lang}
-            t={t}
-            handleSort={handleSort}
-            isSorting={isSorting}
-            keyName={`MEANING_${key}`}
-          />
-        ),
+        header: createMeaningSortHeader(lang, `MEANING_${key}`, t, handleSort, isSorting),
         accessorKey: `meaning_${lang}`,
         enableSorting: true,
         cell: meaningCell(lang),
@@ -216,7 +216,7 @@ export function VocabularyTable() {
     );
 
     return headers;
-  },[handleSort, descriptionCell, meaningCell, MeaningSortableHeader])
+  },[handleSort, descriptionCell, meaningCell, createMeaningSortHeader])
 
   const vocabularySortHeader = (props: { column: any }) => (
           <SortableHeader column={props.column} title={t('vocabularies.table.vocabulary') } 
