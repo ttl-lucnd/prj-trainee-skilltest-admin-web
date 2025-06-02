@@ -23,12 +23,12 @@ export function SubjectFilterForm() {
   const form = useForm();
 
   const {
-    getQueryFromUrl: getSubjectAccountQueryFromUrl,
-    updateUrlWithQuery: updateSubjectAccountUrlWithQuery,
+    getQueryFromUrl: getSubjectQueryFromUrl,
+    updateUrlWithQuery: updateSubjectUrlWithQuery,
   } = useUpdateUrlWithQuery();
 
   useEffect(() => {
-    const query = getSubjectAccountQueryFromUrl();
+    const query = getSubjectQueryFromUrl();
     form.reset(query);
     setSubjectGetListQuery(query, { reloadList: false });
   }, []);
@@ -44,7 +44,7 @@ export function SubjectFilterForm() {
         page: DEFAULT_FIRST_PAGE,
       };
       setSubjectGetListQuery(query, { reloadList: false });
-      updateSubjectAccountUrlWithQuery(query);
+      updateSubjectUrlWithQuery(query);
       await getSubjectList();
     } catch {
       setIsFiltering(false);
@@ -59,7 +59,7 @@ export function SubjectFilterForm() {
         <InputText
           name="keyword"
           size="md"
-          placeholder={t('adminAccount.form.search')}
+          placeholder={t('subjects.form.search')}
           className="max-w-[282px]"
           label=""
           control={form.control}
