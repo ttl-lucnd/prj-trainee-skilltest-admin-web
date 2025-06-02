@@ -30,6 +30,19 @@ function DescriptionCellFactory(lang: TranslateLanguages) {
   return Cell;
 }
 
+function MeaningSortableHeader({ column, lang, t, handleSort, isSorting, keyName }: any) {
+  return (
+    <SortableHeader
+      column={column}
+      title={t(`vocabularies.table.meaning_${lang}`)}
+      onSortChange={(orderDirection: any) =>
+        handleSort(VocabularyOrderBy[keyName as keyof typeof VocabularyOrderBy], orderDirection)
+      }
+      disabled={isSorting}
+    />
+  );
+}
+
 export function VocabularyTable() {
   const t = useTranslations();
   const {
@@ -175,20 +188,18 @@ export function VocabularyTable() {
   );
   
   const translateCol = useMemo((): ColumnDef<IVocabulary>[] =>{
-    const headers = Object.entries(TranslateLanguages).flatMap(([key, lang]) => {
-      function sortHeader(props: { column: any }) {
-        return  <SortableHeader
-            column={props.column}
-            title={t(`vocabularies.table.meaning_${lang}`)}
-            onSortChange={(orderDirection: any) =>
-              handleSort(VocabularyOrderBy[`MEANING_${key}` as keyof typeof VocabularyOrderBy], orderDirection)
-            }
-            disabled={isSorting}
-          />
-      }
-      return [
+    const headers = Object.entries(TranslateLanguages).flatMap(([key, lang]) => [
         {
-        header: sortHeader,
+        header: (props: { column: any }) => (
+          <MeaningSortableHeader
+            column={props.column}
+            lang={lang}
+            t={t}
+            handleSort={handleSort}
+            isSorting={isSorting}
+            keyName={`MEANING_${key}`}
+          />
+        ),
         accessorKey: `meaning_${lang}`,
         enableSorting: true,
         cell: meaningCell(lang),
@@ -202,10 +213,10 @@ export function VocabularyTable() {
         size: 200,
       },
       ]
-    });
+    );
 
     return headers;
-  },[handleSort, descriptionCell, meaningCell])
+  },[handleSort, descriptionCell, meaningCell, MeaningSortableHeader])
 
   const vocabularySortHeader = (props: { column: any }) => (
           <SortableHeader column={props.column} title={t('vocabularies.table.vocabulary') } 

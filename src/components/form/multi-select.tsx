@@ -48,7 +48,9 @@ export function MultiSelectField({
       control={control}
       name={name}
       render={({ field, fieldState: { error: fieldError } }) => (
-        <FormItem className={cn(fieldError && 'text-destructive', className)}>
+        <FormItem className={cn(fieldError && 'text-destructive',
+          className
+        )}>
           <FormFieldLayout
             label={label}
             required={required}

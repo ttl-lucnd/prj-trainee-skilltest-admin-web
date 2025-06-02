@@ -119,7 +119,7 @@ export function InputText({
                 onBlur={() => {
                   handleBlur();
                   field.onBlur();
-                  const trimmed = (field.value || '').trim();
+                  const trimmed = field.value?.trim() ?? '';
                   if (trimmed !== field.value && isTrim) {
                     field.onChange(trimmed);
                   }
@@ -130,7 +130,7 @@ export function InputText({
                   handleChange(e);
                 }}
                 className={cn(
-                  'outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0 shadow-none',
+                  'outline-none focus:ring-1 focus:ring-primary-2 focus:border-primary-2 shadow-none',
                   size === 'sm' && 'h-8 py-1',
                   fieldError && 'border-destructive focus-visible:ring-destructive',
                   customClassName,

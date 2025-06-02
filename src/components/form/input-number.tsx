@@ -194,7 +194,7 @@ export function InputNumber({
                     handleChange(e);
                   }}
                   className={cn(
-                    'noSpinnerClass pr-12 outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus:ring-offset-0 focus-visible:ring-offset-0 shadow-none',
+                    'noSpinnerClass pr-12 outline-none focus:ring-1 focus:ring-primary-2 focus:border-primary-2 shadow-none',
                     fieldError && 'border-destructive focus-visible:ring-destructive',
                     size === 'sm' && 'h-8 py-1',
                     inputClassName,

@@ -93,7 +93,7 @@ export function UploadField({
             src={imageUrl}
             alt=""
             fill
-            className="object-cover object-center"
+            className="object-cover object-center rounded-lg"
           />
           <div className="absolute inset-0 border border-primary rounded-lg pointer-events-none" />
         </div>
@@ -130,10 +130,10 @@ export function UploadField({
                   }
                 }}
                 className={cn(
-                  'w-full text-center bg-white aspect-square border rounded-lg relative group',
+                  'w-full text-center bg-white aspect-square border relative group',
                   fieldError && 'border-destructive',
                   disabled && 'cursor-not-allowed opacity-50',
-                  !imageUrl && 'border-dashed border-primary'
+                  !imageUrl && 'border-dashed border-primary rounded-lg'
                 )}
               >
                 <input

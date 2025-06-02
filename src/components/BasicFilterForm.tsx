@@ -13,11 +13,11 @@ export function BasicFilterForm({
   children,
   isFiltering = false,
 } : {
-  form: UseFormReturn,
-  onSubmit: (data: any) => Promise<void>,
-  searchBtn?: boolean,
-  isFiltering?: boolean,
-  children?: React.ReactNode,
+  readonly form: UseFormReturn,
+  readonly onSubmit: (data: any) => Promise<void>,
+  readonly searchBtn?: boolean,
+  readonly isFiltering?: boolean,
+  readonly children?: React.ReactNode,
 }) {
   const t = useTranslations();
 

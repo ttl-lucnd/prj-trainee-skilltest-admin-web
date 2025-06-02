@@ -17,10 +17,10 @@ export function SyncSettingForm({
   handleUpdate,
   getSetting,
 } : {
-  isOpenSettingFormDialog: boolean,
-  setOpenSettingFormDialog: (open: boolean) => void,
-  handleUpdate: (data: ISyncSettingBody) =>Promise<IBodyResponse<any>>,
-  getSetting: () => Promise<IBodyResponse<ISyncSettingDetail>>,
+  readonly isOpenSettingFormDialog: boolean,
+  readonly setOpenSettingFormDialog: (open: boolean) => void,
+  readonly handleUpdate: (data: ISyncSettingBody) =>Promise<IBodyResponse<any>>,
+  readonly getSetting: () => Promise<IBodyResponse<ISyncSettingDetail>>,
 }) {
   const t = useTranslations();
   

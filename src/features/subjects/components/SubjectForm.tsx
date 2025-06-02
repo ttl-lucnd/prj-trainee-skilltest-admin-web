@@ -119,7 +119,7 @@ export function SubjectForm() {
     <BaseDialog
       open={isOpenSubjectFormDialog}
       onOpenChange={setOpenSubjectFormDialog}
-      showCloseButton={true}
+      showCloseButton={false}
       title={t(`subjects.title.${formType}`)} 
       className="max-w-[500px]"
       headerClassName='block'

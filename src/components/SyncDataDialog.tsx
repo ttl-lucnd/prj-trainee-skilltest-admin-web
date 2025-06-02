@@ -10,10 +10,10 @@ export function SyncDataDialog({
   getSetting,
   handleSync,
 } : {
-  isOpenSyncDataDialog: boolean,
-  setOpenSyncDataDialog: (open: boolean) => void,
-  getSetting: () => Promise<void>,
-  handleSync: () => Promise<IBodyResponse<any>>,
+  readonly isOpenSyncDataDialog: boolean,
+  readonly setOpenSyncDataDialog: (open: boolean) => void,
+  readonly getSetting: () => Promise<void>,
+  readonly handleSync: () => Promise<IBodyResponse<any>>,
 }) {
   const t = useTranslations();
 
