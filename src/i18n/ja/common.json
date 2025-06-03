@@ -101,7 +101,8 @@
     "deny": "拒否"
   },
   "file": {
-    "max_size": "画像ファイルをアップロード（最大{maxSize}MB）",
+    "max_size": "画像ファイルが大きすぎます（最大{maxSize}MB）",
+    "invalid_file_type": "無効なファイル形式です。画像ファイルを選択してください。",
     "upload": "アップロードボタン"
   },
   "update_content": "更新内容",

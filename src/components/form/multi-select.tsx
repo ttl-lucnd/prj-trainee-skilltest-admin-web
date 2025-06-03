@@ -58,6 +58,10 @@ export function MultiSelectField({
             hasError={!!fieldError}
             description={description}
             errorMessage={fieldError?.message}
+            className={cn(
+              fieldError ? 'border-destructive'
+              : 'outline-none focus-within:ring-2 focus-within:ring-primary-2 focus-within:border-primary-2 shadow-none',
+            )}
           >
             <MultiSelect
               {...field}
@@ -69,7 +73,6 @@ export function MultiSelectField({
               className={cn(
                 'w-full',
                 size === 'sm' && 'min-h-8 p-0.5',
-                fieldError && 'border-destructive',
                 label && 'mt-2',
               )}
               onValueChange={(values) => {

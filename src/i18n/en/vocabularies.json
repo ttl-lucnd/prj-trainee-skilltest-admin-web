@@ -11,6 +11,7 @@
   "table": {
     "vocabulary": "単語",
     "pronunciation": "読み方",
+    "description": "説明文",
     "subject": "学科",
     "image": "図",
     "action": "削除",

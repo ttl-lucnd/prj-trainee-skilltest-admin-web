@@ -23,6 +23,7 @@ interface InputFormProps {
   defaultValue?: string;
   disabled?: boolean;
   onFocus?: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
   onChange?: (value: string) => void;
   required?: boolean;
@@ -54,6 +55,7 @@ export function InputText({
   onFocus,
   onBlur,
   onChange,
+  onKeyDown,
   allowClear = false,
   required = false,
   control,
@@ -130,13 +132,14 @@ export function InputText({
                   handleChange(e);
                 }}
                 className={cn(
-                  'outline-none focus:ring-1 focus:ring-primary-2 focus:border-primary-2 shadow-none',
                   size === 'sm' && 'h-8 py-1',
-                  fieldError && 'border-destructive focus-visible:ring-destructive',
+                  fieldError ? 'border-destructive focus-visible:ring-destructive'
+                  : 'outline-none focus:ring-1 focus:ring-primary-2 focus:border-primary-2 shadow-none',
                   customClassName,
                 )}
                 suffixIcon={suffixIcon}
                 onSuffixIconClick={onSuffixIconClick}
+                onKeyDown={onKeyDown}
               />
             </FormControl>
             <FormDescription>{description}</FormDescription>

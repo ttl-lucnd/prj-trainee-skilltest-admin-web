@@ -63,7 +63,7 @@ export function Pagination({
               </div>
             }
           </div>
-          {totalItems > itemsPerPage && (
+          
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
@@ -143,7 +143,7 @@ export function Pagination({
                 />
               </Button>
             </div>
-          )}
+          
         </div>
         {children}
       </div>

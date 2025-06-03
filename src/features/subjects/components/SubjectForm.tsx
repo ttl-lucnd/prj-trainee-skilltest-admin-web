@@ -13,6 +13,8 @@ import { SubjectFormType, ISubject, ISubjectFormBody } from '../interfaces';
 import { toast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { UploadField } from '@/components/form/upload';
+import { DEFAULT_MAX_SIZE } from '@/utils';
+import { InputNumber } from '@/components/form/input-number';
 export function SubjectForm() {
   const t = useTranslations();
   const { selectedSubject, isOpenSubjectFormDialog, setOpenSubjectFormDialog, getSubjectList } = useSubjectStore(
@@ -134,10 +136,9 @@ export function SubjectForm() {
             placeholder={t('subjects.form.subject')} 
             layout='vertical'
             className='w-full'
-            required={true}
             disabled={loading}
           />
-          <InputText 
+          <InputNumber 
             key={'monthlyFee'}
             name="monthlyFee" 
             control={form.control} 
@@ -145,7 +146,6 @@ export function SubjectForm() {
             placeholder={t('subjects.form.monthlyFee')} 
             layout='vertical'
             className='w-full'
-            required={true}
             disabled={loading}
           />
           <UploadField
@@ -154,8 +154,7 @@ export function SubjectForm() {
             control={form.control} 
             label={t('subjects.form.logo')} 
             layout='vertical'
-            className='w-[82px]'
-            required={formType === SubjectFormType.CREATE}
+            className='w-full'
             onChange={(file) => {
               setLogoFile(file);
               form.setValue('logo', URL.createObjectURL(file), { shouldValidate: true, shouldDirty: true,  })
@@ -165,6 +164,10 @@ export function SubjectForm() {
               form.setValue('logo', '', { shouldValidate: true, shouldDirty: true,  })
             }}
             disabled={loading}
+            onValidationFail={(type) => {
+              const message = t(`common.file.${type}`, {maxSize: DEFAULT_MAX_SIZE});
+              form.setError('logo', { message });
+            }}
           />
           <UploadField
             key={'image'}
@@ -172,8 +175,7 @@ export function SubjectForm() {
             control={form.control} 
             label={t('subjects.form.image')} 
             layout='vertical'
-            className='w-[82px]'
-            required={formType === SubjectFormType.CREATE}
+            className='w-full'
             onChange={(file) => {
               setImageFile(file);
               form.setValue('image', URL.createObjectURL(file), { shouldValidate: true, shouldDirty: true,  })
@@ -183,6 +185,10 @@ export function SubjectForm() {
               form.setValue('image', '', { shouldValidate: true, shouldDirty: true,  })
             }}
             disabled={loading}
+            onValidationFail={(type) => {
+              const message = t(`common.file.${type}`, {maxSize: DEFAULT_MAX_SIZE});
+              form.setError('image', { message });
+            }}
           />
         </Form>
         {formType === SubjectFormType.UPDATE && 
@@ -201,7 +207,7 @@ export function SubjectForm() {
             type='submit'
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
-            disabled={!form.formState.isDirty || !form.formState.isValid || loading}
+            disabled={!form.formState.isDirty || !form.formState.isValid || loading || !(form.watch('name') || '').trim()}
           >
             {t(`common.buttons.${formType ===SubjectFormType.CREATE ? 'add' : 'save'}`)}
           </Button>
