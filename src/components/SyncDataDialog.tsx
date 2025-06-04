@@ -29,17 +29,20 @@ export function SyncDataDialog({
       await getSetting();
 
       if(response.success) {
-        
         toast({
           title: t('common.messages.data_sync'),
           variant: 'success',
         })
-      }else {
-        toast({
-          title: t('common.messages.error'),
-          variant:'destructive',
-        })
+        return;
       }
+      let errorKey = 'error';
+      if(response?.errors?.[0]?.errorKey?.includes('notFound')) {
+        errorKey = 'settingNotfound';
+      }
+      toast({
+        title: t(`common.messages.${errorKey}`),
+        variant:'destructive',
+      })
     }catch {
         toast({
           title: t('common.messages.error'),

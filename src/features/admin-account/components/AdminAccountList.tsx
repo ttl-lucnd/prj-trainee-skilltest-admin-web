@@ -38,7 +38,7 @@ export function AdminAccountList() {
       >
         <div className="flex items-center justify-end">
           <Button 
-          hidden={profile?.role !== AdminRole.SUPPER_ADMIN}
+          disabled={profile?.role !== AdminRole.SUPPER_ADMIN}
           size="lg" 
           onClick={() => {setOpenAdminFormDialog(true); setSelectedAdmin(null)}}
           >管理者を追加</Button>

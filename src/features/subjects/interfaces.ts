@@ -8,6 +8,8 @@ export interface ISubject {
   monthlyFee: number;
   logo: string;
   image: string;
+  haveQuestion?: boolean;
+  haveVocabulary?: boolean;
 }
 
 export interface ISubjectFormBody {

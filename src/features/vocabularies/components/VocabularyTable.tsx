@@ -138,6 +138,13 @@ export function VocabularyTable() {
     [],
   );
 
+  const originalDescriptionCell = useCallback(
+    ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
+      return <TruncatedText text={row.original.description.originalLanguage} />;
+    },
+    [],
+  );
+
   const meaningCell = (lang: TranslateLanguages) => MeaningCellFactory(lang);
   const descriptionCell = (lang: TranslateLanguages) => DescriptionCellFactory(lang);
 
@@ -259,6 +266,13 @@ export function VocabularyTable() {
         cell: pronunciationCell,
         size: 200,
       },
+      {
+        header: t('vocabularies.table.description'),
+        accessorKey: 'description',
+        enableSorting: true,
+        cell: originalDescriptionCell,
+        size: 200,
+      },
       ...translateCol,
       {
         header: t('vocabularies.table.subject'),
@@ -291,6 +305,7 @@ export function VocabularyTable() {
     pronunciationCell,
     vocabularySortHeader,
     pronunciationSortHeader,
+    originalDescriptionCell,
   ]);
 
   return <DataTable 

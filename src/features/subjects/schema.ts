@@ -6,9 +6,9 @@ import { ISubjectFormBody } from './interfaces';
 
 const createSubjectSchema = yup.object({
   name: shortStringSchema.required().label('subject'),
-  monthlyFee: yup.number().min(0).max(MAX_INTEGER).required(),
-  logo: yup.string().required(),
-  image: yup.string().required(),
+  monthlyFee: yup.number().min(0).max(MAX_INTEGER, 'common.maxMonthlyFee').required(),
+  logo: yup.string().optional(),
+  image: yup.string().optional(),
 });
 
 export const createSubjectYupResolver = yupResolver<ISubjectFormBody>(createSubjectSchema);

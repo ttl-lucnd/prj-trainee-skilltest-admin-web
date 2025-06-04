@@ -21,5 +21,8 @@
     "title": {
     "create": "学科を追加",
     "update": "編集"
+  },
+  "error": {
+    "existed": "科目は既に存在します"
   }
 }

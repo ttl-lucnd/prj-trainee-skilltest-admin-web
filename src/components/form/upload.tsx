@@ -82,20 +82,20 @@ export function UploadField({
       if (inputRef.current) {
         inputRef.current.value = '';
       }
+      return;
     }
     onChange?.(file);
   };
 
   const uploadFieldImage = useCallback(() => {
     return imageUrl 
-      ? <div className="w-full aspect-square relative">
+      ? <div className="w-full aspect-square relative pointer-events-none inset-0 outline-none">
           <Image
             src={imageUrl}
             alt=""
             fill
             className="object-cover object-center rounded-lg"
           />
-          <div className="absolute inset-0 border border-primary rounded-lg pointer-events-none" />
         </div>
       : <div className="flex flex-col items-center justify-center gap-2">
         <GalleryUpIcon size={20} />
@@ -117,6 +117,7 @@ export function UploadField({
             description={description}
           >
             <div className={cn(
+              "w-[82px]",
               "flex gap-2 overflow-hidden pt-0.5",
             )}>
               <button
@@ -130,10 +131,11 @@ export function UploadField({
                   }
                 }}
                 className={cn(
-                  'w-full text-center bg-white aspect-square border relative group',
-                  fieldError && 'border-destructive',
+                  'w-full text-center bg-white aspect-square relative group rounded-lg',
+                  fieldError ? 'border border-destructive'
+                  : 'focus:outline-none focus:border-solid focus:border-primary-2',
                   disabled && 'cursor-not-allowed opacity-50',
-                  !imageUrl && 'border-dashed border-primary rounded-lg'
+                  (!imageUrl && !fieldError) && 'border-2 border-dashed border-main-primary-2',
                 )}
               >
                 <input

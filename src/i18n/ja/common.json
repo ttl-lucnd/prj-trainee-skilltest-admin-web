@@ -78,7 +78,8 @@
     "notification_not_supported": "このブラウザは通知をサポートしていません。",
     "require_notification_permission": "通知を受け取るには、ブラウザの通知設定を許可に変更してください。",
     "export_request_success": "CSVのエクスポートをリクエストしました。処理が完了したら通知されます。",
-    "download_csv": "CSVファイルが準備できました。ダウンロードするには、こちらをクリックしてください。"
+    "download_csv": "CSVファイルが準備できました。ダウンロードするには、こちらをクリックしてください。",
+    "settingNotfound": "データを設定するには、『データを編集』ボタンをクリックしてください。"
   },
   "noData": "データがありません",
   "editInformation": "情報の編集",
@@ -101,7 +102,8 @@
     "deny": "拒否"
   },
   "file": {
-    "max_size": "画像ファイルをアップロード（最大{maxSize}MB）",
+    "max_size": "画像ファイルが大きすぎます（最大{maxSize}MB）",
+    "invalid_file_type": "無効なファイル形式です。画像ファイルを選択してください。",
     "upload": "アップロードボタン"
   },
   "update_content": "更新内容",
@@ -131,5 +133,6 @@
     "permission_denied": "ドライブへのアクセスが拒否された",
     "server_error": "サーバーエラーが発生した"
   },
+  "maxMonthlyFee": "月額料金が上限を超えています",
   "sync_data_alert": "データの同期を行うには、データ取得に仕様されるスプレッドシートへの閲覧権限以上、およびスプレッドシート内に添付されている画像が保存されているドライブへの閲覧権限以上が必要です。"
 }

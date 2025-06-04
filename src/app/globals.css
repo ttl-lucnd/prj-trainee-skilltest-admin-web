@@ -25,7 +25,7 @@ body {
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive:#E9034E;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0, 0%, 100%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
     --chart-1: 12 76% 61%;

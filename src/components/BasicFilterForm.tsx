@@ -35,6 +35,14 @@ export function BasicFilterForm({
           suffixIcon={<SearchIcon size={22} />}
           onSuffixIconClick={form.handleSubmit(onSubmit)}
           isTrim={true}
+          onKeyDown={(e) => {
+            if(e.key !== 'Enter') return;
+            const keyword = form.watch('keyword') ?? '';
+            const trimmed = keyword.trim();
+            if (trimmed !== keyword) {
+              form.setValue('keyword', trimmed)
+            }
+          }}
         />
         {searchBtn && <Button 
           size="lg" 
