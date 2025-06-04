@@ -36,7 +36,7 @@ export function SyncDataDialog({
         return;
       }
       let errorKey = 'error';
-      if(response?.errors && response.errors[0]?.errorKey.includes('notFound')) {
+      if(response?.errors?.[0]?.errorKey?.includes('notFound')) {
         errorKey = 'settingNotfound';
       }
       toast({
