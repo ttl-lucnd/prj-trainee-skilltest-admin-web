@@ -26,8 +26,6 @@ export function SyncSettingForm({
   
   const form = useForm({
     resolver: syncSettingYupResolver,
-    mode: 'onChange', 
-    reValidateMode: 'onChange',
   });
 
   const [loading, setLoading] = useState(false);
@@ -122,7 +120,7 @@ export function SyncSettingForm({
             type='submit'
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
-            disabled={!form.formState.isDirty || !form.formState.isValid || loading}
+            disabled={!form.formState.isDirty || loading}
           >
             {t('common.buttons.save')}
           </Button>

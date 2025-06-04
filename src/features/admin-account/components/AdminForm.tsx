@@ -28,8 +28,6 @@ export function AdminForm() {
 
   const form = useForm({
     resolver: updateAdminYupResolver,
-    mode: 'onChange', 
-    reValidateMode: 'onChange',
   });
 
   useEffect(() => {
@@ -131,7 +129,7 @@ export function AdminForm() {
             type='submit'
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
-            disabled={!form.formState.isDirty || !form.formState.isValid || loading}
+            disabled={!form.formState.isDirty || loading}
           >
             {t(`common.buttons.${formType ===AdminFormType.CREATE ? 'add' : 'save'}`)}
           </Button>

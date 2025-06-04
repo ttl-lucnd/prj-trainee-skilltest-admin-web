@@ -28,6 +28,7 @@ export function SubjectTable() {
     setOpenImageDetail,
     setSelectedImage,
     getProfile,
+    setOpenSubjectMessageDialog,
   } = useSubjectStore(
     useShallow((state) => ({
       profile: state.profile,
@@ -42,6 +43,7 @@ export function SubjectTable() {
       setOpenImageDetail: state.setOpenImageDetail,
       setSelectedImage: state.setSelectedImage,
       getProfile:state.getProfile,
+      setOpenSubjectMessageDialog: state.setOpenSubjectMessageDialog,
     })),
   );
 
@@ -121,31 +123,37 @@ export function SubjectTable() {
 
   const SubjectActions = useCallback(
     ({ row }: Readonly<CellContext<ISubject, unknown>>) => {
+      const isDisable = profile?.role !== AdminRole.SUPPER_ADMIN;
       return (
         <div className="flex gap-4">
-          <span
-            onPointerDown={() => {
+          <button
+            onClick={() => {
               setOpenSubjectFormDialog(true);
               setSelectedSubject(row.original);
             }}
             className="cursor-pointer"
+            disabled={isDisable}
           >
-            <PencilIcon size={22} />
-          </span>
+            <PencilIcon size={22} stroke={isDisable ? '#CECECE' : 'currentColor'}/>
+          </button>
           <button
-            hidden={profile?.role !== AdminRole.SUPPER_ADMIN}
             onClick={() => {
-              setOpenDeleteSubjectDialog(true);
               setSelectedSubject(row.original);
+              if(row.original?.haveQuestion || row.original?.haveVocabulary) {
+              setOpenSubjectMessageDialog(true);
+              } else {
+              setOpenDeleteSubjectDialog(true);
+              }
             }}
             className="cursor-pointer"
+            disabled={isDisable}
           >
-            <TrashIcon size={22} />
+            <TrashIcon size={22} stroke={isDisable ? '#CECECE' : 'currentColor'}/>
           </button>
         </div>
       );
     },
-    [profile, setOpenSubjectFormDialog, setOpenDeleteSubjectDialog, setSelectedSubject],
+    [profile, setOpenSubjectFormDialog, setOpenDeleteSubjectDialog, setSelectedSubject, setOpenSubjectMessageDialog],
   );
 
   const columns: ColumnDef<ISubject>[] = useMemo(() => {
@@ -159,7 +167,7 @@ export function SubjectTable() {
             page: subjectGetListQuery.page ?? DEFAULT_FIRST_PAGE,
             limit: subjectGetListQuery.limit,
           }),
-        size: 30,
+        size: 50,
       },
       {
         header: t('subjects.table.subject'),
@@ -185,7 +193,7 @@ export function SubjectTable() {
       },{
         header: t('subjects.table.action'),
         id: 'actions',
-        size: 60,
+        size: 80,
         cell: SubjectActions,
       }
     ]);

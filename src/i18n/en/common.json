@@ -75,7 +75,8 @@
     "notification_not_supported": "This browser does not support notifications.",
     "require_notification_permission": "Please allow notifications to receive updates.",
     "export_request_success": "CSV export request sent. You will be notified when it is ready.",
-    "download_csv": "Your CSV file is ready. To download, click here"
+    "download_csv": "Your CSV file is ready. To download, click here",
+    "settingNotfound": "Please click the \"データを編集\" button to set data"
   },
   "file": {
     "max_size": "Max size: {maxSize}MB"
@@ -110,5 +111,6 @@
     "permission_denied": "ドライブへのアクセスが拒否された",
     "server_error": "サーバーエラーが発生した"
   },
+  "maxMonthlyFee": "月額料金が上限を超えています",
   "sync_data_alert": "データの同期を行うには、データ取得に仕様されるスプレッドシートへの閲覧権限以上、およびスプレッドシート内に添付されている画像が保存されているドライブへの閲覧権限以上が必要です。"
 }

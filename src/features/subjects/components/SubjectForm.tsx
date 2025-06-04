@@ -33,8 +33,6 @@ export function SubjectForm() {
 
   const form = useForm<ISubjectFormBody>({
     resolver: createSubjectYupResolver,
-    mode: 'onChange', 
-    reValidateMode: 'onChange',
   });
 
   useEffect(() => {
@@ -90,13 +88,20 @@ export function SubjectForm() {
           title: t(`common.messages.${formType}_success`),
           variant: 'success',
         })
-        getSubjectList()
-      }else {
-        toast({
-          title: t(`common.messages.${formType}_failed`),
-          variant:'destructive',
-        })
+        getSubjectList();
+        return;
       }
+      if(response?.errors && response.errors[0]?.errorKey === 'subject.error.subject.existed') {
+        form.setError('name', {
+          type: 'validate',
+          message: t('subjects.error.existed'),
+        })
+        return;
+      }
+      toast({
+        title: t(`common.messages.${formType}_failed`),
+        variant:'destructive',
+      })
     }catch {
       setOpenSubjectFormDialog(false);
       toast({
@@ -207,7 +212,7 @@ export function SubjectForm() {
             type='submit'
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
-            disabled={!form.formState.isDirty || !form.formState.isValid || loading || !(form.watch('name') || '').trim()}
+            disabled={!form.formState.isDirty || loading}
           >
             {t(`common.buttons.${formType ===SubjectFormType.CREATE ? 'add' : 'save'}`)}
           </Button>

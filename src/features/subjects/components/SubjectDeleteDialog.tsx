@@ -9,13 +9,12 @@ import { IBodyResponse } from '@/utils/interfaces';
 import { toast } from '@/hooks/use-toast';
 export function SubjectDeleteDialog() {
   const t = useTranslations();
-  const { selectedSubject, isOpenDeleteSubjectDialog, setOpenDeleteSubjectDialog, getSubjectList, setOpenSubjectMessageDialog } = useSubjectStore(
+  const { selectedSubject, isOpenDeleteSubjectDialog, setOpenDeleteSubjectDialog, getSubjectList } = useSubjectStore(
     useShallow((state) => ({
       selectedSubject: state.selectedSubject,
       isOpenDeleteSubjectDialog: state.isOpenDeleteSubjectDialog,
       setOpenDeleteSubjectDialog: state.setOpenDeleteSubjectDialog,
       getSubjectList: state.getSubjectList,
-      setOpenSubjectMessageDialog: state.setOpenSubjectMessageDialog,
     })),
   );
 
@@ -35,13 +34,6 @@ export function SubjectDeleteDialog() {
         })
         await getSubjectList();
       }else {
-        
-        const isQuestionExist = response.errors?.findIndex(item => item.errorKey.includes('questionExisted')) ?? -1;
-        const isVocabExist = response.errors?.findIndex(item => item.errorKey.includes('vocabularyExisted')) ?? -1;
-        if(isQuestionExist >= 0 || isVocabExist >=0 ) {
-          setOpenSubjectMessageDialog(true);
-        }
-
         toast({
           title: t('common.messages.delete_failed'),
           variant:'destructive',

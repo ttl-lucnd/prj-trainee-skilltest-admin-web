@@ -6,7 +6,7 @@ import { ISubjectFormBody } from './interfaces';
 
 const createSubjectSchema = yup.object({
   name: shortStringSchema.required().label('subject'),
-  monthlyFee: yup.number().min(0).max(MAX_INTEGER).required(),
+  monthlyFee: yup.number().min(0).max(MAX_INTEGER, 'common.maxMonthlyFee').required(),
   logo: yup.string().optional(),
   image: yup.string().optional(),
 });

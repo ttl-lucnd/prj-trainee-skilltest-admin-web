@@ -38,7 +38,7 @@ export function SubjectList() {
       >
         <div className="flex items-center justify-end">
           <Button 
-          hidden={profile?.role !== AdminRole.SUPPER_ADMIN}
+          disabled={profile?.role !== AdminRole.SUPPER_ADMIN}
           size="lg" 
           onClick={() => {setOpenSubjectFormDialog(true); setSelectedSubject(null)}}
           >学科を追加</Button>

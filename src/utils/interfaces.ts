@@ -35,6 +35,8 @@ export interface IGetListResponse<T> {
 export interface IIconProps {
   size?: number;
   className?: string;
+  fill?: string;
+  stroke?: string;
 }
 
 export interface IFileDetail {
