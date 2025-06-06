@@ -3,18 +3,19 @@ import { DataTable } from '@/components/data-table';
 import { TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
 import { DEFAULT_FIRST_PAGE, OrderDirection } from '@/utils/constants';
-import { CellContext, ColumnDef } from '@tanstack/react-table';
+import { CellContext, ColumnDef, ColumnSort } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { IVocabulary, TranslateLanguages, VocabularyOrderBy } from '../interfaces';
+import { IVocabulary, TranslatedContent, TranslateLanguages, VocabularyOrderBy } from '../interfaces';
 import { useVocabularyStore } from '../stores/useVocabularyStore';
 import { SortableHeader } from '@/components/table/SortableHeader';
 import Image from 'next/image';
 import { useUpdateUrlWithQuery } from '@/utils/url';
+import { cn } from '@/lib/utils';
 
-function MeaningCellFactory(lang: TranslateLanguages) {
+function createMeaningCell(lang: TranslateLanguages) {
   const Cell = ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => (
     <TruncatedText text={row.original.vocabulary[lang] ?? ''} />
   );
@@ -22,29 +23,44 @@ function MeaningCellFactory(lang: TranslateLanguages) {
   return Cell;
 }
 
-function DescriptionCellFactory(lang: TranslateLanguages) {
-  const Cell = ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => (
-    <TruncatedText text={row.original.description[lang] ?? ''} />
-  );
+function createDescriptionCell(
+  lang: TranslateLanguages, 
+  setOpenDescriptionDetail: (open: boolean)=> void,
+  setSelectedDescription: (text: string) => void
+) {
+  const Cell = ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
+      const text = row.original?.description[lang as keyof TranslatedContent] ?? '';
+      return  <div className="flex gap-4">
+          <button
+            type="button"
+            className="overflow-hidden flex items-center cursor-pointer"
+            onClick={() => {
+              setOpenDescriptionDetail(true);
+              setSelectedDescription(text);
+            }}
+          >
+            <span
+              className={cn(
+                'block w-full overflow-hidden text-ellipsis break-words',
+              )}
+            >
+              {text}
+            </span>
+          </button>
+        </div>;
+  }
   Cell.displayName = `DescriptionCell_${lang}`;
   return Cell;
 }
 
 function createMeaningSortHeader (
   lang: TranslateLanguages,
-  keyName: string,
   t: ReturnType<typeof useTranslations>,
-  handleSort: (orderBy: string, orderDirection: OrderDirection | null) => Promise<void>,
-  isSorting: boolean
 ) {
   const MeaningSortHeader = ({ column }: { column: any }) => (
     <SortableHeader
       column={column}
       title={t(`vocabularies.table.meaning_${lang}`)}
-      onSortChange={(orderDirection: any) =>
-        handleSort(VocabularyOrderBy[keyName as keyof typeof VocabularyOrderBy], orderDirection)
-      }
-      disabled={isSorting}
     />
   );
   MeaningSortHeader.displayName = `MeaningSortHeader_${lang}`;
@@ -64,6 +80,8 @@ export function VocabularyTable() {
     setSelectedVocabulary,
     setVocabularyGetListQuery,
     setOpenImageDetail,
+    setOpenDescriptionDetail,
+    setSelectedDescription
   } = useVocabularyStore(
     useShallow((state) => ({
       vocabularyList: state.vocabularyList,
@@ -75,13 +93,12 @@ export function VocabularyTable() {
       setSelectedVocabulary: state.setSelectedVocabulary,
       setVocabularyGetListQuery: state.setVocabularyGetListQuery,
       setOpenImageDetail: state.setOpenImageDetail,
+      setOpenDescriptionDetail: state.setOpenDescriptionDetail,
+      setSelectedDescription: state.setSelectedDescription,
     })),
   );
 
-    const [isSorting, setIsSorting] = useState(false);
-
   const {
-    getQueryFromUrl: getVocabularyQueryFromUrl,
     updateUrlWithQuery: updateVocabularyUrlWithQuery,
   } = useUpdateUrlWithQuery();
 
@@ -92,36 +109,20 @@ export function VocabularyTable() {
     };
   }, []);
 
-  const handleSort = useCallback(
-    async (orderBy: string, orderDirection: OrderDirection | null) => {
-      if (isSorting) return;
-      setIsSorting(true);
-      try {
-        const data = orderDirection ? { orderBy, orderDirection } : {};
-        const query = getVocabularyQueryFromUrl();
-        const newQuery = {
-          ...query,
-          orderBy: VocabularyOrderBy.VOCABULARY,
-          orderDirection: OrderDirection.ASC,
-          ...data,
-        };
+    const handleSortingChange = useCallback(
+    (sort?: ColumnSort) => {
+      const newQuery = {
+        orderBy: VocabularyOrderBy[sort?.id as keyof typeof VocabularyOrderBy ?? 'VOCABULARY'],
+        orderDirection: sort?.desc ? OrderDirection.DESC : OrderDirection.ASC,
+      };
 
-        setVocabularyGetListQuery(newQuery, { reloadList: false });
-        updateVocabularyUrlWithQuery(newQuery);
-        await getVocabularyList();
-      } catch {
-        setIsSorting(false);
-      } finally {
-        setIsSorting(false);
-      }
+      setVocabularyGetListQuery({
+        ...vocabularyGetListQuery,
+        ...newQuery,
+      }, { reloadList: true });
+      updateVocabularyUrlWithQuery(newQuery);
     },
-    [
-      isSorting,
-      getVocabularyQueryFromUrl,
-      setVocabularyGetListQuery,
-      updateVocabularyUrlWithQuery,
-      getVocabularyList,
-    ]
+    [vocabularyGetListQuery, setVocabularyGetListQuery, updateVocabularyUrlWithQuery],
   );
 
   const vocabularyCell = useCallback(
@@ -140,13 +141,28 @@ export function VocabularyTable() {
 
   const originalDescriptionCell = useCallback(
     ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
-      return <TruncatedText text={row.original.description.originalLanguage} />;
+      const text = row.original?.description?.originalLanguage ?? '';
+      return  <div className="flex gap-4">
+          <button
+            type="button"
+            className="overflow-hidden flex items-center cursor-pointer"
+            onClick={() => {
+              setOpenDescriptionDetail(true);
+              setSelectedDescription(text);
+            }}
+          >
+            <span
+              className={cn(
+                'block w-full overflow-hidden text-ellipsis break-words',
+              )}
+            >
+              {text}
+            </span>
+          </button>
+        </div>;
     },
-    [],
+    [setSelectedDescription, setOpenDescriptionDetail],
   );
-
-  const meaningCell = (lang: TranslateLanguages) => MeaningCellFactory(lang);
-  const descriptionCell = (lang: TranslateLanguages) => DescriptionCellFactory(lang);
 
   const subjectCell = useCallback(
     ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
@@ -193,9 +209,14 @@ export function VocabularyTable() {
               setOpenDeleteVocabularyDialog(true);
               setSelectedVocabulary(row.original);
             }}
-            className="cursor-pointer"
+            className={cn(
+              'hover:bg-primary-2',
+              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
+            )}
           >
-            <TrashIcon size={22} />
+            <TrashIcon size={22} 
+              className={cn('group-hover/delete:text-white')}
+            />
           </button>
         </div>
       );
@@ -206,36 +227,32 @@ export function VocabularyTable() {
   const translateCol = useMemo((): ColumnDef<IVocabulary>[] =>{
     const headers = Object.entries(TranslateLanguages).flatMap(([key, lang]) => [
         {
-        header: createMeaningSortHeader(lang, `MEANING_${key}`, t, handleSort, isSorting),
-        accessorKey: `meaning_${lang}`,
+        header: createMeaningSortHeader(lang, t),
+        accessorKey: `MEANING_${key}`,
         enableSorting: true,
-        cell: meaningCell(lang),
-        size: 200,
+        cell: createMeaningCell(lang),
+        size: 120,
       },
       {
         header: t(`vocabularies.table.description_${lang}`),
         accessorKey: `description_${lang}`,
         enableSorting: true,
-        cell: descriptionCell(lang),
-        size: 200,
+        cell: createDescriptionCell(lang, setOpenDescriptionDetail, setSelectedDescription),
+        size: 240,
       },
       ]
     );
 
     return headers;
-  },[handleSort, descriptionCell, meaningCell, createMeaningSortHeader])
+  },[createDescriptionCell, createMeaningCell, createMeaningSortHeader, setSelectedDescription, setOpenDescriptionDetail])
 
   const vocabularySortHeader = (props: { column: any }) => (
           <SortableHeader column={props.column} title={t('vocabularies.table.vocabulary') } 
-            onSortChange={ (orderDirection) => handleSort(VocabularyOrderBy.VOCABULARY, orderDirection)}
-            disabled={isSorting}
           />
         );
   
   const pronunciationSortHeader = (props: { column: any }) => (
           <SortableHeader column={props.column} title={t('vocabularies.table.pronunciation') } 
-            onSortChange={ (orderDirection) => handleSort(VocabularyOrderBy.PRONUNCIATION, orderDirection)}
-            disabled={isSorting}
           />
         );
 
@@ -250,35 +267,35 @@ export function VocabularyTable() {
             page: vocabularyGetListQuery.page ?? DEFAULT_FIRST_PAGE,
             limit: vocabularyGetListQuery.limit,
           }),
-        size: 50,
+        size: 80,
       },
       {
         enableSorting: true,
         header: vocabularySortHeader,
-        accessorKey: 'vocabulary',
+        accessorKey: 'VOCABULARY',
         cell: vocabularyCell,
-        size: 200,
+        size: 120,
       },
       {
         header: pronunciationSortHeader,
-        accessorKey: 'pronunciation',
+        accessorKey: 'PRONOUNCIATION',
         enableSorting: true,
         cell: pronunciationCell,
-        size: 200,
+        size: 120,
       },
       {
         header: t('vocabularies.table.description'),
         accessorKey: 'description',
         enableSorting: true,
         cell: originalDescriptionCell,
-        size: 200,
+        size: 240,
       },
       ...translateCol,
       {
         header: t('vocabularies.table.subject'),
         accessorKey: 'subject',
         cell: subjectCell,
-        size: 150,
+        size: 120,
       },
       {
         header: t('vocabularies.table.image'),
@@ -289,18 +306,16 @@ export function VocabularyTable() {
       {
         header: t('vocabularies.table.action'),
         id: 'actions',
-        size: 80,
+        size: 60,
         cell: VocabularyActions,
       },
     ]);
   }, [
     t,
-    isSorting,
     translateCol,
     vocabularyCell,
     subjectCell,
     VocabularyActions,
-    handleSort,
     imageCell,
     pronunciationCell,
     vocabularySortHeader,
@@ -314,5 +329,6 @@ export function VocabularyTable() {
     loading={loading} 
     rowClassName={'h-16'} 
     headerClassName={'bg-[#FBFDFF]'}
+    onSortingChange={handleSortingChange}
   />;
 }

@@ -68,6 +68,8 @@
   },
   "messages": {
     "error": "エラーが発生しました",
+    "login_success": "ログイン成功！",
+    "logout_success": "ログアウト成功！",
     "create_success": "作成が成功しました",
     "update_success": "編集が成功しました",
     "create_failed": "作成に失敗しました",

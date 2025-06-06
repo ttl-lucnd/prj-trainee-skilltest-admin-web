@@ -69,13 +69,18 @@ export function AdminForm() {
           title: t(`common.messages.${formType}_success`),
           variant: 'success',
         })
-        getAdminList()
-      }else {
-        toast({
-          title: t(`common.messages.${formType}_failed`),
-          variant:'destructive',
-        })
+        getAdminList();
+        return;
       }
+
+      let errorKey = `common.messages.${formType}_failed`;
+      if(response?.errors?.[0]?.errorKey?.includes('invalid')) {
+        errorKey = 'adminAccount.error.mailExisted';
+      }
+      toast({
+        title: t(errorKey),
+        variant:'destructive',
+      })
     }catch {
       setOpenAdminFormDialog(false);
       toast({
@@ -105,7 +110,6 @@ export function AdminForm() {
             placeholder={t('adminAccount.form.email')} 
             layout='vertical'
             className='w-full'
-            required={true}
           />
           <InputText 
             name="name" 
@@ -114,7 +118,6 @@ export function AdminForm() {
             placeholder={t('adminAccount.form.name')} 
             layout='vertical'
             className='w-full mb-5'
-            required={true}
           />
         </Form>
         <div className="w-full flex gap-2.5 justify-center">

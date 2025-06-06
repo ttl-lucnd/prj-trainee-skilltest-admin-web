@@ -65,10 +65,10 @@ export function VocabularyFilterForm() {
         {vocabularySetting?.lastSyncDataAt &&
         <div className='flex flex-wrap'>
           {t('common.sync_data_at')}
-          <p className='text-[#FF0053]'>{dayjs(vocabularySetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))}</p>
+          <p className='text-[#E9034E]'>{dayjs(vocabularySetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))}</p>
         </div>
         }
-        {vocabularySetting?.status && <p className='text-[#FF0053]'>{t(`common.sync_data_status.${vocabularySetting.status}`)}</p>}
+        {vocabularySetting?.status && <p className='text-[#E9034E]'>{t(`common.sync_data_status.${vocabularySetting.status}`)}</p>}
       </div>
     }
 
@@ -85,7 +85,7 @@ export function VocabularyFilterForm() {
       isFiltering={isFiltering}
     >
       <MultiSelectField
-        className="w-[160px] h-[40px]"
+        className="w-[183px] h-[40px]"
         options={subjectDropdownList.map(item => ({
           label: item.name,
           value: item.id,

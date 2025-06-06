@@ -1,5 +1,10 @@
 import { AdminAccountPage } from '@/features/admin-account/pages/AdminAccountPage';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '管理者一覧',
+};
 
 export default function Page() {
   return (

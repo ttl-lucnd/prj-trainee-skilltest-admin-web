@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { authService } from '../services/auth.service';
 import { cn } from '@/lib/utils';
+import { toast } from '@/hooks/use-toast';
 
 export function LogoutButton() {
   const router = useRouter();
@@ -18,6 +19,10 @@ export function LogoutButton() {
     setIsLoggingOut(true);
     await authService.logout();
     removeAllCookies();
+    toast({
+      title: t(`common.messages.logout_success`),
+      variant: 'success',
+    })
     router.push(PageRouter.LOGIN);
   }, []);
 

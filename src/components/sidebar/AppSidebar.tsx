@@ -18,7 +18,7 @@ export function AppSidebar() {
       <SidebarHeader className="p-0">
         <BrandSidebar />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="w-[244px]">
         <AppMenu />
       </SidebarContent>
       <SidebarFooter>

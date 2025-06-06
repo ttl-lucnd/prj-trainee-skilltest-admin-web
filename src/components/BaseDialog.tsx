@@ -31,10 +31,11 @@ export function BaseDialog({
         onInteractOutside={(e) => {
           e.preventDefault();
         }}
+        
       >
 
         <DialogHeader className={cn("px-6", headerClassName)}>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle className='text-[20px]'>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <div className="max-h-full flex-1 overflow-y-auto p-6 pt-2 relative">{children}</div>

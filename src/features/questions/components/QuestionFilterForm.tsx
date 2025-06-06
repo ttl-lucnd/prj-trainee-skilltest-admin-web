@@ -62,14 +62,14 @@ export function QuestionFilterForm() {
   };
 
   const syncDataInfo = () => {
-    return <div className='flex flex-col min-w-[200px] mb-2'>
+    return <div className='flex flex-col mb-2 max-w-full flex-1'>
       {questionSetting?.lastSyncDataAt &&
       <div className='flex flex-wrap'>
         {t('common.sync_data_at')}
-        <p className='text-[#FF0053]'>{dayjs(questionSetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))}</p>
+        <p className='text-[#E9034E]'>{dayjs(questionSetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))}</p>
       </div>
       }
-      {questionSetting?.status && <p className='text-[#FF0053]'>{t(`common.sync_data_status.${questionSetting.status}`)}</p>}
+      {questionSetting?.status && <p className='text-[#E9034E]'>{t(`common.sync_data_status.${questionSetting.status}`)}</p>}
     </div>
   }
 
@@ -86,7 +86,7 @@ export function QuestionFilterForm() {
       isFiltering={isFiltering}
     >
       <MultiSelectField
-        className="w-[160px] h-[40px]"
+        className="w-[183px] h-[40px]"
         options={subjectDropdownList.map(item => ({
           label: item.name,
           value: item.id,
@@ -96,7 +96,7 @@ export function QuestionFilterForm() {
         control={form.control}
       />
       <MultiSelectField
-        className="w-[120px] h-[40px]"
+        className="w-[141px] h-[40px]"
         options={arrangeDropdownList.map(item => ({
           label: `${item}`,
           value: `${item}`,

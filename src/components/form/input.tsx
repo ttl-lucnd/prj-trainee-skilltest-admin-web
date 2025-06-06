@@ -40,7 +40,6 @@ interface InputFormProps {
   customClassName?: string;
   suffixIcon?: React.ReactNode;
   onSuffixIconClick?: () => void;
-  isTrim?: boolean;
 }
 
 export function InputText({
@@ -65,7 +64,6 @@ export function InputText({
   customClassName,
   suffixIcon,
   onSuffixIconClick,
-  isTrim = false,
 }: Readonly<InputFormProps>) {
   const t = useTranslations();
 
@@ -122,7 +120,7 @@ export function InputText({
                   handleBlur();
                   field.onBlur();
                   const trimmed = field.value?.trim() ?? '';
-                  if (trimmed !== field.value && isTrim) {
+                  if (trimmed !== field.value) {
                     field.onChange(trimmed);
                   }
                 }}
@@ -140,6 +138,7 @@ export function InputText({
                 suffixIcon={suffixIcon}
                 onSuffixIconClick={onSuffixIconClick}
                 onKeyDown={onKeyDown}
+                
               />
             </FormControl>
             <FormDescription>{description}</FormDescription>

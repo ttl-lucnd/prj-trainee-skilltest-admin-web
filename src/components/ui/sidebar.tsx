@@ -21,7 +21,7 @@ import {
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-const SIDEBAR_WIDTH = '268px';
+const SIDEBAR_WIDTH = '244px';
 const SIDEBAR_WIDTH_MOBILE = '16rem';
 const SIDEBAR_WIDTH_ICON = '5rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
@@ -567,8 +567,14 @@ const SidebarMenuButton = React.forwardRef<
     }
 
     return (
-      <Tooltip>
-        <TooltipTrigger asChild>{button}</TooltipTrigger>
+      <Tooltip delayDuration={0}>
+        <TooltipTrigger asChild>
+          <span className="size-[40px] inline-block overflow-visible">
+            <div className="absolute top-0 left-0 inset-0 w-full">
+              {button}
+            </div>
+          </span>
+        </TooltipTrigger>
         <TooltipContent
           side="right"
           align="center"
@@ -579,7 +585,7 @@ const SidebarMenuButton = React.forwardRef<
     );
   },
 );
-SidebarMenuButton.displayName = 'SidebarMenuButton';
+SidebarMenuButton.displayName = "SidebarMenuButton";
 
 const SidebarMenuAction = React.forwardRef<
   HTMLButtonElement,

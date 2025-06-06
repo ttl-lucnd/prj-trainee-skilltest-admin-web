@@ -53,10 +53,10 @@ export function AppMenu() {
     <SidebarMenu className={cn('px-4', !open && 'px-5')}>
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
-          <SidebarMenuButton asChild isActive={isActive(item.path)}>
+          <SidebarMenuButton asChild isActive={isActive(item.path)} tooltip={t(item.title)}>
             <Link href={item.path}>
               <item.icon />
-              <span>{t(`${item.title}`)}</span>
+              <span className='text-[16px]'>{t(`${item.title}`)}</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>

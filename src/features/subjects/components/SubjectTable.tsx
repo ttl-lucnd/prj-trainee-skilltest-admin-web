@@ -12,6 +12,7 @@ import { useSubjectStore } from '../stores/useSubjectStore';
 import { ISubject } from '../interfaces';
 import Image from 'next/image';
 import { AdminRole } from '@/features/admin-account/constants';
+import { cn } from '@/lib/utils';
 
 export function SubjectTable() {
   const t = useTranslations();
@@ -131,10 +132,18 @@ export function SubjectTable() {
               setOpenSubjectFormDialog(true);
               setSelectedSubject(row.original);
             }}
-            className="cursor-pointer"
+          className={cn(
+              !isDisable && 'hover:bg-primary-2',
+              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/edit"
+            )}
             disabled={isDisable}
           >
-            <PencilIcon size={22} stroke={isDisable ? '#CECECE' : 'currentColor'}/>
+            <PencilIcon size={22}
+              className={cn(
+                isDisable ? 'text-[#CECECE]'
+                : 'group-hover/edit:text-white')
+              }
+            />
           </button>
           <button
             onClick={() => {
@@ -145,10 +154,18 @@ export function SubjectTable() {
               setOpenDeleteSubjectDialog(true);
               }
             }}
-            className="cursor-pointer"
+            className={cn(
+              !isDisable && 'hover:bg-primary-2',
+              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
+            )}
             disabled={isDisable}
           >
-            <TrashIcon size={22} stroke={isDisable ? '#CECECE' : 'currentColor'}/>
+            <TrashIcon size={22} 
+              className={cn(
+                isDisable ? 'text-[#CECECE]'
+                : 'group-hover/delete:text-white')
+              }
+            />
           </button>
         </div>
       );

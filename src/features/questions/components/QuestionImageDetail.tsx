@@ -19,7 +19,7 @@ export function QuestionImageDetail() {
       showCloseButton={true}
       className="max-w-[700px]"
     >
-      <div className="flex flex-col items-center justify-end gap-2.5 mt-4">
+      <div className="flex flex-col items-center justify-end gap-2.5 mt-8">
         <Image
           src={selectedQuestion?.image ?? ''}
           width={452}

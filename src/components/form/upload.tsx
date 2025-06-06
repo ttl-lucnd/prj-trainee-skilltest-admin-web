@@ -25,7 +25,7 @@ interface UploadFieldProps {
   className?: string;
   onChange?: (file: File) => void;
   onRemove?: (file?: File | null) => void;
-  onValidationFail?: (errorType: ValidationErrorType) => void;
+  onValidationFail?: (file: File, errorType: ValidationErrorType) => void;
   allowClear?: boolean;
   disabled?: boolean;
   loading?: boolean;
@@ -60,11 +60,8 @@ export function UploadField({
     // Check file size
     const fileSizeInMB = file.size / (1024 * 1024);
     if (fileSizeInMB > maxSize) {
-      onValidationFail?.('max_size');
-      if (inputRef.current) {
-        inputRef.current.value = '';
-      }
-      return;
+      onValidationFail?.(file, 'max_size');
+      return
     }
 
     // Check file type
@@ -78,11 +75,8 @@ export function UploadField({
         return fileType === type;
       })
     ) {
-      onValidationFail?.('invalid_file_type');
-      if (inputRef.current) {
-        inputRef.current.value = '';
-      }
-      return;
+      onValidationFail?.(file, 'invalid_file_type');
+      return
     }
     onChange?.(file);
   };
@@ -107,7 +101,7 @@ export function UploadField({
       control={control}
       name={name}
       render={({ fieldState: { error: fieldError } }) => (
-        <FormItem className={className}>
+        <FormItem className={className} >
           <FormFieldLayout
             label={label}
             required={required}
@@ -132,8 +126,7 @@ export function UploadField({
                 }}
                 className={cn(
                   'w-full text-center bg-white aspect-square relative group rounded-lg',
-                  fieldError ? 'border border-destructive'
-                  : 'focus:outline-none focus:border-solid focus:border-primary-2',
+                  fieldError && 'border border-destructive',
                   disabled && 'cursor-not-allowed opacity-50',
                   (!imageUrl && !fieldError) && 'border-2 border-dashed border-main-primary-2',
                 )}
@@ -148,6 +141,7 @@ export function UploadField({
                   onChange={handleFileChange}
                   aria-label={t('common.file.upload')}
                   disabled={disabled}
+                  
                 />
                 {loading ? <LoadingCircleIcon size={16} className="animate-spin" /> : 
                 <div
@@ -161,7 +155,7 @@ export function UploadField({
                 </div>
                 }
                 {(imageUrl && allowClear) && (
-                  <div className='absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity'>
+                  <div className='absolute top-2 right-2 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity'>
                   <div className="bg-black/60 p-1 rounded-full">
                   <X
                     size={16}

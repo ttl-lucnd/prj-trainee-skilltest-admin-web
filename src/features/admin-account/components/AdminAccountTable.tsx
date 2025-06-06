@@ -11,6 +11,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { IAdminAccount } from '../interfaces';
 import { useAdminStore } from '../stores/useAdminStore';
 import { AdminRole } from '../constants';
+import { cn } from '@/lib/utils';
 
 export function AdminAccountTable() {
   const t = useTranslations();
@@ -69,26 +70,42 @@ export function AdminAccountTable() {
       const isSupAdmin = profile?.id === row.original.id && profile.role === AdminRole.SUPPER_ADMIN;
       const isDisableEdit = isDisableDelete && !isSupAdmin;
       return (
-        <div className="flex gap-4">
+        <div className="flex gap-3">
           <button
             onClick={() => {
               setOpenAdminFormDialog(true);
               setSelectedAdmin(row.original);
             }}
-            className="cursor-pointer"
+            className={cn(
+              !isDisableEdit && 'hover:bg-primary-2',
+              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/edit"
+            )}
             disabled={isDisableEdit}
           >
-            <PencilIcon size={22} stroke={isDisableEdit ? '#CECECE' : 'currentColor'}/>
+            <PencilIcon size={22}
+              className={cn(
+                isDisableEdit ? 'text-[#CECECE]'
+                : 'group-hover/edit:text-white')
+              }
+            />
           </button>
           <button
             onClick={() => {
               setOpenDeleteAdminDialog(true);
               setSelectedAdmin(row.original);
             }}
-            className="cursor-pointer"
+            className={cn(
+              !isDisableDelete && 'hover:bg-primary-2',
+              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
+            )}
             disabled={isDisableDelete}
           >
-            <TrashIcon size={22} stroke={isDisableDelete ? '#CECECE' : 'currentColor'}/>
+            <TrashIcon size={22} 
+              className={cn(
+                isDisableDelete ? 'text-[#CECECE]'
+                : 'group-hover/delete:text-white')
+              }
+            />
           </button>
         </div>
       );
@@ -107,7 +124,7 @@ export function AdminAccountTable() {
             page: adminGetListQuery.page ?? DEFAULT_FIRST_PAGE,
             limit: adminGetListQuery.limit,
           }),
-        size: 30,
+        size: 50,
       },
       {
         header: t('adminAccount.table.email'),
