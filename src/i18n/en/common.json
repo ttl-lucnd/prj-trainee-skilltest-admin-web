@@ -65,6 +65,8 @@
   },
   "messages": {
     "error": "Error",
+    "login_success": "ログイン成功！",
+    "logout_success": "ログアウト成功！",
     "create_success": "Created successfully",
     "update_success": "Updated successfully",
     "create_failed": "Failed to create",

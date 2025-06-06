@@ -85,7 +85,7 @@ const FormItem = React.forwardRef<
   const value = React.useMemo(() => ({ id }), [id])
 
   return (
-    <FormItemContext.Provider value={value}>
+    <FormItemContext.Provider value={value} >
       <div ref={ref} className={cn("space-y-2", className)} {...props} />
     </FormItemContext.Provider>
   )
@@ -125,6 +125,7 @@ const FormControl = React.forwardRef<
           : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
+      
       {...props}
     />
   )

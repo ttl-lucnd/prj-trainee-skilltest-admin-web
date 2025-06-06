@@ -1,5 +1,10 @@
 import { VocabularyPage } from '@/features/vocabularies/pages/VocabularyPage';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '単語一覧',
+};
 
 export default function Page() {
   return (

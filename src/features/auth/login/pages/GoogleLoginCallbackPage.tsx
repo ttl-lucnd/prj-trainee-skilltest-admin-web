@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { authService } from '../../services/auth.service';
 import { setCredentials, setProfileData } from '@/utils/cookies';
+import { toast } from '@/hooks/use-toast';
+import { useTranslations } from 'next-intl';
 
 const ACCESS_DENIED = 'access_denied';
 const NEXT_PUBLIC_GOOGLE_LOGIN_CALLBACK_URL =
@@ -14,6 +16,7 @@ const NEXT_PUBLIC_GOOGLE_LOGIN_CALLBACK_URL =
 export function GoogleLoginCallbackPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const t = useTranslations();
   useEffect(() => {
     const login = async () => {
       const token = searchParams.get('code');
@@ -66,6 +69,10 @@ export function GoogleLoginCallbackPage() {
           refreshExpiresIn: response.data?.refreshToken?.expiresIn,
         });
         setProfileData(response.data?.profile, response.data?.refreshToken?.expiresIn);
+        toast({
+          title: t(`common.messages.login_success`),
+          variant: 'success',
+        })
         router.push(PageRouter.QUIZ_MANAGEMENT);
         return;
       }

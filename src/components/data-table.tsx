@@ -260,7 +260,7 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
                       header.id === 'index' && 'text-center',
                       showBorderVertical &&
                         header.index !== headerGroup.headers.length - 1 &&
-                        'border-r border-primary-3',
+                        'border-r border-[#CBD5E1]',
                     )}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -291,7 +291,7 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
                         customRowClassName?.(row.original),
                         showBorderVertical &&
                           cell.column.getSize() !== 0 &&
-                          'border-r border-primary-3',
+                          'border-r border-[#CBD5E1]',
                       )}
                       style={{ ...getCommonPinningStyles(cell.column, shouldShowShadow) }}
                     >

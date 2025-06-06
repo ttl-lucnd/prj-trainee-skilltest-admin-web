@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Login',
+  title: 'ログイン',
 };
 
 export default function LoginPageLayout({ children }: Readonly<{ children: React.ReactNode }>) {

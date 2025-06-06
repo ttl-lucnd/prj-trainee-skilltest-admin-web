@@ -8,7 +8,7 @@ export function BrandSidebar() {
   return (
     <div className={cn("flex justify-end items-center px-4 mt-4 mb-3", !open && 'py-2.5 justify-center')}>
       <button  
-      className="size-10 flex items-center justify-center text-secondary-1 hover:text-primary-1"
+      className="flex items-center justify-center text-secondary-1 hover:bg-accent p-1 rounded-md"
       data-sidebar="trigger"
       data-testid="sidebar-trigger"
       onClick={() => {

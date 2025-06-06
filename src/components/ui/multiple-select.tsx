@@ -220,7 +220,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
           >
             {selectedValues.length > 0 ? (
               <div className="flex justify-between items-center w-full">
-                <div className="flex flex-wrap gap-0.5 items-center">
+                <div className="flex flex-wrap gap-0.5 items-center max-w-[calc(100%-70px)]">
                   {selectedValues.slice(0, maxCount).map((value) => {
                     const option = options.find((o) => o.value === value);
                     const IconComponent = option?.icon;
@@ -228,13 +228,14 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                       <Badge
                         key={value}
                         className={cn(
+                          'w-full',
                           isAnimating ? 'animate-bounce' : '',
                           multiSelectVariants({ variant }),
                         )}
                         style={{ animationDuration: `${animation}s` }}
                       >
                         {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
-                        <span className="truncate max-w-[70px]" title={option?.label}>{option?.label}</span>
+                        <span className="truncate" title={option?.label}>{option?.label}</span>
                         <XCircle
                           className="ml-2 h-4 w-4 cursor-pointer"
                           onClick={(event) => {
@@ -282,9 +283,9 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
               <div className="flex items-center justify-between w-full mx-auto">
                 <span className="text-body-md text-primary-5 mx-3">{placeholder}</span>
                 {isPopoverOpen ? (
-                  <ChevronUp size={20} className="cursor-pointer text-primary-2 mx-2" />
+                  <ChevronUp size={20} className="cursor-pointer text-muted-foreground mx-2" />
                 ) : (
-                  <ChevronDown size={20} className="cursor-pointer text-primary-2 mx-2" />
+                  <ChevronDown size={20} className="cursor-pointer text-muted-foreground mx-2" />
                 )}
               </div>
             )}
@@ -378,6 +379,8 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
             </CommandList>
           </Command>
           {selectedValues.length > 0 && (
+            <>
+            <div className="border-b" />
             <div className="flex items-center justify-between bg-white rounded-md p-1">
               <button
                 type="button"
@@ -389,6 +392,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                 {t('common.buttons.clear')}
               </button>
             </div>
+            </>
           )}
         </PopoverContent>
         {animation > 0 && selectedValues.length > 0 && (

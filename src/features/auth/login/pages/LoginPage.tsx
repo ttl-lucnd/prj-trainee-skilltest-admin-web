@@ -1,12 +1,12 @@
 'use client';
 
-import { LightBulbIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { PageRouter } from '@/utils';
 import { useTranslations } from 'next-intl';
 import { authService } from '../../services/auth.service';
 import qs from 'qs';
 import { useState } from 'react';
+import Image from 'next/image';
 
 const NEXT_PUBLIC_GOOGLE_LOGIN_CALLBACK_URL =
   process.env.NEXT_PUBLIC_GOOGLE_LOGIN_CALLBACK_URL;
@@ -38,17 +38,23 @@ export function LoginPage() {
   };
 
   return (
-    <main className="bg-white flex min-h-screen flex-col items-center justify-center p-24">
-      <LightBulbIcon />
-      <h3 className="font-bold">{t('login.appName')}</h3>
-      <h3 className="font-bold">{t('login.adminScreen')}</h3>
+    <main className="bg-primary-2 flex min-h-screen flex-col items-center justify-center p-24 text-white gap-2">
+      <h2 className="font-bold">{t('login.appName')}</h2>
+      <h2 className="font-bold">{t('login.adminScreen')}</h2>
       <Button
-        className="mt-[50px] w-[345px]"
+        className="mt-[20px] w-[300px] text-[#1C77C3] hover:text-primary-2 gap-[15px] justify-start font-[400]"
         size="xl"
+        variant={'outline'}
         disabled={loading}
         onClick={handleLoginWithGoogle}
-        loading={loading}
       >
+        <Image
+          className='ml-[10px]'
+          src="/google-icon.png"
+          alt="google-icon"
+          width={45}
+          height={45}
+        />
         {t('login.loginWithGoogle')}
       </Button>
     </main>

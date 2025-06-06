@@ -148,6 +148,7 @@ export function InputNumber({
             layout === 'horizontal' && 'items-center gap-2',
             className,
           )}
+          
         >
           {label && (
             <FormLabel
@@ -181,7 +182,9 @@ export function InputNumber({
                   allowClear={allowClear}
                   disabled={disabled}
                   onChange={(e) => {
-                    const value = Number(e.target?.value);
+                    const raw = e?.target?.value ?? '';
+                    if (!allowDecimal && (raw.includes('.') || raw.includes(','))) return;
+                    const value = Number(raw);
                     if (type === 'number') {
                       if (max && value > max) {
                         field.onChange(+oldValue);
@@ -205,6 +208,7 @@ export function InputNumber({
                   maxLength={type === 'phone' ? INPUT_PHONE_MAX_LENGTH : maxLength}
                   onKeyDown={(e) => preventInput(e)}
                   onPaste={handlePaste}
+                  
                 />
                 {suffix && (
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">

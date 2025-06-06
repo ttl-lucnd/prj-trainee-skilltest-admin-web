@@ -19,7 +19,7 @@ interface ItemsCountProps {
 }
 
 function ItemsCount({ totalItems }: ItemsCountProps) {
-  return <div className="text-[#232625] pr-1 font-medium">{` ${totalItems} `}</div>;
+  return <div className="text-[#232625] pr-1 font-[600]">{` ${totalItems} `}</div>;
 }
 
 export function Pagination({
@@ -41,7 +41,7 @@ export function Pagination({
       <div className="w-full flex items-center gap-6 justify-between">
         <div className="flex gap-6">
           <div className="flex items-center gap-4">
-            <div className="h-8 flex items-center px-4 text-main-primary-2 rounded-[6px] text-medium">
+            <div className="h-8 flex items-center text-[#667085] rounded-[6px] text-[18px]">
               {totalItemsComponent}
             </div>
             {onItemsPerPageChange &&            

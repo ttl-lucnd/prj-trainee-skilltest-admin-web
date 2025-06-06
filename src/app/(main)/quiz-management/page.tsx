@@ -1,5 +1,10 @@
 import { QuestionsPage } from '@/features/questions/pages/QuestionsPage';
 import { Suspense } from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '質問一覧',
+};
 
 export default function Page() {
   return (

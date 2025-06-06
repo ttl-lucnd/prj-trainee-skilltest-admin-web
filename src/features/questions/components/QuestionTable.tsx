@@ -2,13 +2,13 @@ import { TruncatedText } from '@/components/TruncateText';
 import { DataTable } from '@/components/data-table';
 import { TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
-import { DEFAULT_FIRST_PAGE, DEFAULT_ORDER_BY, DEFAULT_ORDER_DIRECTION, OrderDirection } from '@/utils/constants';
-import { CellContext, ColumnDef } from '@tanstack/react-table';
+import { DEFAULT_FIRST_PAGE, OrderBy, OrderDirection } from '@/utils/constants';
+import { CellContext, ColumnDef, ColumnSort } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { IQuestion, QuestionOrderBy } from '../interfaces';
+import { IQuestion } from '../interfaces';
 import { useQuestionStore } from '../stores/useQuestionStore';
 import { SortableHeader } from '@/components/table/SortableHeader';
 import { Badge } from '@/components/ui/badge';
@@ -16,6 +16,7 @@ import Image from 'next/image';
 import { CircleIcon } from '@/components/icons/circle';
 import { XCrossIcon } from '@/components/icons/x-cross';
 import { useUpdateUrlWithQuery } from '@/utils/url';
+import { cn } from '@/lib/utils';
 
 export function QuestionTable() {
   const t = useTranslations();
@@ -43,10 +44,7 @@ export function QuestionTable() {
     })),
   );
 
-    const [isSorting, setIsSorting] = useState(false);
-
   const {
-    getQueryFromUrl: getQuestionQueryFromUrl,
     updateUrlWithQuery: updateQuestionUrlWithQuery,
   } = useUpdateUrlWithQuery();
 
@@ -57,36 +55,20 @@ export function QuestionTable() {
     };
   }, []);
 
-  const handleSort = useCallback(
-    async (orderBy: string, orderDirection: OrderDirection | null) => {
-      if (isSorting) return;
-      setIsSorting(true);
-      try {
-        const data = orderDirection ? { orderBy, orderDirection } : {};
-        const query = getQuestionQueryFromUrl();
-        const newQuery = {
-          ...query,
-          orderBy: DEFAULT_ORDER_BY,
-          orderDirection: DEFAULT_ORDER_DIRECTION,
-          ...data,
-        };
+    const handleSortingChange = useCallback(
+    (sort?: ColumnSort) => {
+      const newQuery = {
+        orderBy: sort?.id ?? OrderBy.CREATED_AT,
+        orderDirection: sort?.desc ? OrderDirection.DESC : OrderDirection.ASC,
+      };
 
-        setQuestionGetListQuery(newQuery, { reloadList: false });
-        updateQuestionUrlWithQuery(newQuery);
-        await getQuestionList();
-      } catch {
-        setIsSorting(false);
-      } finally {
-        setIsSorting(false);
-      }
+      setQuestionGetListQuery({
+        ...questionGetListQuery,
+        ...newQuery,
+      }, { reloadList: true });
+      updateQuestionUrlWithQuery(newQuery);
     },
-    [
-      isSorting,
-      getQuestionQueryFromUrl,
-      setQuestionGetListQuery,
-      updateQuestionUrlWithQuery,
-      getQuestionList,
-    ]
+    [questionGetListQuery, setQuestionGetListQuery, updateQuestionUrlWithQuery],
   );
 
   const questionCell = useCallback(
@@ -172,9 +154,14 @@ export function QuestionTable() {
               setOpenDeleteQuestionDialog(true);
               setSelectedQuestion(row.original);
             }}
-            className="cursor-pointer"
+            className={cn(
+              'hover:bg-primary-2',
+              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
+            )}
           >
-            <TrashIcon size={22} />
+            <TrashIcon size={22} 
+              className={cn('group-hover/delete:text-white')}
+            />
           </button>
         </div>
       );
@@ -217,8 +204,6 @@ export function QuestionTable() {
         enableSorting: true,
         header: ({ column }) => (
           <SortableHeader column={column} title={t('questions.table.arrange')} 
-            onSortChange={ (orderDirection) => handleSort(QuestionOrderBy.ARRANGE, orderDirection)}
-            disabled={isSorting}
           />
         ),
         accessorKey: 'arrange',
@@ -252,7 +237,6 @@ export function QuestionTable() {
     ]);
   }, [
     t,
-    isSorting,
     questionCell,
     descriptionCell,
     subjectCell,
@@ -261,7 +245,6 @@ export function QuestionTable() {
     imageCell,
     answerCell,
     QuestionActions,
-    handleSort,
   ]);
 
   return <DataTable 
@@ -270,5 +253,6 @@ export function QuestionTable() {
     loading={loading} 
     rowClassName={'h-16'} 
     headerClassName={'bg-[#FBFDFF]'}
+    onSortingChange={handleSortingChange}
   />;
 }

@@ -67,7 +67,7 @@ export function SyncSettingForm({
     }catch {
         setOpenSettingFormDialog(false);
         toast({
-          title: t('common.messages.error'),
+          title: t('common.sync_data_status.server_error'),
           variant:'destructive',
         })
     }finally {
@@ -79,7 +79,7 @@ export function SyncSettingForm({
     <BaseDialog
       open={isOpenSettingFormDialog}
       onOpenChange={setOpenSettingFormDialog}
-      showCloseButton={true}
+      showCloseButton={false}
       title={t('vocabularies.form.title')} 
       className="max-w-[500px]"
       headerClassName='block'
@@ -94,7 +94,6 @@ export function SyncSettingForm({
           placeholder={t('vocabularies.form.sheetLink')} 
           layout='vertical'
           className='w-full'
-          required={true}
           />
 
           <InputNumber 
@@ -105,7 +104,6 @@ export function SyncSettingForm({
           placeholder={t('vocabularies.form.lastReadRow')} 
           layout='vertical'
           className='w-full mb-5'
-          required={true}
           />
         </Form>
         <div className="w-full flex gap-2.5 justify-center">

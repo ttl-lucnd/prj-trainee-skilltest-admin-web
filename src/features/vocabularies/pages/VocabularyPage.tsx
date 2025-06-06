@@ -9,6 +9,7 @@ import { useVocabularyStore } from '../stores/useVocabularyStore';
 import { useShallow } from 'zustand/react/shallow';
 import { vocabularyService } from '../services/vocabulary.service';
 import { SyncSettingForm } from '@/components/SyncSettingForm';
+import { VocabularyDescriptionDetail } from '../components/VocabularyDescriptionDetail';
 export function VocabularyPage() {
   const { 
     isOpenSyncDataDialog, 
@@ -32,6 +33,7 @@ export function VocabularyPage() {
       <VocabularyList />
       <VocabularyDeleteDialog />
       <VocabularyImageDetail />
+      <VocabularyDescriptionDetail />
       <SyncDataDialog 
         isOpenSyncDataDialog={isOpenSyncDataDialog}
         setOpenSyncDataDialog={(data)=> setOpenSyncDataDialog(data)}

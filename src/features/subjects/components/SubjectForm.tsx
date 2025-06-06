@@ -36,7 +36,14 @@ export function SubjectForm() {
   });
 
   useEffect(() => {
-    if (!isOpenSubjectFormDialog) return;
+    if (!isOpenSubjectFormDialog) {
+      form.reset({
+        name: '',
+        logo: '',
+        image: '',
+      });
+      return;
+    }
     setLogoFile(null);
     setImageFile(null);
 
@@ -55,16 +62,7 @@ export function SubjectForm() {
     if(selectedSubject) {
       setFormType(SubjectFormType.UPDATE);
       getSubjectDetail();
-    } else {
-      setFormType(SubjectFormType.CREATE);
-      form.reset({
-        name: '',
-        monthlyFee: 0,
-        logo: '',
-        image: '',
-      });
-    }
-
+    } 
   }, [isOpenSubjectFormDialog, selectedSubject, setFormType]);
 
   const onSubmit = async (data: ISubjectFormBody) => {
@@ -91,15 +89,16 @@ export function SubjectForm() {
         getSubjectList();
         return;
       }
+      let errorKey = `common.messages.${formType}_failed`;
       if(response?.errors && response.errors[0]?.errorKey === 'subject.error.subject.existed') {
         form.setError('name', {
           type: 'validate',
           message: t('subjects.error.existed'),
         })
-        return;
+        errorKey='subjects.error.nameExisted';
       }
       toast({
-        title: t(`common.messages.${formType}_failed`),
+        title: t(errorKey),
         variant:'destructive',
       })
     }catch {
@@ -120,6 +119,15 @@ export function SubjectForm() {
       return response.data.url;
     };
     return '';
+  }
+
+  const handleDisable = () => {
+    return  loading 
+      || !form.formState.isDirty 
+      || !form.getValues('name')
+      || !form.getValues('monthlyFee')
+      || !!form.formState.errors.logo?.message 
+      || !!form.formState.errors.image?.message
   }
 
   return (
@@ -169,7 +177,8 @@ export function SubjectForm() {
               form.setValue('logo', '', { shouldValidate: true, shouldDirty: true,  })
             }}
             disabled={loading}
-            onValidationFail={(type) => {
+            onValidationFail={(file, type) => {
+              form.setValue('logo', URL.createObjectURL(file), { shouldValidate: false, shouldDirty: false,  })
               const message = t(`common.file.${type}`, {maxSize: DEFAULT_MAX_SIZE});
               form.setError('logo', { message });
             }}
@@ -190,7 +199,8 @@ export function SubjectForm() {
               form.setValue('image', '', { shouldValidate: true, shouldDirty: true,  })
             }}
             disabled={loading}
-            onValidationFail={(type) => {
+            onValidationFail={(file, type) => {
+              form.setValue('image', URL.createObjectURL(file), { shouldValidate: false, shouldDirty: false,  })
               const message = t(`common.file.${type}`, {maxSize: DEFAULT_MAX_SIZE});
               form.setError('image', { message });
             }}
@@ -212,7 +222,7 @@ export function SubjectForm() {
             type='submit'
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
-            disabled={!form.formState.isDirty || loading}
+            disabled={handleDisable()}
           >
             {t(`common.buttons.${formType ===SubjectFormType.CREATE ? 'add' : 'save'}`)}
           </Button>

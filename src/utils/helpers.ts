@@ -22,6 +22,7 @@ export function isJson(str: string): boolean {
 }
 
 export function parseErrorMessage(t: any, message: string): string {
+  console.log(message)
   const [tx, data] = message.split(SEPARATION);
   if (!data) {
     return t(tx);
@@ -207,4 +208,12 @@ export async function downloadFileByLink(link: string, fileName: string) {
 
 export function checkEmptyObject(obj: any) {
   return Object.keys(obj).length === 0;
+}
+
+export function capitalizeUnicodeFirstLetter(str: string): string {
+  if (!str) return "";
+  const firstChar = [...str][0];
+  const rest = [...str].slice(1).join('');
+  const capitalized = firstChar.toLocaleUpperCase();
+  return capitalized + rest;
 }
