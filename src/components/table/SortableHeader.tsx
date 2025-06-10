@@ -31,8 +31,6 @@ export function SortableHeader({
             if(disabled) return
             e.stopPropagation();
             if (column.getIsSorted() === OrderDirection.ASC.toLowerCase()) {
-              // column.clearSorting();
-              // onSortChange?.(null); 
               return;
             } else {
               column.toggleSorting(false);
@@ -47,8 +45,6 @@ export function SortableHeader({
             if(disabled) return
             e.stopPropagation();
             if (column.getIsSorted() === OrderDirection.DESC.toLowerCase()) {
-              // column.clearSorting();
-              // onSortChange?.(null); 
               return;
             } else {
               column.toggleSorting(true);
