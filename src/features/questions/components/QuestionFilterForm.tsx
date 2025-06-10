@@ -86,7 +86,7 @@ export function QuestionFilterForm() {
       isFiltering={isFiltering}
     >
       <MultiSelectField
-        className="w-[183px] h-[40px]"
+        className="w-[200px] h-[40px]"
         options={subjectDropdownList.map(item => ({
           label: item.name,
           value: item.id,
@@ -96,7 +96,7 @@ export function QuestionFilterForm() {
         control={form.control}
       />
       <MultiSelectField
-        className="w-[141px] h-[40px]"
+        className="w-[170px] h-[40px]"
         options={arrangeDropdownList.map(item => ({
           label: `${item}`,
           value: `${item}`,

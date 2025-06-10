@@ -39,3 +39,5 @@ export * from './questions-list';
 export * from './vocabulary-list';
 export * from './log-out-2';
 export * from './subject-list';
+export * from './logo';
+export * from './app-name';

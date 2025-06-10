@@ -2,7 +2,7 @@ import { BaseDialog } from '@/components/BaseDialog';
 import { useAdminStore } from '../stores/useAdminStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Button } from '@/components/ui/button';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { Form } from '@/components/ui/form';
 import { InputText } from '@/components/form/input';
 import { useTranslations } from 'next-intl';
@@ -28,6 +28,8 @@ export function AdminForm() {
 
   const form = useForm({
     resolver: updateAdminYupResolver,
+    mode:'onBlur',
+    reValidateMode: 'onBlur'
   });
 
   useEffect(() => {
@@ -92,35 +94,44 @@ export function AdminForm() {
     }
   };
 
+  const name = useWatch({ control: form.control, name: 'name' });
+  const email = useWatch({ control: form.control, name: 'email' });
+
   return (
     <BaseDialog
       open={isOpenAdminFormDialog}
       onOpenChange={setOpenAdminFormDialog}
-      showCloseButton={true}
+      showCloseButton={false}
       title={t(`adminAccount.title.${formType}`)} 
       className="max-w-[500px]"
       headerClassName='block'
     >
       <div className="flex flex-col items-center justify-end gap-2.5 ">
-        <Form {...form}>
+        <Form {...form} key={formType}>
           <InputText 
+            key={'email'}
             name="email" 
             control={form.control} 
             label={t('adminAccount.form.email')} 
             placeholder={t('adminAccount.form.email')} 
             layout='vertical'
             className='w-full'
+            disabled={loading}
+            onChange={() => form.clearErrors('email')}
           />
           <InputText 
+            key={'name'}
             name="name" 
             control={form.control} 
             label={t('adminAccount.form.name')} 
             placeholder={t('adminAccount.form.name')} 
             layout='vertical'
-            className='w-full mb-5'
+            className='w-full'
+            disabled={loading}
+            onChange={() => form.clearErrors('name')}
           />
         </Form>
-        <div className="w-full flex gap-2.5 justify-center">
+        <div className="w-full flex gap-2.5 justify-center mt-4">
           <Button
             variant="outline"
             className="w-[120px] h-[40px]"
@@ -132,7 +143,13 @@ export function AdminForm() {
             type='submit'
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
-            disabled={!form.formState.isDirty || loading}
+            disabled={
+              loading ||
+              !form.formState.isDirty ||
+              !name ||
+              !email ||
+              !!Object.keys(form.formState.errors).length
+            }
           >
             {t(`common.buttons.${formType ===AdminFormType.CREATE ? 'add' : 'save'}`)}
           </Button>

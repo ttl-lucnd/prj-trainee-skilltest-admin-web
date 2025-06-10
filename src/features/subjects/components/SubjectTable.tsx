@@ -155,7 +155,7 @@ export function SubjectTable() {
               }
             }}
             className={cn(
-              !isDisable && 'hover:bg-primary-2',
+              !isDisable && 'hover:bg-destructive',
               "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
             )}
             disabled={isDisable}

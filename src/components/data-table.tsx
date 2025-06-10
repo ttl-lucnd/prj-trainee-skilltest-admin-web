@@ -78,6 +78,7 @@ interface DataTableProps<TData, TValue> {
   containerClassName?: string;
   showBorderVertical?: boolean;
   headerClassName?: string;
+  defaultSort?: SortingState;
 }
 
 export const DataTable = forwardRef<any, DataTableProps<any, any>>(function DataTable(
@@ -98,12 +99,13 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
     containerClassName,
     showBorderVertical = false,
     headerClassName,
+    defaultSort = [],
   },
   ref,
 ) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [shouldShowShadow, setShouldShowShadow] = useState(true);
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>(defaultSort);
   const [rowSelection, setRowSelection] = React.useState({});
 
   const { inView } = useInView({

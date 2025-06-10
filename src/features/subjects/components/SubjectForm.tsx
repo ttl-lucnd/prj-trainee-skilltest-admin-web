@@ -33,6 +33,8 @@ export function SubjectForm() {
 
   const form = useForm<ISubjectFormBody>({
     resolver: createSubjectYupResolver,
+    mode: 'onChange',
+    reValidateMode: 'onChange',
   });
 
   useEffect(() => {
@@ -91,10 +93,6 @@ export function SubjectForm() {
       }
       let errorKey = `common.messages.${formType}_failed`;
       if(response?.errors && response.errors[0]?.errorKey === 'subject.error.subject.existed') {
-        form.setError('name', {
-          type: 'validate',
-          message: t('subjects.error.existed'),
-        })
         errorKey='subjects.error.nameExisted';
       }
       toast({
@@ -121,22 +119,13 @@ export function SubjectForm() {
     return '';
   }
 
-  const handleDisable = () => {
-    return  loading 
-      || !form.formState.isDirty 
-      || !form.getValues('name')
-      || !form.getValues('monthlyFee')
-      || !!form.formState.errors.logo?.message 
-      || !!form.formState.errors.image?.message
-  }
-
   return (
     <BaseDialog
       open={isOpenSubjectFormDialog}
       onOpenChange={setOpenSubjectFormDialog}
       showCloseButton={false}
       title={t(`subjects.title.${formType}`)} 
-      className="max-w-[500px]"
+      className="max-w-[500px] max-h-screen"
       headerClassName='block'
     >
       <div className="flex flex-col items-start justify-end gap-2.5">
@@ -210,7 +199,7 @@ export function SubjectForm() {
         <div className='text-[#E9034E]'>
             {t('subjects.form.message')}
         </div>}
-        <div className="w-full flex gap-2.5 justify-center mt-5">
+        <div className="w-full flex gap-2.5 justify-center mt-4">
           <Button
             variant="outline"
             className="w-[120px] h-[40px]"
@@ -222,7 +211,13 @@ export function SubjectForm() {
             type='submit'
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
-            disabled={handleDisable()}
+            disabled={
+              loading ||
+              !form.formState.isDirty ||
+              !form.formState.isValid ||
+              !!form.formState.errors.logo?.message ||
+              !!form.formState.errors.image?.message
+            }
           >
             {t(`common.buttons.${formType ===SubjectFormType.CREATE ? 'add' : 'save'}`)}
           </Button>

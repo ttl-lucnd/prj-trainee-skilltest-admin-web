@@ -35,17 +35,17 @@ export function SyncDataDialog({
         })
         return;
       }
-      let errorKey = 'error';
+      let errorKey = 'sync_data_status.server_error';
       if(response?.errors?.[0]?.errorKey?.includes('notFound')) {
-        errorKey = 'settingNotfound';
+        errorKey = 'messages.settingNotfound';
       }
       toast({
-        title: t(`common.messages.${errorKey}`),
+        title: t(`common.${errorKey}`),
         variant:'destructive',
       })
     }catch {
         toast({
-          title: t('common.messages.error'),
+          title: t('common.sync_data_status.server_error'),
           variant:'destructive',
         })
     }finally {
@@ -62,7 +62,7 @@ export function SyncDataDialog({
     >
       <div className="flex flex-col items-center justify-end gap-2.5 ">
         <h5 className="font-bold text-[#E9034E]">{t('common.sync_data_alert')}</h5>
-        <div className="w-full flex gap-2.5 justify-center mt-6">
+        <div className="w-full flex gap-2.5 justify-center mt-4">
           <Button variant="outline" className="w-[120px] h-[40px]" onClick={() => setOpenSyncDataDialog(false)}>
             {t('common.buttons.cancel')}
           </Button>

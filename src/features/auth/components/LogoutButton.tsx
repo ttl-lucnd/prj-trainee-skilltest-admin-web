@@ -19,24 +19,24 @@ export function LogoutButton() {
     setIsLoggingOut(true);
     await authService.logout();
     removeAllCookies();
+    router.push(PageRouter.LOGIN);
     toast({
       title: t(`common.messages.logout_success`),
       variant: 'success',
     })
-    router.push(PageRouter.LOGIN);
-  }, []);
+  }, [toast]);
 
   return (
     <button
       onClick={logout}
       disabled={isLoggingOut}
       className={cn(
-        'w-full flex items-center justify-start hover:bg-accent rounded-none px-6 py-3.5 text-[#FF0053]',
-        !open && 'justify-center',
+        'w-full flex items-center justify-start hover:bg-accent rounded-none px-10 py-3.5 text-[#FF0053] transition-width duration-200',
+        !open && 'justify-center flex-col px-2',
       )}
     >
       <LogOut2Icon size={20} className="py-2.5 mx-[20px]" />
-      <span className={cn(!open && 'hidden')}>{t('sidebar.logout')}</span>
+      <span>{t('sidebar.logout')}</span>
     </button>
   );
 }
