@@ -1,4 +1,4 @@
-import { DEFAULT_GET_LIST_QUERY } from '@/utils/constants';
+import { DEFAULT_GET_LIST_QUERY, OrderDirection } from '@/utils/constants';
 import { create } from 'zustand';
 import { IQuestion, IQuestionGetListQuery } from '../interfaces';
 import { questionService } from '../services/question.service';
@@ -52,6 +52,8 @@ const initialState: States = {
   isOpenSyncDataDialog: false,
   questionGetListQuery: {
     ...DEFAULT_GET_LIST_QUERY,
+    orderBy: 'arrange',
+    orderDirection: OrderDirection.ASC,
   },
   totalItems: 0,
   questionList: [],

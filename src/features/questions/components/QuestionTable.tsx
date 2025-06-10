@@ -155,7 +155,7 @@ export function QuestionTable() {
               setSelectedQuestion(row.original);
             }}
             className={cn(
-              'hover:bg-primary-2',
+              'hover:bg-destructive',
               "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
             )}
           >
@@ -254,5 +254,6 @@ export function QuestionTable() {
     rowClassName={'h-16'} 
     headerClassName={'bg-[#FBFDFF]'}
     onSortingChange={handleSortingChange}
+    defaultSort={[{id: 'arrange', desc: false}]} // default dort by arrange
   />;
 }

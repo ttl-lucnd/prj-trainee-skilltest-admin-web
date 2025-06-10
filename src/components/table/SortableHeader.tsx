@@ -21,10 +21,6 @@ export function SortableHeader({
   return (
     <button
       className={cn('w-full flex items-center gap-2', className)}
-      onClick={() =>{
-        if(disabled) return
-        column.toggleSorting()
-      }}
       data-testid="sortable-header-button"
     >
       {title}
@@ -35,8 +31,7 @@ export function SortableHeader({
             if(disabled) return
             e.stopPropagation();
             if (column.getIsSorted() === OrderDirection.ASC.toLowerCase()) {
-              column.clearSorting();
-              onSortChange?.(null); 
+              return;
             } else {
               column.toggleSorting(false);
               onSortChange?.(OrderDirection.ASC);
@@ -50,8 +45,7 @@ export function SortableHeader({
             if(disabled) return
             e.stopPropagation();
             if (column.getIsSorted() === OrderDirection.DESC.toLowerCase()) {
-              column.clearSorting();
-              onSortChange?.(null); 
+              return;
             } else {
               column.toggleSorting(true);
               onSortChange?.(OrderDirection.DESC);

@@ -50,7 +50,7 @@ export function AppMenu() {
     [pathname],
   );
   return (
-    <SidebarMenu className={cn('px-4', !open && 'px-5')}>
+    <SidebarMenu className={cn('px-4', !open && 'px-8')}>
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
           <SidebarMenuButton asChild isActive={isActive(item.path)} tooltip={t(item.title)}>

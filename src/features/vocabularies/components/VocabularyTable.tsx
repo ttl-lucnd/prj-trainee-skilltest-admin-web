@@ -210,7 +210,7 @@ export function VocabularyTable() {
               setSelectedVocabulary(row.original);
             }}
             className={cn(
-              'hover:bg-primary-2',
+              'hover:bg-destructive',
               "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
             )}
           >
@@ -231,14 +231,14 @@ export function VocabularyTable() {
         accessorKey: `MEANING_${key}`,
         enableSorting: true,
         cell: createMeaningCell(lang),
-        size: 120,
+        size: 180,
       },
       {
         header: t(`vocabularies.table.description_${lang}`),
         accessorKey: `description_${lang}`,
         enableSorting: true,
         cell: createDescriptionCell(lang, setOpenDescriptionDetail, setSelectedDescription),
-        size: 240,
+        size: 180,
       },
       ]
     );
@@ -288,7 +288,7 @@ export function VocabularyTable() {
         accessorKey: 'description',
         enableSorting: true,
         cell: originalDescriptionCell,
-        size: 240,
+        size: 150,
       },
       ...translateCol,
       {
@@ -330,5 +330,6 @@ export function VocabularyTable() {
     rowClassName={'h-16'} 
     headerClassName={'bg-[#FBFDFF]'}
     onSortingChange={handleSortingChange}
+    defaultSort={[{id: 'VOCABULARY', desc: false}]} 
   />;
 }

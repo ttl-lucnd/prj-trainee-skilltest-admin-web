@@ -44,7 +44,6 @@ export function BasicFilterForm({
           }}
         />
         {searchBtn && <Button 
-          size="lg" 
           onClick={form.handleSubmit(onSubmit)}
           disabled={isFiltering}
         >{t('common.buttons.filter_view')}</Button>

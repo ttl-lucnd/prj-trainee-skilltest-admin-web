@@ -17,7 +17,7 @@ export const validateTrim = (value: string) => {
 
 export const emailSchema = yup.string().trim().max(INPUT_TEXT_MAX_LENGTH).isEmail();
 
-export const shortStringSchema = yup.string().trim().max(INPUT_TEXT_MAX_LENGTH);
+export const shortStringSchema = yup.string().max(INPUT_TEXT_MAX_LENGTH);
 
 export const longStringSchema = yup.string().trim().max(TEXTAREA_MAX_LENGTH);
 

@@ -23,7 +23,7 @@ const SIDEBAR_COOKIE_NAME = 'sidebar:state';
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = '244px';
 const SIDEBAR_WIDTH_MOBILE = '16rem';
-const SIDEBAR_WIDTH_ICON = '5rem';
+const SIDEBAR_WIDTH_ICON = '104px';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 
 type SidebarContext = {

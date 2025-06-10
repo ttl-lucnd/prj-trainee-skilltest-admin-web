@@ -13,7 +13,7 @@ export default {
       fontSize: {
         base: ['14px', '20px'],
         medium: ['0.875rem', '1.2'],
-        'body-xl': ['18px', '25.2px'],
+        'body-xl': ['20px', '26px'],
         'body-lg': ['16px', '19.2px'],
         'body-md': ['14px', '16.8px'],
         'body-sm': ['12px', '14px'],

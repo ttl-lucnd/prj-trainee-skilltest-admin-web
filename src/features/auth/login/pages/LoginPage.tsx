@@ -7,6 +7,7 @@ import { authService } from '../../services/auth.service';
 import qs from 'qs';
 import { useState } from 'react';
 import Image from 'next/image';
+import { Toaster } from '@/components/ui/toaster';
 
 const NEXT_PUBLIC_GOOGLE_LOGIN_CALLBACK_URL =
   process.env.NEXT_PUBLIC_GOOGLE_LOGIN_CALLBACK_URL;
@@ -39,6 +40,7 @@ export function LoginPage() {
 
   return (
     <main className="bg-primary-2 flex min-h-screen flex-col items-center justify-center p-24 text-white gap-2">
+      <Toaster/>
       <h2 className="font-bold">{t('login.appName')}</h2>
       <h2 className="font-bold">{t('login.adminScreen')}</h2>
       <Button

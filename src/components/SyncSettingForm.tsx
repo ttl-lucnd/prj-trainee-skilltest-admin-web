@@ -1,6 +1,6 @@
 import { BaseDialog } from '@/components/BaseDialog';
 import { Button } from '@/components/ui/button';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { Form } from '@/components/ui/form';
 import { InputText } from '@/components/form/input';
 import { useTranslations } from 'next-intl';
@@ -26,6 +26,8 @@ export function SyncSettingForm({
   
   const form = useForm({
     resolver: syncSettingYupResolver,
+    mode:'onBlur',
+    reValidateMode: 'onBlur'
   });
 
   const [loading, setLoading] = useState(false);
@@ -33,7 +35,7 @@ export function SyncSettingForm({
   useEffect(() => {
     if (!isOpenSettingFormDialog) return;
 
-    const getVocabularySetting = async () => {
+    const getDefaultSetting = async () => {
       const response = await getSetting();
       if (response.success) {
         form.reset({
@@ -43,7 +45,7 @@ export function SyncSettingForm({
       }
     };
 
-    getVocabularySetting();
+    getDefaultSetting();
   }, [isOpenSettingFormDialog]);
 
   const onSubmit = async (data: ISyncSettingBody) => {
@@ -67,13 +69,16 @@ export function SyncSettingForm({
     }catch {
         setOpenSettingFormDialog(false);
         toast({
-          title: t('common.sync_data_status.server_error'),
+          title: t('common.messages.error'),
           variant:'destructive',
         })
     }finally {
       setLoading(false);
     }
   };
+
+  const sheetLink = useWatch({ control: form.control, name: 'sheetLink' });
+  const lastReadRow = useWatch({ control: form.control, name: 'lastReadRow' });
 
   return (
     <BaseDialog
@@ -94,6 +99,10 @@ export function SyncSettingForm({
           placeholder={t('vocabularies.form.sheetLink')} 
           layout='vertical'
           className='w-full'
+          disabled={loading}
+          onChange={()=>form.clearErrors('sheetLink')}
+          customClassName='truncate'
+          title={sheetLink}
           />
 
           <InputNumber 
@@ -103,10 +112,12 @@ export function SyncSettingForm({
           label={t('vocabularies.form.lastReadRow')} 
           placeholder={t('vocabularies.form.lastReadRow')} 
           layout='vertical'
-          className='w-full mb-5'
+          className='w-full'
+          disabled={loading}
+          onChange={()=> form.clearErrors('lastReadRow')}
           />
         </Form>
-        <div className="w-full flex gap-2.5 justify-center">
+        <div className="w-full flex gap-2.5 justify-center mt-4">
           <Button
             variant="outline"
             className="w-[120px] h-[40px]"
@@ -118,7 +129,13 @@ export function SyncSettingForm({
             type='submit'
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
-            disabled={!form.formState.isDirty || loading}
+            disabled={
+              loading ||
+              !form.formState.isDirty ||
+              !sheetLink ||
+              !lastReadRow ||
+              !!Object.keys(form.formState.errors).length
+            }
           >
             {t('common.buttons.save')}
           </Button>

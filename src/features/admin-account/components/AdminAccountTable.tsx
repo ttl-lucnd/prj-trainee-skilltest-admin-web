@@ -95,7 +95,7 @@ export function AdminAccountTable() {
               setSelectedAdmin(row.original);
             }}
             className={cn(
-              !isDisableDelete && 'hover:bg-primary-2',
+              !isDisableDelete && 'hover:bg-destructive',
               "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
             )}
             disabled={isDisableDelete}
