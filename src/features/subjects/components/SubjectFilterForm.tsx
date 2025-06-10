@@ -26,7 +26,7 @@ export function SubjectFilterForm() {
   useEffect(() => {
     const query = getSubjectQueryFromUrl();
     form.reset(query);
-    setSubjectGetListQuery(query, { reloadList: false });
+    setSubjectGetListQuery({...query, limit: 10}, { reloadList: false });
   }, []);
 
   const onSubmit = async (data: any) => {
