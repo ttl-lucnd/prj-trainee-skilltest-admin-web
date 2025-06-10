@@ -132,7 +132,7 @@
   "sync_data_status": {
     "pending": "データ同期中",
     "complete": "データ同期完了",
-    "permission_denied": "ドライブへのアクセスが拒否された",
+    "permission_denied": "スプレッドシートへのアクセスが拒否された",
     "server_error": "サーバーエラーが発生した"
   },
   "maxMonthlyFee": "月額料金が上限を超えています",
