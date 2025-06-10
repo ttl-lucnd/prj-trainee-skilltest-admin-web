@@ -26,7 +26,7 @@ export function AdminFilterForm() {
   useEffect(() => {
     const query = getAdminAccountQueryFromUrl();
     form.reset(query);
-    setAdminGetListQuery({...query, limit: 10}, { reloadList: false });
+    setAdminGetListQuery(query, { reloadList: false });
   }, []);
 
   const onSubmit = async (data: any) => {
