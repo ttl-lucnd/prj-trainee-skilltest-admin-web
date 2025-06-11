@@ -278,7 +278,7 @@ export function VocabularyTable() {
       },
       {
         header: pronunciationSortHeader,
-        accessorKey: 'PRONOUNCIATION',
+        accessorKey: 'PRONUNCIATION',
         enableSorting: true,
         cell: pronunciationCell,
         size: 120,

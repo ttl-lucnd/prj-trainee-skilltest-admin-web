@@ -31,12 +31,12 @@ export function LogoutButton() {
       onClick={logout}
       disabled={isLoggingOut}
       className={cn(
-        'w-full flex items-center justify-start hover:bg-accent rounded-none px-10 py-3.5 text-[#FF0053] transition-width duration-200',
+        'w-full flex items-center justify-start hover:bg-accent rounded-none px-10 py-3.5 text-[#FF0053] transition-width duration-200 overflow-hidden',
         !open && 'justify-center flex-col px-2',
       )}
     >
       <LogOut2Icon size={20} className="py-2.5 mx-[20px]" />
-      <span>{t('sidebar.logout')}</span>
+      <span className='break-keep'>{t('sidebar.logout')}</span>
     </button>
   );
 }
