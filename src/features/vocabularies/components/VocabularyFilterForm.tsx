@@ -1,9 +1,9 @@
 'use client';
 
-import { DEFAULT_FIRST_PAGE } from '@/utils/constants';
+import { DEFAULT_FIRST_PAGE, DELAY_GET_STATUS } from '@/utils/constants';
 import { useUpdateUrlWithQuery } from '@/utils/url';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useShallow } from 'zustand/react/shallow';
 import { vocabularyFilterYupResolver } from '../schema';
@@ -12,6 +12,7 @@ import { MultiSelectField } from '@/components/form/multi-select';
 import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 import { BasicFilterForm } from '@/components/BasicFilterForm';
+import { SYNC_DATA_STATUS } from '@/features/common/constants';
 export function VocabularyFilterForm() {
   const t = useTranslations();
   const [isFiltering, setIsFiltering] = useState(false);
@@ -34,11 +35,29 @@ export function VocabularyFilterForm() {
     updateUrlWithQuery: updateVocabularyUrlWithQuery,
   } = useUpdateUrlWithQuery();
 
+  const prevStatusRef = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    const prevStatus = prevStatusRef.current;
+    const currentStatus = vocabularySetting?.status;
+
+    if (prevStatus === SYNC_DATA_STATUS.PENDING && currentStatus !== SYNC_DATA_STATUS.PENDING) {
+      getVocabularyList();
+    }
+
+    prevStatusRef.current = currentStatus;
+  }, [vocabularySetting?.status]);
+
   useEffect(() => {
     const query = getVocabularyQueryFromUrl();
     form.reset(query);
     setVocabularyGetListQuery(query, { reloadList: false });
     getVocabularySetting();
+    const interval = setInterval(() => {
+      getVocabularySetting();
+    }, DELAY_GET_STATUS);
+
+    return () => clearInterval(interval)
   }, []);
 
   const onSubmit = async (data: any) => {

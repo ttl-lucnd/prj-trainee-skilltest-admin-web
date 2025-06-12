@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { UploadField } from '@/components/form/upload';
 import { DEFAULT_MAX_SIZE } from '@/utils';
 import { InputNumber } from '@/components/form/input-number';
+import { cn } from '@/lib/utils';
 export function SubjectForm() {
   const t = useTranslations();
   const { selectedSubject, isOpenSubjectFormDialog, setOpenSubjectFormDialog, getSubjectList } = useSubjectStore(
@@ -125,10 +126,10 @@ export function SubjectForm() {
       onOpenChange={setOpenSubjectFormDialog}
       showCloseButton={false}
       title={t(`subjects.title.${formType}`)} 
-      className="max-w-[500px] max-h-screen"
+      className="max-w-[500px] max-h-[calc(100vh-10px)] pb-0"
       headerClassName='block'
     >
-      <div className="flex flex-col items-start justify-end gap-2.5">
+      <div className="flex flex-col items-start justify-end gap-2.5 pb-2">
         <Form {...form} key={formType}>
           <InputText 
             key={'name'}
@@ -199,7 +200,9 @@ export function SubjectForm() {
         <div className='text-[#E9034E]'>
             {t('subjects.form.message')}
         </div>}
-        <div className="w-full flex gap-2.5 justify-center mt-4">
+
+      </div>
+        <div className={cn("w-full pb-6 flex gap-2.5 bg-white justify-center pt-2 sticky left-0 bottom-0")}>
           <Button
             variant="outline"
             className="w-[120px] h-[40px]"
@@ -222,7 +225,6 @@ export function SubjectForm() {
             {t(`common.buttons.${formType ===SubjectFormType.CREATE ? 'add' : 'save'}`)}
           </Button>
         </div>
-      </div>
     </BaseDialog>
   );
 }

@@ -24,7 +24,7 @@ export function BaseDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         className={cn(
-          'p-0 pt-3 gap-0 overflow-hidden',
+          'p-0 pb-6 pt-3 gap-0 overflow-hidden',
           className,
         )}
         showCloseButton={showCloseButton}
@@ -38,7 +38,7 @@ export function BaseDialog({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <div className="max-h-full flex-1 overflow-y-auto p-6 pt-2 relative">{children}</div>
+        <div className="max-h-full flex-1 overflow-y-auto px-6 pt-2 relative">{children}</div>
       </DialogContent>
     </Dialog>
   );

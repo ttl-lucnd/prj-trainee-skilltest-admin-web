@@ -3,10 +3,10 @@ import { DataTable } from '@/components/data-table';
 import { TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
 import { DEFAULT_FIRST_PAGE, OrderDirection } from '@/utils/constants';
-import { CellContext, ColumnDef, ColumnSort } from '@tanstack/react-table';
+import { CellContext, ColumnDef, ColumnSort, SortingState } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { IVocabulary, TranslatedContent, TranslateLanguages, VocabularyOrderBy } from '../interfaces';
 import { useVocabularyStore } from '../stores/useVocabularyStore';
@@ -98,11 +98,19 @@ export function VocabularyTable() {
     })),
   );
 
+  const [sorting, setSorting] = useState<SortingState>([{id: 'VOCABULARY_ORIGINALLANGUAGE', desc: false}])
+
   const {
+    getQueryFromUrl: getVocabularyQueryFromUrl,
     updateUrlWithQuery: updateVocabularyUrlWithQuery,
   } = useUpdateUrlWithQuery();
 
   useEffect(() => {
+    const query = getVocabularyQueryFromUrl();
+    setSorting([{
+      id: (query?.orderBy as string)?.toUpperCase()?.replace('.', '_') ?? 'VOCABULARY_ORIGINALLANGUAGE', 
+      desc: query?.orderDirection === OrderDirection.DESC
+    }])
     getVocabularyList();
     return () => {
       resetState();
@@ -112,7 +120,7 @@ export function VocabularyTable() {
     const handleSortingChange = useCallback(
     (sort?: ColumnSort) => {
       const newQuery = {
-        orderBy: VocabularyOrderBy[sort?.id as keyof typeof VocabularyOrderBy ?? 'VOCABULARY'],
+        orderBy: VocabularyOrderBy[sort?.id as keyof typeof VocabularyOrderBy ?? 'VOCABULARY_ORIGINALLANGUAGE'],
         orderDirection: sort?.desc ? OrderDirection.DESC : OrderDirection.ASC,
       };
 
@@ -228,7 +236,7 @@ export function VocabularyTable() {
     const headers = Object.entries(TranslateLanguages).flatMap(([key, lang]) => [
         {
         header: createMeaningSortHeader(lang, t),
-        accessorKey: `MEANING_${key}`,
+        accessorKey: `VOCABULARY_${key}`,
         enableSorting: true,
         cell: createMeaningCell(lang),
         size: 180,
@@ -272,13 +280,13 @@ export function VocabularyTable() {
       {
         enableSorting: true,
         header: vocabularySortHeader,
-        accessorKey: 'VOCABULARY',
+        accessorKey: 'VOCABULARY_ORIGINALLANGUAGE',
         cell: vocabularyCell,
         size: 120,
       },
       {
         header: pronunciationSortHeader,
-        accessorKey: 'PRONOUNCIATION',
+        accessorKey: 'PRONUNCIATION',
         enableSorting: true,
         cell: pronunciationCell,
         size: 120,
@@ -330,6 +338,7 @@ export function VocabularyTable() {
     rowClassName={'h-16'} 
     headerClassName={'bg-[#FBFDFF]'}
     onSortingChange={handleSortingChange}
-    defaultSort={[{id: 'VOCABULARY', desc: false}]} 
+    sorting={sorting}
+    setSorting={setSorting}
   />;
 }

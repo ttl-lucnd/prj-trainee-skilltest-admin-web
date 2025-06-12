@@ -81,7 +81,7 @@ export function GoogleLoginCallbackPage() {
     login();
   }, []);
   return (
-    <div className="h-screen bg-white flex items-center justify-center">
+    <div className="h-screen bg-white flex items-center justify-center text-primary-2">
       <LoadingCircleIcon className="animate-spin" size={48} />
     </div>
   );

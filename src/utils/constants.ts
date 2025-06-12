@@ -347,3 +347,5 @@ export enum AuthEventType {
 }
 
 export const MIN_DATA_TABLE_ROW = 5;
+
+export const DELAY_GET_STATUS = 10000; // 10s delay

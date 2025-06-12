@@ -49,7 +49,6 @@ const initialState: States = {
   isOpenImageDetail: false,
   subjectGetListQuery: {
     ...DEFAULT_GET_LIST_QUERY,
-    limit: 10,
   },
   totalItems: 0,
   subjectList: [],
