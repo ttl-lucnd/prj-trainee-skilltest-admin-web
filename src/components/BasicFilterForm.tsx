@@ -6,24 +6,27 @@ import { SearchIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { UseFormReturn } from 'react-hook-form';
 import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
 export function BasicFilterForm({
   form,
   onSubmit,
   searchBtn = false,
   children,
   isFiltering = false,
+  className,
 } : {
   readonly form: UseFormReturn,
   readonly onSubmit: (data: any) => Promise<void>,
   readonly searchBtn?: boolean,
   readonly isFiltering?: boolean,
   readonly children?: React.ReactNode,
+  readonly className?: string,
 }) {
   const t = useTranslations();
 
   return (
     <Form {...form}>
-      <form className="flex gap-2.5 items-end justify-end mb-5 ms-[auto]" onSubmit={form.handleSubmit(onSubmit)}>
+      <form className={cn("flex gap-2.5 items-end justify-end ms-[auto]", className)} onSubmit={form.handleSubmit(onSubmit)}>
         {children}
         <InputText
           name="keyword"

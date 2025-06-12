@@ -81,7 +81,7 @@ export function QuestionFilterForm() {
   };
 
   const syncDataInfo = () => {
-    return <div className='flex flex-col mb-2 max-w-full flex-1'>
+    return <div className='flex flex-col max-w-full flex-1'>
       {questionSetting?.lastSyncDataAt &&
       <div className='flex flex-wrap'>
         {t('common.sync_data_at')}
@@ -94,7 +94,7 @@ export function QuestionFilterForm() {
 
   return (
     <div className={cn(
-      'flex flex-wrap w-full items-start gap-2.5 mb-5',
+      'flex flex-wrap w-full items-start gap-2.5 mt-0.5 mb-[16px]',
       questionSetting? 'justify-between' : 'justify-end'
     )}>
     {questionSetting && syncDataInfo()}

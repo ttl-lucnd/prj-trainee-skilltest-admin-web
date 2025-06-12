@@ -52,6 +52,7 @@ export function SubjectFilterForm() {
 
   return (
     <BasicFilterForm 
+      className='mt-0.5 mb-[16px]'
       form={form}
       onSubmit={(data) => onSubmit(data)}
     />
