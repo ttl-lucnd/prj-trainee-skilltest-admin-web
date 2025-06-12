@@ -107,7 +107,6 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
 ) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [shouldShowShadow, setShouldShowShadow] = useState(true);
-  // const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState({});
 
   const { inView } = useInView({
