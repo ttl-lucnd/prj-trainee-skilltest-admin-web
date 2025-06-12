@@ -54,7 +54,7 @@ const initialState: States = {
   isOpenSyncDataDialog: false,
   vocabularyGetListQuery: {
     ...DEFAULT_GET_LIST_QUERY,
-    orderBy: VocabularyOrderBy.VOCABULARY,
+    orderBy: VocabularyOrderBy.VOCABULARY_ORIGINALLANGUAGE,
     orderDirection: OrderDirection.ASC,
   },
   totalItems: 0,

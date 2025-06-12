@@ -78,7 +78,8 @@ interface DataTableProps<TData, TValue> {
   containerClassName?: string;
   showBorderVertical?: boolean;
   headerClassName?: string;
-  defaultSort?: SortingState;
+  sorting?: SortingState;
+  setSorting?: React.Dispatch<React.SetStateAction<SortingState>>
 }
 
 export const DataTable = forwardRef<any, DataTableProps<any, any>>(function DataTable(
@@ -99,13 +100,14 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
     containerClassName,
     showBorderVertical = false,
     headerClassName,
-    defaultSort = [],
+    sorting = [],
+    setSorting,
   },
   ref,
 ) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const [shouldShowShadow, setShouldShowShadow] = useState(true);
-  const [sorting, setSorting] = useState<SortingState>(defaultSort);
+  // const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState({});
 
   const { inView } = useInView({
@@ -167,7 +169,7 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
       rowSelection,
     },
     onSortingChange: (updatedSorting) => {
-      setSorting(updatedSorting);
+      setSorting?.(updatedSorting);
       const newSorting =
         typeof updatedSorting === 'function' ? updatedSorting(sorting) : updatedSorting;
       onSortingChange?.(newSorting?.[0]);

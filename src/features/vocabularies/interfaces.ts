@@ -34,13 +34,13 @@ export interface IVocabularyGetListQuery extends ICommonListQuery {
 
 const meaningOrderBy = Object.fromEntries(
   Object.entries(TranslateLanguages).map(([key, lang]) => [
-    `MEANING_${key}`,
+    `VOCABULARY_${key}`,
     `vocabulary.${lang}`,
   ]),
 ) as Record<`MEANING_${keyof typeof TranslateLanguages}`, string>;
 
 export const VocabularyOrderBy = {
   ...meaningOrderBy,
-  VOCABULARY: 'vocabulary.originalLanguage',
+  VOCABULARY_ORIGINALLANGUAGE: 'vocabulary.originalLanguage',
   PRONUNCIATION: 'pronunciation',
 } as const;

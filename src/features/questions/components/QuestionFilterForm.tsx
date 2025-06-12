@@ -1,9 +1,9 @@
 'use client';
 
-import { DEFAULT_FIRST_PAGE } from '@/utils/constants';
+import { DEFAULT_FIRST_PAGE, DELAY_GET_STATUS } from '@/utils/constants';
 import { useUpdateUrlWithQuery } from '@/utils/url';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useShallow } from 'zustand/react/shallow';
 import { questionFilterYupResolver } from '../schema';
@@ -12,6 +12,7 @@ import { MultiSelectField } from '@/components/form/multi-select';
 import dayjs from 'dayjs';
 import { cn } from '@/lib/utils';
 import { BasicFilterForm } from '@/components/BasicFilterForm';
+import { SYNC_DATA_STATUS } from '@/features/common/constants';
 export function QuestionFilterForm() {
   const t = useTranslations();
   const [isFiltering, setIsFiltering] = useState(false);
@@ -35,11 +36,29 @@ export function QuestionFilterForm() {
     updateUrlWithQuery: updateQuestionUrlWithQuery,
   } = useUpdateUrlWithQuery();
 
+  const prevStatusRef = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    const prevStatus = prevStatusRef.current;
+    const currentStatus = questionSetting?.status;
+
+    if (prevStatus === SYNC_DATA_STATUS.PENDING && currentStatus !== SYNC_DATA_STATUS.PENDING) {
+      getQuestionList();
+    }
+
+    prevStatusRef.current = currentStatus;
+  }, [questionSetting?.status]);
+
   useEffect(() => {
     const query = getQuestionQueryFromUrl();
     form.reset(query);
     setQuestionGetListQuery(query, { reloadList: false });
-    getQuestionSetting();
+    getQuestionSetting();   
+    const interval = setInterval(() => {
+      getQuestionSetting();
+    }, DELAY_GET_STATUS);
+
+    return () => clearInterval(interval)
   }, []);
 
   const onSubmit = async (data: any) => {

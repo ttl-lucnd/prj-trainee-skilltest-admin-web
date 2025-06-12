@@ -40,7 +40,6 @@ const initialState: States = {
   isOpenDeleteAdminDialog: false,
   adminGetListQuery: {
     ...DEFAULT_GET_LIST_QUERY,
-    limit: 10,
   },
   totalItems: 0,
   adminList: [],

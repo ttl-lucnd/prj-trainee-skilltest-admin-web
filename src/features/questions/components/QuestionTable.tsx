@@ -3,10 +3,10 @@ import { DataTable } from '@/components/data-table';
 import { TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
 import { DEFAULT_FIRST_PAGE, OrderBy, OrderDirection } from '@/utils/constants';
-import { CellContext, ColumnDef, ColumnSort } from '@tanstack/react-table';
+import { CellContext, ColumnDef, ColumnSort, SortingState } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { IQuestion } from '../interfaces';
 import { useQuestionStore } from '../stores/useQuestionStore';
@@ -44,11 +44,19 @@ export function QuestionTable() {
     })),
   );
 
+  const [sorting, setSorting] = useState<SortingState>([{id: 'arrange', desc: false}])
+
   const {
+    getQueryFromUrl: getQuestionQueryFromUrl,
     updateUrlWithQuery: updateQuestionUrlWithQuery,
   } = useUpdateUrlWithQuery();
 
   useEffect(() => {
+    const query = getQuestionQueryFromUrl();
+    setSorting([{
+      id: query?.orderBy as string ?? 'arrange', 
+      desc: query?.orderDirection === OrderDirection.DESC
+    }])
     getQuestionList();
     return () => {
       resetState();
@@ -254,6 +262,7 @@ export function QuestionTable() {
     rowClassName={'h-16'} 
     headerClassName={'bg-[#FBFDFF]'}
     onSortingChange={handleSortingChange}
-    defaultSort={[{id: 'arrange', desc: false}]} // default dort by arrange
+    sorting={sorting}
+    setSorting={setSorting}
   />;
 }
