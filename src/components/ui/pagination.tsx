@@ -53,7 +53,7 @@ export function Pagination({
                     size="sm"
                     onClick={() => onItemsPerPageChange?.(limit)}
                     className={cn(
-                      `rounded-[6px] text-body-md`,
+                      `rounded-[6px] text-body-md font-normal`,
                       itemsPerPage === limit && '!text-white',
                     )}
                   >
@@ -70,7 +70,7 @@ export function Pagination({
                 size="sx"
                 onClick={() => onPageChange(1)}
                 disabled={currentPage === 1}
-                className="p-1"
+                className="p-1 font-normal"
                 name="double-left"
               >
                 <Image
@@ -85,7 +85,7 @@ export function Pagination({
                 size="sx"
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="p-1"
+                className="p-1 font-normal"
                 name="left"
               >
                 <Image src="/chevron-left.svg" alt="left" width={22} height={22} />
@@ -109,7 +109,7 @@ export function Pagination({
                       variant={currentPage === page ? 'default' : 'outline'}
                       size="sx"
                       onClick={() => onPageChange(page)}
-                      className="p-1 w-8 h-8 yt"
+                      className="p-1 w-8 h-8 yt font-normal"
                       name={`page-${page}`}
                     >
                       {page}
@@ -122,7 +122,7 @@ export function Pagination({
                 size="sx"
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="p-1"
+                className="p-1 font-normal"
                 name="right"
               >
                 <Image src="/chevron-right.svg" alt="right" width={22} height={22} />
@@ -132,7 +132,7 @@ export function Pagination({
                 size="sx"
                 onClick={() => onPageChange(totalPages)}
                 disabled={currentPage === totalPages}
-                className="p-1"
+                className="p-1 font-normal"
                 name="double-right"
               >
                 <Image
