@@ -80,7 +80,7 @@ export function VocabularyFilterForm() {
   };
 
    const syncDataInfo = () => {
-      return <div className='flex flex-col min-w-[200px] mb-2'>
+      return <div className='flex flex-col min-w-[200px]'>
         {vocabularySetting?.lastSyncDataAt &&
         <div className='flex flex-wrap'>
           {t('common.sync_data_at')}
@@ -93,7 +93,7 @@ export function VocabularyFilterForm() {
 
   return (
     <div className={cn(
-      'flex flex-wrap w-full items-start gap-10 mb-5',
+      'flex flex-wrap w-full items-start gap-10 mt-0.5 mb-[16px]',
       vocabularySetting? 'justify-between' : 'justify-end'
     )}>
     {vocabularySetting && syncDataInfo()}
