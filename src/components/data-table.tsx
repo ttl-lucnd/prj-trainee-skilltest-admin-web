@@ -260,7 +260,6 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
                     className={cn(
                       'bg-white',
                       headerClassName,
-                      header.id === 'index' && 'text-center',
                       showBorderVertical &&
                         header.index !== headerGroup.headers.length - 1 &&
                         'border-r border-[#CBD5E1]',
