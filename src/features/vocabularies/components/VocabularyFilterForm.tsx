@@ -93,7 +93,7 @@ export function VocabularyFilterForm() {
 
   return (
     <div className={cn(
-      'flex flex-wrap w-full items-start gap-10 mt-0.5 mb-[16px]',
+      'flex flex-wrap w-full items-start gap-x-10 gap-y-2.5 mt-0.5 mb-[16px]',
       vocabularySetting? 'justify-between' : 'justify-end'
     )}>
     {vocabularySetting && syncDataInfo()}

@@ -117,7 +117,7 @@ export function SyncSettingForm({
           onChange={()=> form.clearErrors('lastReadRow')}
           />
         </Form>
-        <div className="w-full flex gap-2.5 justify-center mt-4">
+        <div className="w-full flex gap-2.5 justify-center mt-4 pb-0.5">
           <Button
             variant="outline"
             className="w-[120px] h-[40px]"
