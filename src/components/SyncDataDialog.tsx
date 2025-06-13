@@ -62,7 +62,7 @@ export function SyncDataDialog({
     >
       <div className="flex flex-col items-center justify-end gap-2.5 ">
         <h5 className="font-bold text-[#E9034E]">{t('common.sync_data_alert')}</h5>
-        <div className="w-full flex gap-2.5 justify-center mt-4">
+        <div className="w-full flex gap-2.5 justify-center mt-4 pb-0.5">
           <Button variant="outline" className="w-[120px] h-[40px]" onClick={() => setOpenSyncDataDialog(false)}>
             {t('common.buttons.cancel')}
           </Button>
