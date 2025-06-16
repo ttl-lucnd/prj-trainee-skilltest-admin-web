@@ -36,7 +36,7 @@ export function BasicFilterForm({
           label=""
           control={form.control}
           suffixIcon={<SearchIcon size={22} />}
-          onSuffixIconClick={form.handleSubmit(onSubmit)}
+          onSuffixIconClick={!searchBtn ? form.handleSubmit(onSubmit): undefined}
           onKeyDown={(e) => {
             if(e.key !== 'Enter') return;
             const keyword = form.watch('keyword') ?? '';

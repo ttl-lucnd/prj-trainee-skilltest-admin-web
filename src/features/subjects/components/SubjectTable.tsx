@@ -134,14 +134,14 @@ export function SubjectTable() {
             }}
           className={cn(
               !isDisable && 'hover:bg-primary-2',
-              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/edit"
+              "flex size-[30px] rounded-full items-center justify-center group/edit"
             )}
             disabled={isDisable}
           >
             <PencilIcon size={22}
               className={cn(
                 isDisable ? 'text-[#CECECE]'
-                : 'group-hover/edit:text-white')
+                : 'cursor-pointer group-hover/edit:text-white')
               }
             />
           </button>
@@ -156,14 +156,14 @@ export function SubjectTable() {
             }}
             className={cn(
               !isDisable && 'hover:bg-destructive',
-              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
+              "flex size-[30px] rounded-full items-center justify-center group/delete"
             )}
             disabled={isDisable}
           >
             <TrashIcon size={22} 
               className={cn(
                 isDisable ? 'text-[#CECECE]'
-                : 'group-hover/delete:text-white')
+                : 'cursor-pointer group-hover/delete:text-white')
               }
             />
           </button>

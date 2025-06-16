@@ -78,14 +78,14 @@ export function AdminAccountTable() {
             }}
             className={cn(
               !isDisableEdit && 'hover:bg-primary-2',
-              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/edit"
+              "flex size-[30px] rounded-full items-center justify-center group/edit"
             )}
             disabled={isDisableEdit}
           >
             <PencilIcon size={22}
               className={cn(
                 isDisableEdit ? 'text-[#CECECE]'
-                : 'group-hover/edit:text-white')
+                : 'cursor-pointer group-hover/edit:text-white')
               }
             />
           </button>
@@ -96,14 +96,14 @@ export function AdminAccountTable() {
             }}
             className={cn(
               !isDisableDelete && 'hover:bg-destructive',
-              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
+              "flex size-[30px] rounded-full items-center justify-center group/delete"
             )}
             disabled={isDisableDelete}
           >
             <TrashIcon size={22} 
               className={cn(
                 isDisableDelete ? 'text-[#CECECE]'
-                : 'group-hover/delete:text-white')
+                : 'cursor-pointer group-hover/delete:text-white')
               }
             />
           </button>
