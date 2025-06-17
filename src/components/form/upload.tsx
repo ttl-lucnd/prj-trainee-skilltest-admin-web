@@ -91,10 +91,8 @@ export function UploadField({
             src={imageUrl}
             alt=""
             fill
-            width={82}
-            height={82}
             className="object-cover object-center rounded-lg"
-            onLoadingComplete={()=>setIsImageLoading(false)}
+            onLoad={()=>setIsImageLoading(false)}
             onError={() => setTimeout(() => setIsImageLoading(false), 1000)} // wait fall back image error
           />
         </div>
