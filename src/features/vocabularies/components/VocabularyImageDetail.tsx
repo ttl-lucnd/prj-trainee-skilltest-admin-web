@@ -1,6 +1,8 @@
 import { BaseDialog } from '@/components/BaseDialog';
 import { useVocabularyStore } from '../stores/useVocabularyStore';
 import { useShallow } from 'zustand/react/shallow';
+import { LoadingCircleIcon } from '@/components/icons';
+import { useState } from 'react';
 import Image from 'next/image';
 
 export function VocabularyImageDetail() {
@@ -12,20 +14,31 @@ export function VocabularyImageDetail() {
     })),
   );
 
+  const [loadingVocabularyImage, setLoadingVocabularyImage] = useState(true);
+
   return (
     <BaseDialog
       open={isOpenImageDetail}
-      onOpenChange={setOpenImageDetail}
+      onOpenChange={(open) => {
+        setOpenImageDetail(open);
+        if (open) setLoadingVocabularyImage(true);
+      }}
       showCloseButton={true}
       className="max-w-[700px]"
     >
-      <div className="flex flex-col items-center justify-end gap-2.5 mt-8">
+      <div className="flex flex-col items-center justify-center gap-2.5 mt-8 min-h-[200px]">
+        {loadingVocabularyImage && 
+        <LoadingCircleIcon className=" text-primary-2 absolute top-[calc(50%-12px)] left-[calc(50%-12px)] z-10" size={24} />
+        }
         <Image
+          key={selectedVocabulary?.image ?? ''}
           src={selectedVocabulary?.image ?? ''}
           width={452}
           height={452}
           alt="vocabulary-image"
           className='max-h-[452px]'
+          onLoad={() => setLoadingVocabularyImage(false)}
+          onError={() => setLoadingVocabularyImage(false)}
         />
       </div>
     </BaseDialog>

@@ -46,7 +46,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {suffixIcon && (
           <button
             type="button"
-            className="absolute top-1/2 left-3 -translate-y-1/2 text-primary-5"
+            className={cn("absolute top-1/2 left-3 -translate-y-1/2 text-primary-5")}
+            style={!onSuffixIconClick ? { pointerEvents: 'none', cursor: 'default' }: {}}
             onClick={onSuffixIconClick}
             aria-label="suffix action"
             tabIndex={0}

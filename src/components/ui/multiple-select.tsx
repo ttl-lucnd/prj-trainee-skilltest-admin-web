@@ -213,7 +213,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
     const maxCountTooltip: string = React.useMemo(() => {
       const labelMap = new Map(options.map(item => [item.value, item.label]))
       const maxCountValues = selectedValues.slice(maxCount);
-      const tooltip = maxCountValues.map(item => `- ${labelMap.get(item)}`).join('\n');
+      const tooltip = maxCountValues.map(item => `• ${labelMap.get(item)}`).join('\n');
       return tooltip;
     }, [selectedValues, maxCount, options])
 

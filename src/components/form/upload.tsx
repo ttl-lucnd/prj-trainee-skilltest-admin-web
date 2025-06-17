@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import { X } from 'lucide-react';
 import { GalleryUpIcon, LoadingCircleIcon } from '../icons';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { DEFAULT_MAX_SIZE } from '@/utils/constants';
 import Image from 'next/image';
 
@@ -52,6 +52,7 @@ export function UploadField({
   const t = useTranslations();
 
   const imageUrl = useWatch({ control, name });
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -84,17 +85,21 @@ export function UploadField({
   const uploadFieldImage = useCallback(() => {
     return imageUrl 
       ? <div className="w-full aspect-square relative pointer-events-none inset-0 outline-none">
+          {isImageLoading && <LoadingCircleIcon className="animate-spin text-primary-2 absolute inset-0 flex items-center justify-center z-10" size={24} />}
           <Image
+            key={imageUrl}
             src={imageUrl}
             alt=""
             fill
             className="object-cover object-center rounded-lg"
+            onLoad={()=>setIsImageLoading(false)}
+            onError={() => setTimeout(() => setIsImageLoading(false), 1000)} // wait fall back image error
           />
         </div>
       : <div className="flex flex-col items-center justify-center gap-2">
         <GalleryUpIcon size={20} />
       </div>
-  }, [imageUrl])
+  }, [imageUrl, isImageLoading, setIsImageLoading])
 
   return (
     <FormField
