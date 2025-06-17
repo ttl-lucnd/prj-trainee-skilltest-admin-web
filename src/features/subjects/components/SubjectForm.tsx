@@ -34,8 +34,8 @@ export function SubjectForm() {
 
   const form = useForm<ISubjectFormBody>({
     resolver: createSubjectYupResolver,
-    mode: 'onChange',
-    reValidateMode: 'onChange',
+    mode: 'onBlur',
+    reValidateMode: 'onBlur',
   });
 
   useEffect(() => {
@@ -140,6 +140,7 @@ export function SubjectForm() {
             layout='vertical'
             className='w-full'
             disabled={loading}
+            onChange={() => form.clearErrors('name')}
           />
           <InputNumber 
             key={'monthlyFee'}
@@ -150,6 +151,7 @@ export function SubjectForm() {
             layout='vertical'
             className='w-full'
             disabled={loading}
+            onChange={() => form.clearErrors('monthlyFee')}
           />
           <UploadField
             key={'logo'}
