@@ -1,7 +1,7 @@
 import { BaseDialog } from '@/components/BaseDialog';
 import { useShallow } from 'zustand/react/shallow';
 import { useSubjectStore } from '../stores/useSubjectStore';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LoadingCircleIcon } from '@/components/icons';
 import Image from 'next/image';
 
@@ -16,19 +16,22 @@ export function SubjectImageDetail() {
   
   const [loadingSubjectImage, setLoadingSubjectImage] = useState(true);
 
+  useEffect(()=> {
+    if(isOpenImageDetail) {
+      setLoadingSubjectImage(isOpenImageDetail)
+    }
+  },[isOpenImageDetail])
+
   return (
     <BaseDialog
       open={isOpenImageDetail}
-      onOpenChange={(open) => {
-        setOpenImageDetail(open);
-        if (open) setLoadingSubjectImage(true);
-      }}
+      onOpenChange={setOpenImageDetail}
       showCloseButton={true}
       className="max-w-[700px]"
     >
       <div className="relative flex flex-col items-center justify-end gap-2.5 mt-8 min-h-[200px]">
         {loadingSubjectImage && 
-        <LoadingCircleIcon className="animate-spin text-primary-2 absolute top-[calc(50%-12px)] left-[calc(50%-12px)] z-10" size={24} />
+        <LoadingCircleIcon className="animate-spin text-primary-2 absolute top-[calc(50%-12px)] left-[calc(50%-12px)] z-10" size={48} />
         }
         <Image
           key={selectedImage ?? ''}

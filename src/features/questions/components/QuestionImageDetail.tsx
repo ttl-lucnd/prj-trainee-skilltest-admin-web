@@ -1,7 +1,7 @@
 import { BaseDialog } from '@/components/BaseDialog';
 import { useQuestionStore } from '../stores/useQuestionStore';
 import { useShallow } from 'zustand/react/shallow';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { LoadingCircleIcon } from '@/components/icons';
 import Image from 'next/image';
 
@@ -16,19 +16,22 @@ export function QuestionImageDetail() {
 
   const [loadingQuestionImage, setLoadingQuestionImage] = useState(true);
 
+  useEffect(()=> {
+    if(isOpenImageDetail) {
+      setLoadingQuestionImage(isOpenImageDetail)
+    }
+  },[isOpenImageDetail])
+
   return (
     <BaseDialog
       open={isOpenImageDetail}
-      onOpenChange={(open) => {
-        setOpenImageDetail(open);
-        if (open) setLoadingQuestionImage(true);
-      }}
+      onOpenChange={setOpenImageDetail}
       showCloseButton={true}
       className="max-w-[700px]"
     >
       <div className="relative flex flex-col items-center justify-center gap-2.5 mt-8 min-h-[200px]">
         {loadingQuestionImage && 
-        <LoadingCircleIcon className="animate-spin text-primary-2 absolute top-[calc(50%-12px)] left-[calc(50%-12px)] z-10" size={24} />
+        <LoadingCircleIcon className="animate-spin text-primary-2 absolute top-[calc(50%-12px)] left-[calc(50%-12px)] z-10" size={48} />
         }
         <Image
           key={selectedQuestion?.image ?? ''}
