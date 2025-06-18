@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 import { X } from 'lucide-react';
 import { GalleryUpIcon, LoadingCircleIcon } from '../icons';
-import { useCallback, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { DEFAULT_MAX_SIZE } from '@/utils/constants';
 import Image from 'next/image';
 
@@ -82,25 +82,6 @@ export function UploadField({
     onChange?.(file);
   };
 
-  const uploadFieldImage = useCallback(() => {
-    return imageUrl 
-      ? <div className="w-full aspect-square relative pointer-events-none inset-0 outline-none">
-          {isImageLoading && <LoadingCircleIcon className="animate-spin text-primary-2 absolute inset-0 flex items-center justify-center z-10" size={24} />}
-          <Image
-            key={imageUrl}
-            src={imageUrl}
-            alt=""
-            fill
-            className="object-cover object-center rounded-lg"
-            onLoad={()=>setIsImageLoading(false)}
-            onError={() => setTimeout(() => setIsImageLoading(false), 1000)} // wait fall back image error
-          />
-        </div>
-      : <div className="flex flex-col items-center justify-center gap-2">
-        <GalleryUpIcon size={20} />
-      </div>
-  }, [imageUrl, isImageLoading, setIsImageLoading])
-
   return (
     <FormField
       control={control}
@@ -156,7 +137,23 @@ export function UploadField({
                   )}
                   aria-disabled={disabled}
                 >
-                  {uploadFieldImage()}
+                  {imageUrl 
+                  ? <div className="w-full aspect-square relative pointer-events-none inset-0 outline-none">
+                      {isImageLoading && <LoadingCircleIcon className="animate-spin text-primary-2 absolute inset-0 flex items-center justify-center z-10" size={24} />}
+                      <Image
+                        key={imageUrl}
+                        src={imageUrl}
+                        alt=""
+                        fill
+                        className="object-cover object-center rounded-lg"
+                        onLoad={()=>setIsImageLoading(false)}
+                        onError={() => setTimeout(() => setIsImageLoading(false), 1000)} // wait fall back image error
+                      />
+                    </div>
+                  : <div className="flex flex-col items-center justify-center gap-2">
+                      <GalleryUpIcon size={20} />
+                    </div>
+                  }
                 </div>
                 }
                 {(imageUrl && allowClear) && (

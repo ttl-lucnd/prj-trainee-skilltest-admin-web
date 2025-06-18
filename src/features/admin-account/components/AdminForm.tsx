@@ -59,6 +59,7 @@ export function AdminForm() {
   }, [isOpenAdminFormDialog, selectedAdmin, setFormType]);
 
   const onSubmit = async (data: IUpdateAdminBody) => {
+    if(loading) return;
     try {
       setLoading(true);
       const response: IBodyResponse<IAdminAccount> = selectedAdmin
@@ -116,7 +117,6 @@ export function AdminForm() {
             placeholder={t('adminAccount.form.email')} 
             layout='vertical'
             className='w-full'
-            disabled={loading}
             onChange={() => form.clearErrors('email')}
           />
           <InputText 
@@ -127,7 +127,6 @@ export function AdminForm() {
             placeholder={t('adminAccount.form.name')} 
             layout='vertical'
             className='w-full'
-            disabled={loading}
             onChange={() => form.clearErrors('name')}
           />
         </Form>
@@ -135,6 +134,7 @@ export function AdminForm() {
           <Button
             variant="outline"
             className="w-[120px] h-[40px]"
+            disabled={loading}
             onClick={() => setOpenAdminFormDialog(false)}
           >
             {t('common.buttons.cancel')}
@@ -143,8 +143,8 @@ export function AdminForm() {
             type='submit'
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
+            loading={loading}
             disabled={
-              loading ||
               !form.formState.isDirty ||
               !name ||
               !email ||

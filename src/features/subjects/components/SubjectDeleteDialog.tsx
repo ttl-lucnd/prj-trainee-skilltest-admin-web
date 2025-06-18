@@ -59,10 +59,10 @@ export function SubjectDeleteDialog() {
       <div className="flex flex-col items-center justify-end gap-2.5 ">
         <h5 className="font-bold">{t('subjects.delete.title')}</h5>
         <div className="w-full flex gap-2.5 justify-center mt-4 pb-0.5">
-          <Button variant="outline" className="w-[120px] h-[40px]" onClick={() => setOpenDeleteSubjectDialog(false)}>
+          <Button variant="outline" className="w-[120px] h-[40px]" onClick={() => setOpenDeleteSubjectDialog(false)} disabled={isDeleting}>
             {t('common.buttons.cancel')}
           </Button>
-          <Button variant="destructive" className="w-[120px] h-[40px]" onClick={(e) => {
+          <Button variant="destructive" className="w-[120px] h-[40px]" loading={isDeleting} onClick={(e) => {
             e.stopPropagation();
             handleDeleteSubject();
             }}>
