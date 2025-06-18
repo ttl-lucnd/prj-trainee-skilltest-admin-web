@@ -39,21 +39,19 @@ export function SubjectForm() {
   });
 
   useEffect(() => {
-    if (!isOpenSubjectFormDialog) {
-      form.reset({
-        name: '',
-        logo: '',
-        image: '',
-      });
-      return;
-    }
     setLogoFile(null);
     setImageFile(null);
+
+    form.reset({
+      name: '',
+      logo: selectedSubject?.logo ?? '',
+      image: selectedSubject?.image ?? '',
+    });
 
     const getSubjectDetail = async () => {
       const response: IBodyResponse<ISubject> = await subjectService._getDetail(selectedSubject?.id ?? '');
       if (response.success) {
-        form.reset({
+        form.reset({ // reload data on database
           name: response.data.name,
           monthlyFee: response.data.monthlyFee,
           logo: response.data.logo ?? '',
@@ -69,6 +67,7 @@ export function SubjectForm() {
   }, [isOpenSubjectFormDialog, selectedSubject, setFormType]);
 
   const onSubmit = async (data: ISubjectFormBody) => {
+    if(loading) return;
     try {
       setLoading(true);
       if(imageFile) {
@@ -139,7 +138,6 @@ export function SubjectForm() {
             placeholder={t('subjects.form.subject')} 
             layout='vertical'
             className='w-full'
-            disabled={loading}
             onChange={() => form.clearErrors('name')}
           />
           <InputNumber 
@@ -150,7 +148,6 @@ export function SubjectForm() {
             placeholder={t('subjects.form.monthlyFee')} 
             layout='vertical'
             className='w-full'
-            disabled={loading}
             onChange={() => form.clearErrors('monthlyFee')}
           />
           <UploadField
@@ -168,7 +165,6 @@ export function SubjectForm() {
               setLogoFile(null);
               form.setValue('logo', '', { shouldValidate: true, shouldDirty: true,  })
             }}
-            disabled={loading}
             onValidationFail={(file, type) => {
               form.setValue('logo', URL.createObjectURL(file), { shouldValidate: false, shouldDirty: false,  })
               const message = t(`common.file.${type}`, {maxSize: DEFAULT_MAX_SIZE});
@@ -190,7 +186,6 @@ export function SubjectForm() {
               setImageFile(null);
               form.setValue('image', '', { shouldValidate: true, shouldDirty: true,  })
             }}
-            disabled={loading}
             onValidationFail={(file, type) => {
               form.setValue('image', URL.createObjectURL(file), { shouldValidate: false, shouldDirty: false,  })
               const message = t(`common.file.${type}`, {maxSize: DEFAULT_MAX_SIZE});
@@ -209,6 +204,7 @@ export function SubjectForm() {
             variant="outline"
             className="w-[120px] h-[40px]"
             onClick={() => setOpenSubjectFormDialog(false)}
+            disabled={loading}
           >
             {t('common.buttons.cancel')}
           </Button>
@@ -217,12 +213,12 @@ export function SubjectForm() {
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
             disabled={
-              loading ||
               !form.formState.isDirty ||
               !form.formState.isValid ||
               !!form.formState.errors.logo?.message ||
               !!form.formState.errors.image?.message
             }
+            loading={loading}
           >
             {t(`common.buttons.${formType ===SubjectFormType.CREATE ? 'add' : 'save'}`)}
           </Button>

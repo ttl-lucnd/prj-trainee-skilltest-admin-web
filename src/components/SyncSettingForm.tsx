@@ -49,6 +49,7 @@ export function SyncSettingForm({
   }, [isOpenSettingFormDialog]);
 
   const onSubmit = async (data: ISyncSettingBody) => {
+    if(loading) return;
     try {
       setLoading(true);
       const response: IBodyResponse<any> = await handleUpdate(data);
@@ -99,7 +100,6 @@ export function SyncSettingForm({
           placeholder={t('vocabularies.form.sheetLink')} 
           layout='vertical'
           className='w-full'
-          disabled={loading}
           onChange={()=>form.clearErrors('sheetLink')}
           customClassName='truncate'
           title={sheetLink}
@@ -113,7 +113,6 @@ export function SyncSettingForm({
           placeholder={t('vocabularies.form.lastReadRow')} 
           layout='vertical'
           className='w-full'
-          disabled={loading}
           onChange={()=> form.clearErrors('lastReadRow')}
           />
         </Form>
@@ -121,6 +120,7 @@ export function SyncSettingForm({
           <Button
             variant="outline"
             className="w-[120px] h-[40px]"
+            disabled={loading}
             onClick={() => setOpenSettingFormDialog(false)}
           >
             {t('common.buttons.cancel')}
@@ -129,8 +129,8 @@ export function SyncSettingForm({
             type='submit'
             className="w-[120px] h-[40px]"
             onClick={form.handleSubmit(onSubmit)}
+            loading={loading}
             disabled={
-              loading ||
               !form.formState.isDirty ||
               !sheetLink ||
               !lastReadRow ||
