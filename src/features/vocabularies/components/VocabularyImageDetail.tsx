@@ -31,7 +31,7 @@ export function VocabularyImageDetail() {
     >
       <div className="flex flex-col items-center justify-center gap-2.5 mt-8 min-h-[200px]">
         {loadingVocabularyImage && 
-        <LoadingCircleIcon className=" text-primary-2 absolute top-[calc(50%-12px)] left-[calc(50%-12px)] z-10" size={48} />
+        <LoadingCircleIcon className="animate-spin text-primary-2 absolute top-[calc(50%-12px)] left-[calc(50%-12px)] z-10" size={48} />
         }
         <Image
           key={selectedVocabulary?.image ?? ''}
