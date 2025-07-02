@@ -60,8 +60,11 @@
     "close": "Close",
     "download": "Download",
     "filter_view_full": "Filter View Full",
-    "setting_url": "データを編集",
-    "sync_data": "データを更新"
+    "setting_url": "データ取得設定",
+    "sync_data": "データを更新",
+    "translate": "翻訳",
+    "ok": "同期",
+    "bulk_delete": "一括削除"
   },
   "messages": {
     "error": "Error",
@@ -74,11 +77,13 @@
     "delete_success": "Deleted successfully",
     "delete_failed": "Failed to delete",
     "data_sync": "Data is being synchronized, please wait a few moments.",
+    "data_translate": "Data is being tranlated, please wait a few moments.",
     "notification_not_supported": "This browser does not support notifications.",
     "require_notification_permission": "Please allow notifications to receive updates.",
     "export_request_success": "CSV export request sent. You will be notified when it is ready.",
     "download_csv": "Your CSV file is ready. To download, click here",
-    "settingNotfound": "Please click the \"データを編集\" button to set data"
+    "settingNotfound": "Please click the \"データを編集\" button to set data",
+    "sync_data_error_at": "{row}行目の画像が同期用メールに共有されていないため、同期を中断しました。"
   },
   "file": {
     "max_size": "Max size: {maxSize}MB"
@@ -107,6 +112,7 @@
   "not_set": "Not Set",
   "sync_data_at_format": "MMM YYYY HH:mm",
   "sync_data_at": "最終データ更新日時：",
+  "no_sync_data": "まだデータがありません",
   "sync_data_status": {
     "pending": "データ同期中",
     "complete": "データ同期完了",

@@ -1,9 +1,9 @@
 import { TruncatedText } from '@/components/TruncateText';
 import { DataTable } from '@/components/data-table';
-import { TrashIcon } from '@/components/icons';
+import { PencilIcon, TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
 import { DEFAULT_FIRST_PAGE, OrderDirection } from '@/utils/constants';
-import { CellContext, ColumnDef, ColumnSort, SortingState } from '@tanstack/react-table';
+import { CellContext, ColumnDef, ColumnSort, HeaderContext, SortingState } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -14,6 +14,8 @@ import { SortableHeader } from '@/components/table/SortableHeader';
 import Image from 'next/image';
 import { useUpdateUrlWithQuery } from '@/utils/url';
 import { cn } from '@/lib/utils';
+import { SYNC_DATA_STATUS } from '@/features/common/constants';
+import { Checkbox } from '@/components/ui/checkbox';
 
 function createMeaningCell(lang: TranslateLanguages) {
   const Cell = ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => (
@@ -71,6 +73,8 @@ function createMeaningSortHeader (
 export function VocabularyTable() {
   const t = useTranslations();
   const {
+    vocabularySetting,
+    selectedVocabularyIds,
     vocabularyList,
     loading,
     vocabularyGetListQuery,
@@ -81,9 +85,13 @@ export function VocabularyTable() {
     setVocabularyGetListQuery,
     setOpenImageDetail,
     setOpenDescriptionDetail,
-    setSelectedDescription
+    setSelectedDescription,
+    setOpenVocabularyFormDialog,
+    setSelectedVocabularyIds,
   } = useVocabularyStore(
     useShallow((state) => ({
+      vocabularySetting: state.vocabularySetting,
+      selectedVocabularyIds: state.selectedVocabularyIds,
       vocabularyList: state.vocabularyList,
       loading: state.loading,
       vocabularyGetListQuery: state.vocabularyGetListQuery,
@@ -95,10 +103,14 @@ export function VocabularyTable() {
       setOpenImageDetail: state.setOpenImageDetail,
       setOpenDescriptionDetail: state.setOpenDescriptionDetail,
       setSelectedDescription: state.setSelectedDescription,
+      setOpenVocabularyFormDialog: state.setOpenVocabularyFormDialog,
+      setSelectedVocabularyIds: state.setSelectedVocabularyIds,
     })),
   );
 
   const [sorting, setSorting] = useState<SortingState>([{id: 'VOCABULARY_ORIGINALLANGUAGE', desc: false}])
+    const isDisable = useMemo(() => vocabularySetting?.status === SYNC_DATA_STATUS.PENDING || vocabularySetting?.status === SYNC_DATA_STATUS.TRANSLATING
+    , [vocabularySetting]);
 
   const {
     getQueryFromUrl: getVocabularyQueryFromUrl,
@@ -135,14 +147,14 @@ export function VocabularyTable() {
 
   const vocabularyCell = useCallback(
     ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
-      return <TruncatedText text={row.original.vocabulary.originalLanguage} />;
+      return <TruncatedText text={row.original?.vocabulary?.originalLanguage ?? ''} />;
     },
     [],
   );
 
   const pronunciationCell = useCallback(
     ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
-      return <TruncatedText text={row.original.pronunciation} />;
+      return <TruncatedText text={row.original.pronunciation ?? ''} />;
     },
     [],
   );
@@ -212,24 +224,44 @@ export function VocabularyTable() {
       return (
         <div className="flex gap-4">
           <button
+            onClick={() => {
+              setOpenVocabularyFormDialog(true);
+              setSelectedVocabulary(row.original);
+            }}
+          className={cn(
+              !isDisable && 'hover:bg-primary-2',
+              "flex size-[30px] rounded-full items-center justify-center group/edit"
+            )}
+          >
+            <PencilIcon size={22}
+              className={cn(
+                isDisable ? 'text-[#CECECE]'
+                : 'cursor-pointer group-hover/edit:text-white')
+              }
+            />
+          </button>
+          <button
             type="button"
             onClick={() => {
               setOpenDeleteVocabularyDialog(true);
               setSelectedVocabulary(row.original);
             }}
             className={cn(
-              'hover:bg-destructive',
+              !isDisable && 'hover:bg-destructive',
               "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
             )}
           >
             <TrashIcon size={22} 
-              className={cn('group-hover/delete:text-white')}
+              className={cn(
+                isDisable ? 'text-[#CECECE]'
+                : 'cursor-pointer group-hover/delete:text-white')
+              }
             />
           </button>
         </div>
       );
     },
-    [setOpenDeleteVocabularyDialog, setSelectedVocabulary],
+    [isDisable, setOpenDeleteVocabularyDialog, setOpenVocabularyFormDialog, setSelectedVocabulary],
   );
   
   const translateCol = useMemo((): ColumnDef<IVocabulary>[] =>{
@@ -239,14 +271,14 @@ export function VocabularyTable() {
         accessorKey: `VOCABULARY_${key}`,
         enableSorting: true,
         cell: createMeaningCell(lang),
-        size: 180,
+        size: 200,
       },
       {
         header: t(`vocabularies.table.description_${lang}`),
         accessorKey: `description_${lang}`,
         enableSorting: true,
         cell: createDescriptionCell(lang, setOpenDescriptionDetail, setSelectedDescription),
-        size: 180,
+        size: 200,
       },
       ]
     );
@@ -264,8 +296,62 @@ export function VocabularyTable() {
           />
         );
 
+  const SelectCell = useCallback(({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
+    return (
+      <div className="flex gap-4">
+      <Checkbox
+        disabled={isDisable}
+        checked={selectedVocabularyIds.includes(row.original.id)}
+        onCheckedChange={(value) => {
+          if (value) {
+            const newSelectedQuestionIds = [
+              ...selectedVocabularyIds,
+              row.original.id,
+            ];
+            setSelectedVocabularyIds(newSelectedQuestionIds);
+          } else {
+            const newSelectedQuestionIds = selectedVocabularyIds.filter(
+              (id) => id !== row.original.id,
+            );
+            setSelectedVocabularyIds(newSelectedQuestionIds);
+          }
+          row.toggleSelected(!!value);
+        }}
+        aria-label="Select row"
+      />
+      </div>
+    );
+  },[isDisable, selectedVocabularyIds, setSelectedVocabularyIds])
+  
+    const SelectHeader = useCallback(({ table }: HeaderContext<IVocabulary, unknown>) => {
+    return (
+      <div className="flex gap-4">
+      <Checkbox
+        disabled={isDisable || vocabularyList.length === 0}
+        checked={selectedVocabularyIds.length === vocabularyList.length && selectedVocabularyIds.length > 0}
+        onCheckedChange={(value) => {
+          if (value) {
+            const newSelectedQuestionIds = vocabularyList.map(item => item.id);
+            setSelectedVocabularyIds(newSelectedQuestionIds);
+          } else {
+            setSelectedVocabularyIds([]);
+          }
+          table.toggleAllPageRowsSelected(!!value)
+        }}
+        aria-label="Select all"
+      />
+      </div>
+    );
+  },[isDisable, selectedVocabularyIds, vocabularyList, setSelectedVocabularyIds])
+
   const columns: ColumnDef<IVocabulary>[] = useMemo(() => {
     return compact([
+      {
+        id: 'select',
+        header: SelectHeader,
+        cell: SelectCell,
+        size: 60,
+      },
       {
         header: t('common.number'),
         accessorKey: 'index',
@@ -314,7 +400,7 @@ export function VocabularyTable() {
       {
         header: t('vocabularies.table.action'),
         id: 'actions',
-        size: 60,
+        size: 120,
         cell: VocabularyActions,
       },
     ]);
@@ -329,6 +415,8 @@ export function VocabularyTable() {
     vocabularySortHeader,
     pronunciationSortHeader,
     originalDescriptionCell,
+    SelectCell,
+    SelectHeader,
   ]);
 
   return <DataTable 
@@ -340,5 +428,6 @@ export function VocabularyTable() {
     onSortingChange={handleSortingChange}
     sorting={sorting}
     setSorting={setSorting}
+    enableMultiRowSelection={true}
   />;
 }

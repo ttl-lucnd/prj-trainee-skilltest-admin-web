@@ -21,12 +21,14 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
         tertiary:
           'bg-secondary-2 text-primary-2 hover:bg-secondary-3 disabled:text-primary-4',
+        success: 
+          'bg-[#7ABC67] text-[#FFFFFF] hover:bg-[#7ABC67E6] disabled:bg-primary-5'
       },
       size: {
         default: 'h-10 px-4 py-2 shadow-[0.5px_1px_1.5px_0px_rgba(0,0,0,0.02)]',
         sx: 'px-[8px] py-[5px]',
         sm: 'h-8 rounded-md px-3',
-        lg: 'h-10 rounded-md px-3.5 py-2.5',
+        lg: 'h-10 rounded-md px-3.5 py-2.5 min-w-[112px]',
         xl: 'h-12 h-[70px] px-[10px] py-[20px] text-[16px]',
         icon: 'h-10 w-10',
       },

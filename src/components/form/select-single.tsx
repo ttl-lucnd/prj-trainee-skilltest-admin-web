@@ -26,6 +26,7 @@ import NoData from '../NoData';
 export interface SelectOption {
   label: string;
   value: string;
+  customLabel?: React.ReactNode;
 }
 
 interface SelectSingleProps {
@@ -147,7 +148,7 @@ export function SelectSingle({
                   <SelectGroup className="overflow-y-auto max-h-[10rem]">
                     {options.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
-                        {option.label}
+                        {option.customLabel ?? option.label}
                       </SelectItem>
                     ))}
                   </SelectGroup>

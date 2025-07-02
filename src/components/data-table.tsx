@@ -7,6 +7,7 @@ import {
   ColumnSort,
   flexRender,
   getCoreRowModel,
+  Row,
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
@@ -79,7 +80,8 @@ interface DataTableProps<TData, TValue> {
   showBorderVertical?: boolean;
   headerClassName?: string;
   sorting?: SortingState;
-  setSorting?: React.Dispatch<React.SetStateAction<SortingState>>
+  setSorting?: React.Dispatch<React.SetStateAction<SortingState>>;
+  enableMultiRowSelection?: boolean | ((row: Row<any>) => boolean);
 }
 
 export const DataTable = forwardRef<any, DataTableProps<any, any>>(function DataTable(
@@ -102,6 +104,7 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
     headerClassName,
     sorting = [],
     setSorting,
+    enableMultiRowSelection,
   },
   ref,
 ) {
@@ -174,6 +177,7 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
       onSortingChange?.(newSorting?.[0]);
     },
     getCoreRowModel: getCoreRowModel(),
+    enableMultiRowSelection: enableMultiRowSelection,
   });
 
   // Forward the table instance through the ref

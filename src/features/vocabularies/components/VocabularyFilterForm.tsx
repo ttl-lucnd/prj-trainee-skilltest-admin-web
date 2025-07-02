@@ -3,7 +3,7 @@
 import { DEFAULT_FIRST_PAGE, DELAY_GET_STATUS } from '@/utils/constants';
 import { useUpdateUrlWithQuery } from '@/utils/url';
 import { useTranslations } from 'next-intl';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useShallow } from 'zustand/react/shallow';
 import { vocabularyFilterYupResolver } from '../schema';
@@ -41,7 +41,9 @@ export function VocabularyFilterForm() {
     const prevStatus = prevStatusRef.current;
     const currentStatus = vocabularySetting?.status;
 
-    if (prevStatus === SYNC_DATA_STATUS.PENDING && currentStatus !== SYNC_DATA_STATUS.PENDING) {
+    if ((prevStatus === SYNC_DATA_STATUS.PENDING && currentStatus !== SYNC_DATA_STATUS.PENDING) 
+      || (prevStatus === SYNC_DATA_STATUS.TRANSLATING && currentStatus !== SYNC_DATA_STATUS.TRANSLATING)
+    ) {
       getVocabularyList();
     }
 
@@ -79,24 +81,25 @@ export function VocabularyFilterForm() {
     }
   };
 
-   const syncDataInfo = () => {
+   const syncDataInfo = useMemo(() => {
       return <div className='flex flex-col min-w-[200px]'>
-        {vocabularySetting?.lastSyncDataAt &&
         <div className='flex flex-wrap'>
           {t('common.sync_data_at')}
-          <p className='text-[#E9034E]'>{dayjs(vocabularySetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))}</p>
+          <p className='text-[#E9034E]'>{vocabularySetting?.lastSyncDataAt
+          ? dayjs(vocabularySetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))
+          : t('common.no_sync_data')
+          }</p>
         </div>
-        }
         {vocabularySetting?.status && <p className='text-[#E9034E]'>{t(`common.sync_data_status.${vocabularySetting.status}`)}</p>}
       </div>
-    }
+    }, [vocabularySetting])
 
   return (
     <div className={cn(
       'flex flex-wrap w-full items-start gap-x-10 gap-y-2.5 mt-0.5 mb-[16px]',
       vocabularySetting? 'justify-between' : 'justify-end'
     )}>
-    {vocabularySetting && syncDataInfo()}
+    {syncDataInfo}
     <BasicFilterForm
       form={form}
       onSubmit={(data) => onSubmit(data)}
