@@ -145,7 +145,7 @@ export function VocabularyForm() {
             onChange={() => form.clearErrors('pronunciation')}
           />
           <InputTextArea
-            key={'description'}
+            key={'vocab-description'}
             name="description" 
             control={form.control} 
             label={t('vocabularies.form.description')} 
@@ -155,7 +155,7 @@ export function VocabularyForm() {
             onChange={() => form.clearErrors('description')}
           />
           <SelectSingle
-            key={'subjectId'}
+            key={'vocab-subjectId'}
             name="subjectId" 
             control={form.control} 
             label={t('vocabularies.form.subjectId')} 
@@ -168,7 +168,7 @@ export function VocabularyForm() {
             }))}
           />
           <UploadField
-            key={'image'}
+            key={'vocab-image'}
             name="image" 
             control={form.control} 
             label={t('vocabularies.form.image')} 

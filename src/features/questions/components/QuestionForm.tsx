@@ -138,7 +138,7 @@ export function QuestionForm() {
             onChange={() => form.clearErrors('question')}
           />
           <InputText 
-            key={'description'}
+            key={'romaji'}
             name="description" 
             control={form.control} 
             label={t('questions.form.description')} 
@@ -148,7 +148,7 @@ export function QuestionForm() {
             onChange={() => form.clearErrors('description')}
           />
           <SelectSingle
-            key={'subjectId'}
+            key={'question-subjectId'}
             name="subjectId" 
             control={form.control} 
             label={t('questions.form.subjectId')} 
@@ -192,7 +192,7 @@ export function QuestionForm() {
             }]}
           />
           <UploadField
-            key={'image'}
+            key={'question-image'}
             name="image" 
             control={form.control} 
             label={t('questions.form.image')} 
