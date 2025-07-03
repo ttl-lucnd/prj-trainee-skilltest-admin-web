@@ -62,9 +62,11 @@
     "close": "閉じる",
     "download": "ダウンロード",
     "filter_view_full": "フィルター表示",
-    "setting_url": "データを編集",
+    "setting_url": "データ取得設定",
     "sync_data": "データを更新",
-    "ok": "同期"
+    "translate": "翻訳",
+    "ok": "同期",
+    "bulk_delete": "一括削除 "
   },
   "messages": {
     "error": "エラーが発生しました",
@@ -77,11 +79,13 @@
     "delete_success": "削除が成功しました",
     "delete_failed": "削除に失敗しました",
     "data_sync": "データを同期中です。しばらくお待ちください。",
+    "data_translate": "データを翻訳中です。しばらくお待ちください。",
     "notification_not_supported": "このブラウザは通知をサポートしていません。",
     "require_notification_permission": "通知を受け取るには、ブラウザの通知設定を許可に変更してください。",
     "export_request_success": "CSVのエクスポートをリクエストしました。処理が完了したら通知されます。",
     "download_csv": "CSVファイルが準備できました。ダウンロードするには、こちらをクリックしてください。",
-    "settingNotfound": "データを設定するには、『データを編集』ボタンをクリックしてください。"
+    "settingNotfound": "データを設定するには、『データを編集』ボタンをクリックしてください。",
+    "sync_data_error_at": "{row}行目の画像が同期用メールに共有されていないため、同期を中断しました。"
   },
   "noData": "データがありません",
   "editInformation": "情報の編集",
@@ -129,11 +133,15 @@
   "not_set": "未設定",
   "sync_data_at_format": "YYYY年MM月DD日HH時mm分",
   "sync_data_at": "最終データ更新日時：",
+  "no_sync_data": "まだデータがありません",
   "sync_data_status": {
     "pending": "データ同期中",
     "complete": "データ同期完了",
     "permission_denied": "スプレッドシートへのアクセスが拒否された",
-    "server_error": "サーバーエラーが発生した"
+    "server_error": "サーバーエラーが発生した",
+    "drive_denied": "ドライブへのアクセスが拒否された",
+    "translating": "データ翻訳中",
+    "translate_complete": "データ翻訳完了"
   },
   "maxMonthlyFee": "月額料金が上限を超えています",
   "sync_data_alert": "同期を行うためには、データが含まれているスプレッドシートおよびスプレッドシート内に添付された画像が保存されているドライブの両方に対して、同期用に設定されたメールアドレスに閲覧権限以上を共有している必要があります。"

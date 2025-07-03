@@ -1,8 +1,16 @@
 {
   "form": {
-    "title":"データを編集",
+    "title":"データ取得設定",
+    "updateTitle": "データを編集",
     "sheetLink": "データ取得リンク",
-    "lastReadRow": "同期済み最終行"
+    "lastReadRow": "同期済み最終行",
+    "question": "Question",
+    "answer": "Answer",
+    "description": "Romaji",
+    "subjectId": "Subject",
+    "arrange": "Arrange",
+    "original": "Original",
+    "image": "Image"
   },
   "filter": {
     "subject": "学科で絞り込む",
@@ -14,7 +22,8 @@
     "staff_name": "スタッフ名"
   },
   "delete": {
-    "title": "本当にこの管理者を削除しますか？"
+    "title": "本当にこの管理者を削除しますか？",
+    "bulkDeleteTitle": "選択された質問を一括削除しますか？"
   },
     "error": {
     "sheetLink": "データ取得リンクの形式が正しくありません"

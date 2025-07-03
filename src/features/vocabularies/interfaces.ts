@@ -2,7 +2,12 @@ import { ICommonListQuery } from '@/utils/interfaces';
 
 export enum TranslateLanguages {
   EN = 'en',
+  ZH = 'zh',
+  KO = 'ko',
   VI = 'vi',
+  ID = 'id',
+  TL = 'tl',
+  TH = 'th',
 }
 
 export type TranslatedContent = {
@@ -44,3 +49,11 @@ export const VocabularyOrderBy = {
   VOCABULARY_ORIGINALLANGUAGE: 'vocabulary.originalLanguage',
   PRONUNCIATION: 'pronunciation',
 } as const;
+
+export interface IVocabularyFormBody {
+  vocabulary: string;
+  pronunciation: string;
+  description: string;
+  subjectId: string;
+  image?: string;
+}

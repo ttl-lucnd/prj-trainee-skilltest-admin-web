@@ -11,6 +11,8 @@ interface States {
   isOpenDeleteQuestionDialog: boolean;
   isOpenImageDetail: boolean;
   isOpenSyncDataDialog: boolean;
+  isOpenQuestionFormDialog: boolean;
+  isOpenBulkDeleteDialog: boolean;
   questionGetListQuery: IQuestionGetListQuery;
   totalItems: number;
   questionList: IQuestion[];
@@ -18,6 +20,7 @@ interface States {
   subjectDropdownList: ISubjectDropdown[];
   arrangeDropdownList: number[];
   selectedQuestion: IQuestion | null;
+  selectedQuestionIds: string[];
   questionSetting: ISyncSettingDetail | null;
 }
 
@@ -27,6 +30,8 @@ interface Actions {
   setOpenDeleteQuestionDialog: (open: boolean) => void;
   setOpenImageDetail: (open: boolean) => void;
   setOpenSyncDataDialog: (open: boolean) => void;
+  setOpenQuestionFormDialog: (open: boolean) => void;
+  setOpenBulkDeleteDialog: (open: boolean) => void;
   setQuestionGetListQuery: (
     query: IQuestionGetListQuery,
     opt?: { reloadList?: boolean },
@@ -43,6 +48,7 @@ interface Actions {
   setSelectedQuestion: (admin: IQuestion | null) => void;
   getQuestionSetting: () => Promise<void>;
   resetState: () => void;
+  setSelectedQuestionIds: (selectedQuestionIds: string[]) => void;
 }
 
 const initialState: States = {
@@ -50,6 +56,8 @@ const initialState: States = {
   isOpenDeleteQuestionDialog: false,
   isOpenImageDetail: false,
   isOpenSyncDataDialog: false,
+  isOpenQuestionFormDialog: false,
+  isOpenBulkDeleteDialog: false,
   questionGetListQuery: {
     ...DEFAULT_GET_LIST_QUERY,
     orderBy: 'arrange',
@@ -62,6 +70,7 @@ const initialState: States = {
   arrangeDropdownList: [],
   selectedQuestion: null,
   questionSetting: null,
+  selectedQuestionIds: [],
 };
 
 // useAdminStore
@@ -73,6 +82,8 @@ export const useQuestionStore = create<States & Actions>((set, get) => ({
   setOpenDeleteQuestionDialog: (open: boolean) => set({ isOpenDeleteQuestionDialog: open }),
   setOpenImageDetail: (open: boolean) => set({ isOpenImageDetail: open }),
   setOpenSyncDataDialog: (open: boolean) => set({ isOpenSyncDataDialog: open }),
+  setOpenQuestionFormDialog: (open: boolean) => set({ isOpenQuestionFormDialog: open }),
+  setOpenBulkDeleteDialog: (open: boolean) => set({ isOpenBulkDeleteDialog: open }),
   setQuestionGetListQuery: (query: IQuestionGetListQuery, opt?: { reloadList?: boolean }) => {
     set((state) => ({
       questionGetListQuery: { ...state.questionGetListQuery, ...query },
@@ -88,7 +99,7 @@ export const useQuestionStore = create<States & Actions>((set, get) => ({
   setTotalItems: (totalItems: number) => set({ totalItems }),
   getQuestionList: async () => {
     try {
-      set(() => ({ loading: true }));
+      set(() => ({ loading: true, selectedQuestionIds: [], }));
       const response = await questionService.getQuestionList(get().questionGetListQuery);
       set(() => ({
         questionList: response?.data?.items ?? [],
@@ -122,4 +133,5 @@ export const useQuestionStore = create<States & Actions>((set, get) => ({
     }));
   },
   resetState: () => set({ ...initialState }),
+  setSelectedQuestionIds: (selectedQuestionIds: string[]) => set({ selectedQuestionIds }),
 }));

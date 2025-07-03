@@ -23,14 +23,6 @@ class SubjectService extends ApiService {
   ): Promise<IBodyResponse<IGetListResponse<ISubject>>> {
     return this._getList(query);
   }
-
-  uploadFile(file: File): Promise<IBodyResponse<{ url: string }>> {
-    const formData = new FormData();
-    formData.append('file', file);
-    return this.client.post(`${this.baseUrl}/upload-file`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    })
-  }
 }
 
 export const subjectService = new SubjectService(

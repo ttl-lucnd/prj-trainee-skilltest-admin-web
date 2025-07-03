@@ -117,5 +117,13 @@
   "subject": "学科",
   "monthlyFee": "月額",
   "logo": "ロゴ",
-  "image": "画像"
+  "image": "画像",
+  "question": "質問",
+  "answer": "正答",
+  "romaji": "ローマ字",
+  "arrange": "アレンジ",
+  "original": "オリジナル",
+  "vocabulary": "単語",
+  "pronunciation": "読み方",
+  "description": "説明文"
 }

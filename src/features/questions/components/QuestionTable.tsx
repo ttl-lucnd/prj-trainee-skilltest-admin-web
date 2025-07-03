@@ -1,9 +1,9 @@
 import { TruncatedText } from '@/components/TruncateText';
 import { DataTable } from '@/components/data-table';
-import { TrashIcon } from '@/components/icons';
+import { PencilIcon, TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
 import { DEFAULT_FIRST_PAGE, OrderBy, OrderDirection } from '@/utils/constants';
-import { CellContext, ColumnDef, ColumnSort, SortingState } from '@tanstack/react-table';
+import { CellContext, ColumnDef, ColumnSort, HeaderContext, SortingState } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -17,34 +17,45 @@ import { CircleIcon } from '@/components/icons/circle';
 import { XCrossIcon } from '@/components/icons/x-cross';
 import { useUpdateUrlWithQuery } from '@/utils/url';
 import { cn } from '@/lib/utils';
+import { Checkbox } from '@/components/ui/checkbox';
+import { SYNC_DATA_STATUS } from '@/features/common/constants';
 
 export function QuestionTable() {
   const t = useTranslations();
   const {
+    questionSetting,
     questionList,
     loading,
     questionGetListQuery,
+    selectedQuestionIds,
     getQuestionList,
     resetState,
     setOpenDeleteQuestionDialog,
     setSelectedQuestion,
     setOpenImageDetail,
     setQuestionGetListQuery,
+    setOpenQuestionFormDialog,
+    setSelectedQuestionIds,
   } = useQuestionStore(
     useShallow((state) => ({
+      questionSetting: state.questionSetting,
       questionList: state.questionList,
       loading: state.loading,
       questionGetListQuery: state.questionGetListQuery,
+      selectedQuestionIds: state.selectedQuestionIds,
       getQuestionList: state.getQuestionList,
       resetState: state.resetState,
       setOpenDeleteQuestionDialog: state.setOpenDeleteQuestionDialog,
       setSelectedQuestion: state.setSelectedQuestion,
       setOpenImageDetail: state.setOpenImageDetail,
       setQuestionGetListQuery: state.setQuestionGetListQuery,
+      setOpenQuestionFormDialog: state.setOpenQuestionFormDialog,
+      setSelectedQuestionIds: state.setSelectedQuestionIds,
     })),
   );
 
   const [sorting, setSorting] = useState<SortingState>([{id: 'arrange', desc: false}])
+  const isDisable = useMemo(() => questionSetting?.status === SYNC_DATA_STATUS.PENDING, [questionSetting]);
 
   const {
     getQueryFromUrl: getQuestionQueryFromUrl,
@@ -81,14 +92,14 @@ export function QuestionTable() {
 
   const questionCell = useCallback(
     ({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
-      return <TruncatedText text={row.original.question} />;
+      return <TruncatedText text={row.original?.question ?? ''} />;
     },
     [],
   );
 
   const descriptionCell = useCallback(
     ({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
-      return <TruncatedText text={row.original.description} />;
+      return <TruncatedText text={row.original?.description ?? ''} />;
     },
     [],
   );
@@ -96,7 +107,7 @@ export function QuestionTable() {
   const subjectCell = useCallback(
     ({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
       return (
-        <TruncatedText text={row.original.subject.name}/>
+        <TruncatedText text={row.original?.subject?.name ?? ''}/>
       );
     },
     [],
@@ -157,28 +168,102 @@ export function QuestionTable() {
       return (
         <div className="flex gap-4">
           <button
+            onClick={() => {
+              setOpenQuestionFormDialog(true);
+              setSelectedQuestion(row.original);
+            }}
+          className={cn(
+              !isDisable && 'hover:bg-primary-2',
+              "flex size-[30px] rounded-full items-center justify-center group/edit"
+            )}
+          >
+            <PencilIcon size={22}
+              className={cn(
+                isDisable ? 'text-[#CECECE]'
+                : 'cursor-pointer group-hover/edit:text-white')
+              }
+            />
+          </button>
+          <button
             type="button"
             onClick={() => {
               setOpenDeleteQuestionDialog(true);
               setSelectedQuestion(row.original);
             }}
             className={cn(
-              'hover:bg-destructive',
+              !isDisable && 'hover:bg-destructive',
               "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
             )}
           >
             <TrashIcon size={22} 
-              className={cn('group-hover/delete:text-white')}
+              className={cn(
+                isDisable ? 'text-[#CECECE]'
+                : 'cursor-pointer group-hover/delete:text-white')
+              }
             />
           </button>
         </div>
       );
     },
-    [setOpenDeleteQuestionDialog, setSelectedQuestion],
+    [isDisable, setOpenDeleteQuestionDialog, setOpenQuestionFormDialog, setSelectedQuestion],
   );
+
+  const SelectCell = useCallback(({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
+    return (
+      <div className="flex gap-4">
+      <Checkbox
+        disabled={isDisable}
+        checked={selectedQuestionIds.includes(row.original.id)}
+        onCheckedChange={(value) => {
+          if (value) {
+            const newSelectedQuestionIds = [
+              ...selectedQuestionIds,
+              row.original.id,
+            ];
+            setSelectedQuestionIds(newSelectedQuestionIds);
+          } else {
+            const newSelectedQuestionIds = selectedQuestionIds.filter(
+              (id) => id !== row.original.id,
+            );
+            setSelectedQuestionIds(newSelectedQuestionIds);
+          }
+          row.toggleSelected(!!value);
+        }}
+        aria-label="Select row"
+      />
+      </div>
+    );
+  },[isDisable, selectedQuestionIds, setSelectedQuestionIds])
+
+    const SelectHeader = useCallback(({ table }: HeaderContext<IQuestion, unknown>) => {
+    return (
+      <div className="flex gap-4">
+      <Checkbox
+        disabled={isDisable || questionList.length === 0}
+        checked={selectedQuestionIds.length === questionList.length && selectedQuestionIds.length > 0}
+        onCheckedChange={(value) => {
+          if (value) {
+            const newSelectedQuestionIds = questionList.map(item => item.id);
+            setSelectedQuestionIds(newSelectedQuestionIds);
+          } else {
+            setSelectedQuestionIds([]);
+          }
+          table.toggleAllPageRowsSelected(!!value)
+        }}
+        aria-label="Select all"
+      />
+      </div>
+    );
+  },[isDisable, selectedQuestionIds, questionList, setSelectedQuestionIds])
 
   const columns: ColumnDef<IQuestion>[] = useMemo(() => {
     return compact([
+      {
+        id: 'select',
+        header: SelectHeader,
+        cell: SelectCell,
+        size: 60,
+      },
       {
         header: t('common.number'),
         accessorKey: 'index',
@@ -188,7 +273,7 @@ export function QuestionTable() {
             page: questionGetListQuery.page ?? DEFAULT_FIRST_PAGE,
             limit: questionGetListQuery.limit,
           }),
-        size: 50,
+        size: 80,
       },
       {
         header: t('questions.table.question'),
@@ -239,7 +324,7 @@ export function QuestionTable() {
       {
         header: t('questions.table.action'),
         id: 'actions',
-        size: 80,
+        size: 120,
         cell: QuestionActions,
       },
     ]);
@@ -253,6 +338,8 @@ export function QuestionTable() {
     imageCell,
     answerCell,
     QuestionActions,
+    SelectCell,
+    SelectHeader,
   ]);
 
   return <DataTable 
@@ -264,5 +351,6 @@ export function QuestionTable() {
     onSortingChange={handleSortingChange}
     sorting={sorting}
     setSorting={setSorting}
+    enableMultiRowSelection={true}
   />;
 }

@@ -83,5 +83,13 @@
   "subject": "Subject",
   "monthlyFee": "Monthly fee",
   "logo": "Logo",
-  "image": "Image"
+  "image": "Image",
+  "question": "Question",
+  "answer": "Answer",
+  "romaji": "Romaji",
+  "arrange": "Arrange",
+  "original": "Original",
+  "vocabulary": "Vocabulary",
+  "pronunciation": "Pronunciation",
+  "description": "Description"
 }

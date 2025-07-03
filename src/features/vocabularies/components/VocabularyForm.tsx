@@ -1,74 +1,72 @@
 import { BaseDialog } from '@/components/BaseDialog';
-import { useSubjectStore } from '../stores/useSubjectStore';
+import { useVocabularyStore } from '../stores/useVocabularyStore';
 import { useShallow } from 'zustand/react/shallow';
 import { Button } from '@/components/ui/button';
 import { useForm } from 'react-hook-form';
 import { Form } from '@/components/ui/form';
 import { InputText } from '@/components/form/input';
 import { useTranslations } from 'next-intl';
-import { createSubjectYupResolver } from '../schema';
-import { subjectService } from '../services/subject.service';
+import { updateVocabularyYupResolver } from '../schema';
 import { IBodyResponse } from '@/utils/interfaces';
-import { SubjectFormType, ISubject, ISubjectFormBody } from '../interfaces';
+import { IVocabulary, IVocabularyFormBody } from '../interfaces';
 import { toast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
 import { UploadField } from '@/components/form/upload';
 import { DEFAULT_MAX_SIZE } from '@/utils';
-import { InputNumber } from '@/components/form/input-number';
 import { cn } from '@/lib/utils';
 import { fileApiService } from '@/features/common/service/file.api.service';
+import { SelectSingle } from '@/components/form/select-single';
+import { vocabularyService } from '../services/vocabulary.service';
+import { InputTextArea } from '@/components/form/input-text-area';
 
-export function SubjectForm() {
+export function VocabularyForm() {
   const t = useTranslations();
-  const { selectedSubject, isOpenSubjectFormDialog, setOpenSubjectFormDialog, getSubjectList } = useSubjectStore(
+  const { subjectDropdownList, selectedVocabulary, isOpenVocabularyFormDialog, setOpenVocabularyFormDialog, getVocabularyList } = useVocabularyStore(
     useShallow((state) => ({
-      selectedSubject: state.selectedSubject,
-      isOpenSubjectFormDialog: state.isOpenSubjectFormDialog,
-      setOpenSubjectFormDialog: state.setOpenSubjectFormDialog,
-      getSubjectList: state.getSubjectList,
+      subjectDropdownList: state.subjectDropdownList,
+      selectedVocabulary: state.selectedVocabulary,
+      isOpenVocabularyFormDialog: state.isOpenVocabularyFormDialog,
+      setOpenVocabularyFormDialog: state.setOpenVocabularyFormDialog,
+      getVocabularyList: state.getVocabularyList,
     })),
   );
 
-  const [formType, setFormType] = useState<SubjectFormType>(SubjectFormType.CREATE);
   const [loading, setLoading] = useState(false);
-  const [logoFile, setLogoFile] = useState<File | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const form = useForm<ISubjectFormBody>({
-    resolver: createSubjectYupResolver,
+  const form = useForm<IVocabularyFormBody>({
+    resolver: updateVocabularyYupResolver,
     mode: 'onBlur',
     reValidateMode: 'onBlur',
   });
 
   useEffect(() => {
-    setLogoFile(null);
     setImageFile(null);
 
     form.reset({
-      name: '',
-      logo: selectedSubject?.logo ?? '',
-      image: selectedSubject?.image ?? '',
+      image: selectedVocabulary?.image ?? '',
     });
 
-    const getSubjectDetail = async () => {
-      const response: IBodyResponse<ISubject> = await subjectService._getDetail(selectedSubject?.id ?? '');
+    const getVocabularyDetail = async () => {
+      const response: IBodyResponse<IVocabulary> = await vocabularyService._getDetail(selectedVocabulary?.id ?? '');
       if (response.success) {
         form.reset({ // reload data on database
-          name: response.data.name,
-          monthlyFee: response.data.monthlyFee,
-          logo: response.data.logo ?? '',
           image: response.data.image ?? '',
+          vocabulary: response.data.vocabulary.originalLanguage,
+          description: response.data.description.originalLanguage,
+          subjectId: response.data.subjectId,
+          pronunciation: response.data.pronunciation,
         });
       }
     };
 
-    if(selectedSubject) {
-      setFormType(SubjectFormType.UPDATE);
-      getSubjectDetail();
+    if(selectedVocabulary) {
+      getVocabularyDetail();
     } 
-  }, [isOpenSubjectFormDialog, selectedSubject, setFormType]);
+  }, [isOpenVocabularyFormDialog, selectedVocabulary]);
 
-  const onSubmit = async (data: ISubjectFormBody) => {
+  const onSubmit = async (data: IVocabularyFormBody) => {
+    if(!selectedVocabulary) return;
     if(loading) return;
     try {
       setLoading(true);
@@ -76,33 +74,27 @@ export function SubjectForm() {
         data.image = await getImageUrl(imageFile);
       }
 
-      if(logoFile) {
-        data.logo = await getImageUrl(logoFile);
-      }
-
-      const response: IBodyResponse<ISubject> = selectedSubject
-        ? await subjectService.updateSubject(selectedSubject.id, data)
-        : await subjectService.createSubject(data);
+      const response: IBodyResponse<IVocabulary> = await vocabularyService.updateVocabulary(selectedVocabulary.id, data);
 
       if(response.success) {
-        setOpenSubjectFormDialog(false);
+        setOpenVocabularyFormDialog(false);
         toast({
-          title: t(`common.messages.${formType}_success`),
+          title: t(`common.messages.update_success`),
           variant: 'success',
         })
-        getSubjectList();
+        getVocabularyList();
         return;
       }
-      let errorKey = `common.messages.${formType}_failed`;
-      if(response?.errors && response.errors[0]?.errorKey === 'subject.error.subject.existed') {
-        errorKey='subjects.error.nameExisted';
+      let errorKey = `common.messages.update_failed`;
+      if(response?.errors && response.errors[0]?.errorKey === 'question.error.question.existed') {
+        errorKey='questions.error.nameExisted';
       }
       toast({
         title: t(errorKey),
         variant:'destructive',
       })
     }catch {
-      setOpenSubjectFormDialog(false);
+      setOpenVocabularyFormDialog(false);
       toast({
         title: t('common.messages.error'),
         variant:'destructive',
@@ -123,61 +115,63 @@ export function SubjectForm() {
 
   return (
     <BaseDialog
-      open={isOpenSubjectFormDialog}
-      onOpenChange={setOpenSubjectFormDialog}
+      open={isOpenVocabularyFormDialog}
+      onOpenChange={setOpenVocabularyFormDialog}
       showCloseButton={false}
-      title={t(`subjects.title.${formType}`)} 
+      title={t('questions.form.updateTitle')} 
       className="max-w-[500px] max-h-[calc(100vh-10px)] pb-0"
       headerClassName='block'
     >
       <div className="flex flex-col items-start justify-end gap-2.5 pb-2">
-        <Form {...form} key={formType}>
+        <Form {...form}>
           <InputText 
-            key={'name'}
-            name="name" 
+            key={'vocabulary'}
+            name="vocabulary" 
             control={form.control} 
-            label={t('subjects.form.subject')} 
-            placeholder={t('subjects.form.subject')} 
+            label={t('vocabularies.form.vocabulary')} 
+            placeholder={t('vocabularies.form.vocabulary')} 
             layout='vertical'
             className='w-full'
-            onChange={() => form.clearErrors('name')}
+            onChange={() => form.clearErrors('vocabulary')}
           />
-          <InputNumber 
-            key={'monthlyFee'}
-            name="monthlyFee" 
+          <InputText 
+            key={'pronunciation'}
+            name="pronunciation" 
             control={form.control} 
-            label={t('subjects.form.monthlyFee')} 
-            placeholder={t('subjects.form.monthlyFee')} 
+            label={t('vocabularies.form.pronunciation')} 
+            placeholder={t('vocabularies.form.pronunciation')} 
             layout='vertical'
             className='w-full'
-            onChange={() => form.clearErrors('monthlyFee')}
+            onChange={() => form.clearErrors('pronunciation')}
+          />
+          <InputTextArea
+            key={'vocab-description'}
+            name="description" 
+            control={form.control} 
+            label={t('vocabularies.form.description')} 
+            placeholder={t('vocabularies.form.description')} 
+            layout='vertical'
+            className='w-full'
+            onChange={() => form.clearErrors('description')}
+          />
+          <SelectSingle
+            key={'vocab-subjectId'}
+            name="subjectId" 
+            control={form.control} 
+            label={t('vocabularies.form.subjectId')} 
+            placeholder={t('vocabularies.form.subjectId')} 
+            layout='vertical'
+            className='w-full'
+            options={subjectDropdownList.map(item => ({
+              label: item.name,
+              value: item.id,
+            }))}
           />
           <UploadField
-            key={'logo'}
-            name="logo" 
-            control={form.control} 
-            label={t('subjects.form.logo')} 
-            layout='vertical'
-            className='w-full'
-            onChange={(file) => {
-              setLogoFile(file);
-              form.setValue('logo', URL.createObjectURL(file), { shouldValidate: true, shouldDirty: true,  })
-            }}
-            onRemove={() => {
-              setLogoFile(null);
-              form.setValue('logo', '', { shouldValidate: true, shouldDirty: true,  })
-            }}
-            onValidationFail={(file, type) => {
-              form.setValue('logo', URL.createObjectURL(file), { shouldValidate: false, shouldDirty: false,  })
-              const message = t(`common.file.${type}`, {maxSize: DEFAULT_MAX_SIZE});
-              form.setError('logo', { message });
-            }}
-          />
-          <UploadField
-            key={'image'}
+            key={'vocab-image'}
             name="image" 
             control={form.control} 
-            label={t('subjects.form.image')} 
+            label={t('vocabularies.form.image')} 
             layout='vertical'
             className='w-full'
             onChange={(file) => {
@@ -195,17 +189,13 @@ export function SubjectForm() {
             }}
           />
         </Form>
-        {formType === SubjectFormType.UPDATE && 
-        <div className='text-[#E9034E]'>
-            {t('subjects.form.message')}
-        </div>}
 
       </div>
         <div className={cn("w-full pb-6 flex gap-2.5 bg-white justify-center pt-2 sticky left-0 bottom-0")}>
           <Button
             variant="outline"
             className="w-[120px] h-[40px]"
-            onClick={() => setOpenSubjectFormDialog(false)}
+            onClick={() => setOpenVocabularyFormDialog(false)}
             disabled={loading}
           >
             {t('common.buttons.cancel')}
@@ -217,12 +207,11 @@ export function SubjectForm() {
             disabled={
               !form.formState.isDirty ||
               !form.formState.isValid ||
-              !!form.formState.errors.logo?.message ||
               !!form.formState.errors.image?.message
             }
             loading={loading}
           >
-            {t(`common.buttons.${formType ===SubjectFormType.CREATE ? 'add' : 'save'}`)}
+            {t('common.buttons.save')}
           </Button>
         </div>
     </BaseDialog>
