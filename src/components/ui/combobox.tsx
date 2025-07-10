@@ -139,7 +139,8 @@ export function Combobox({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="p-0"
+        className="p-0 pointer-events-auto"
+        onWheel={(e) => e.stopPropagation()}
         style={{ width: triggerWidth ? `${triggerWidth}px` : 'auto' }}
         onEscapeKeyDown={() => setOpen(false)}
       >
