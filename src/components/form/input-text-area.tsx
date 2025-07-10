@@ -70,9 +70,6 @@ export function InputTextArea({
       textareaRef.current.setSelectionRange(length, length);
     }
   };
-  const handleBlur = () => {
-    onBlur?.();
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement> | undefined) => {
     onChange?.(e?.target?.value ?? '');
@@ -113,11 +110,14 @@ export function InputTextArea({
                 required={required}
                 placeholder={placeholder}
                 {...field}
-                maxLength={maxLength}
+                maxLength={maxLength ?? undefined}
                 disabled={disabled}
                 value={field.value || ''}
                 onFocus={handleFocus}
-                onBlur={handleBlur}
+                onBlur={() => {
+                  onBlur?.();
+                  field.onBlur();
+                }}
                 resizable={resizable}
                 onChange={(e) => {
                   field.onChange(e);

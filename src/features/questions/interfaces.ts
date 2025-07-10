@@ -34,7 +34,7 @@ export const MAX_ARRANGE = 20;
 export interface IQuestionFormBody {
   question: string;
   answer: boolean | string;
-  description: string;
+  description?: string;
   subjectId: string;
   arrange: number | string;
   original: boolean | string;

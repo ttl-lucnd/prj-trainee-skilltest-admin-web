@@ -78,7 +78,6 @@ export function VocabularyTable() {
     vocabularyList,
     loading,
     vocabularyGetListQuery,
-    getVocabularyList,
     resetState,
     setOpenDeleteVocabularyDialog,
     setSelectedVocabulary,
@@ -95,7 +94,6 @@ export function VocabularyTable() {
       vocabularyList: state.vocabularyList,
       loading: state.loading,
       vocabularyGetListQuery: state.vocabularyGetListQuery,
-      getVocabularyList: state.getVocabularyList,
       resetState: state.resetState,
       setOpenDeleteVocabularyDialog: state.setOpenDeleteVocabularyDialog,
       setSelectedVocabulary: state.setSelectedVocabulary,
@@ -123,7 +121,6 @@ export function VocabularyTable() {
       id: (query?.orderBy as string)?.toUpperCase()?.replace('.', '_') ?? 'VOCABULARY_ORIGINALLANGUAGE', 
       desc: query?.orderDirection === OrderDirection.DESC
     }])
-    getVocabularyList();
     return () => {
       resetState();
     };
@@ -221,6 +218,7 @@ export function VocabularyTable() {
 
   const VocabularyActions = useCallback(
     ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
+      const disableAction = isDisable || selectedVocabularyIds.includes(row.original.id);
       return (
         <div className="flex gap-4">
           <button
@@ -229,14 +227,14 @@ export function VocabularyTable() {
               setSelectedVocabulary(row.original);
             }}
           className={cn(
-              !isDisable && 'hover:bg-primary-2',
+              !disableAction && 'hover:bg-primary-2',
               "flex size-[30px] rounded-full items-center justify-center group/edit"
             )}
-            disabled={isDisable}
+            disabled={disableAction}
           >
             <PencilIcon size={22}
               className={cn(
-                isDisable ? 'text-[#CECECE]'
+                disableAction ? 'text-[#CECECE]'
                 : 'cursor-pointer group-hover/edit:text-white')
               }
             />
@@ -247,15 +245,15 @@ export function VocabularyTable() {
               setOpenDeleteVocabularyDialog(true);
               setSelectedVocabulary(row.original);
             }}
-            disabled={isDisable}
+            disabled={disableAction}
             className={cn(
-              !isDisable && 'hover:bg-destructive',
-              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
+              !disableAction && 'hover:bg-destructive',
+              "flex size-[30px] rounded-full items-center justify-center group/delete"
             )}
           >
             <TrashIcon size={22} 
               className={cn(
-                isDisable ? 'text-[#CECECE]'
+                disableAction ? 'text-[#CECECE]'
                 : 'cursor-pointer group-hover/delete:text-white')
               }
             />
@@ -263,7 +261,7 @@ export function VocabularyTable() {
         </div>
       );
     },
-    [isDisable, setOpenDeleteVocabularyDialog, setOpenVocabularyFormDialog, setSelectedVocabulary],
+    [isDisable, selectedVocabularyIds, setOpenDeleteVocabularyDialog, setOpenVocabularyFormDialog, setSelectedVocabulary],
   );
   
   const translateCol = useMemo((): ColumnDef<IVocabulary>[] =>{

@@ -24,7 +24,7 @@ export interface IComboboxProps {
   value?: ValueType;
   placeholder?: string;
   searchPlaceholder?: string;
-  options: { label: string; value: ValueType }[];
+  options: { label: string; value: ValueType, customLabel?: React.ReactNode, }[];
   allowClear?: boolean;
   className?: string;
   onChange?: (value?: ValueType) => void;
@@ -43,11 +43,26 @@ export function Combobox({
 }: Readonly<IComboboxProps>) {
   const t = useTranslations();
   const [open, setOpen] = React.useState(false);
+  const [search, setSearch] = React.useState('');
   const [_value, setValue] = React.useState<ValueType>();
 
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
   const [triggerWidth, setTriggerWidth] = React.useState<number | undefined>();
+
+  const filteredOptions = React.useMemo(() => {
+    console.log('search:', search);
+    console.log('Options:', options);
+    console.log('filter: ', options.filter(item => item.label.toLowerCase().includes(search.toLowerCase())))
+    console.log('>>>>>>>>>>')
+    return options.filter(item => item.label.toLowerCase().includes(search.toLowerCase()))
+  },[options, search])
+
+  const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      setOpen(true);
+    } 
+  };
 
   React.useEffect(() => {
     setValue(value);
@@ -109,7 +124,7 @@ export function Combobox({
         >
           <span className={cn('truncate', !_value && 'text-primary-3')}>
             {_value
-              ? options.find((option) => option.value === _value)?.label
+              ? (options.find((option) => option.value === _value)?.customLabel ?? <TruncatedText text={options.find((option) => option.value === _value)?.label ?? ''}/>)
               : placeholder}
           </span>
           <span className="flex items-center gap-2">
@@ -130,31 +145,34 @@ export function Combobox({
       <PopoverContent
         className="p-0"
         style={{ width: triggerWidth ? `${triggerWidth}px` : 'auto' }}
+        onEscapeKeyDown={() => setOpen(false)}
       >
         <Command>
           <CommandInput
             placeholder={searchPlaceholder ?? t('common.searchPlaceholder')}
+            onKeyDown={handleInputKeyDown}
+            onValueChange={setSearch}
+            value={search}
           />
           <CommandList ref={listRef}>
             <CommandEmpty>
               <NoData />
             </CommandEmpty>
             <CommandGroup>
-              {options.map((option) => (
+              {filteredOptions.map((option) => (
                 <CommandItem
                   key={option.value}
-                  value={option.value?.toString()}
-                  className="truncate"
-                  onSelect={handleSelect}
+                  value={option.label}
+                  onSelect={() => handleSelect(option.value?.toString() ?? '')}
                   data-value={option.value}
                 >
                   <Check
                     className={cn(
-                      'mr-2 h-4 w-4 flex-shrink-0',
+                      'mr-2 h-4 w-4 flex-shrink-0 text-primary-2',
                       _value === option.value ? 'opacity-100' : 'opacity-0',
                     )}
                   />
-                  <TruncatedText text={option.label} />
+                  {option.customLabel ?? <TruncatedText text={option.label} />}
                 </CommandItem>
               ))}
             </CommandGroup>

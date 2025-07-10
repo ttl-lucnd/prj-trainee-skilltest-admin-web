@@ -62,7 +62,7 @@ export function SubjectForm() {
       }
     };
 
-    if(selectedSubject) {
+    if(selectedSubject && isOpenSubjectFormDialog) {
       setFormType(SubjectFormType.UPDATE);
       getSubjectDetail();
     } 
@@ -127,7 +127,7 @@ export function SubjectForm() {
       onOpenChange={setOpenSubjectFormDialog}
       showCloseButton={false}
       title={t(`subjects.title.${formType}`)} 
-      className="max-w-[500px] max-h-[calc(100vh-10px)] pb-0"
+      className="max-w-[500px] max-h-[calc(100vh-2rem)] pb-0"
       headerClassName='block'
     >
       <div className="flex flex-col items-start justify-end gap-2.5 pb-2">
