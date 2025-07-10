@@ -29,6 +29,8 @@ import {
 import { useTranslations } from 'next-intl';
 import NoData from '../NoData';
 import { useEffect } from 'react';
+import { TruncatedText } from '../TruncateText';
+import { Tooltip, TooltipContent, TooltipPortal, TooltipTrigger } from './tooltip';
 
 /**
  * Variants for the multi-select component to handle different styles.
@@ -210,10 +212,10 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
       setSelectedValues(value || []);
     }, [value]);
 
-    const maxCountTooltip: string = React.useMemo(() => {
+    const maxCountTooltip: string[] = React.useMemo(() => {
       const labelMap = new Map(options.map(item => [item.value, item.label]))
       const maxCountValues = selectedValues.slice(maxCount);
-      const tooltip = maxCountValues.map(item => `• ${labelMap.get(item)}`).join('\n');
+      const tooltip = maxCountValues.map(item => labelMap.get(item) ?? '');
       return tooltip;
     }, [selectedValues, maxCount, options])
 
@@ -246,7 +248,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                         style={{ animationDuration: `${animation}s` }}
                       >
                         {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
-                        <span className="truncate" title={option?.label}>{option?.label}</span>
+                        <TruncatedText text={option?.label ?? ''}/>
                         <XCircle
                           className="ml-1 h-4 w-4 cursor-pointer"
                           onClick={(event) => {
@@ -258,24 +260,45 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                     );
                   })}
                   {selectedValues.length > maxCount && (
-                    <Badge
-                      className={cn(
-                        'bg-transparent text-foreground border-foreground/1 hover:bg-transparent px-1.5',
-                        isAnimating ? 'animate-bounce' : '',
-                        multiSelectVariants({ variant }),
-                      )}
-                      style={{ animationDuration: `${animation}s` }}
-                    >
-                      <span className="truncate" title={maxCountTooltip}>{`+ ${selectedValues.length - maxCount}`}</span>
-                      <XCircle
-                        className="ml-1 h-4 w-4 cursor-pointer"
-                        data-testid="clear-button"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          clearExtraOptions();
-                        }}
-                      />
-                    </Badge>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge
+                          className={cn(
+                            'bg-transparent text-foreground border-foreground/1 hover:bg-transparent px-1.5',
+                            isAnimating ? 'animate-bounce' : '',
+                            multiSelectVariants({ variant }),
+                          )}
+                          style={{ animationDuration: `${animation}s` }}
+                        >
+                          <span
+                            className={cn(
+                              'block w-full overflow-hidden text-ellipsis break-words'
+                            )}
+                          >
+                            {`+ ${selectedValues.length - maxCount}`}
+                          </span>
+                          <XCircle
+                            className="ml-1 h-4 w-4 cursor-pointer"
+                            data-testid="clear-button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              clearExtraOptions();
+                            }}
+                          />
+                        </Badge>
+                      </TooltipTrigger>
+                        <TooltipPortal>
+                          <TooltipContent
+                            className={cn(
+                              'break-words whitespace-normal max-w-xs md:max-w-md lg:max-w-lg',
+                            )}
+                          >
+                            <ul className="list-disc pl-4">
+                            {maxCountTooltip.map(item => <li key={item}>{item}</li>)}
+                            </ul>
+                          </TooltipContent>
+                        </TooltipPortal>
+                    </Tooltip>
                   )}
                 </div>
                 <div className="flex items-center justify-between">
@@ -387,7 +410,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                       {option.icon && (
                         <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                       )}
-                      <span className="truncate" title={option.label}>{option.label}</span>
+                      <TruncatedText text={option.label}/>
                     </CommandItem>
                   );
                 })}

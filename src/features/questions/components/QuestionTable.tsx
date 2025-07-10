@@ -28,7 +28,6 @@ export function QuestionTable() {
     loading,
     questionGetListQuery,
     selectedQuestionIds,
-    getQuestionList,
     resetState,
     setOpenDeleteQuestionDialog,
     setSelectedQuestion,
@@ -43,7 +42,6 @@ export function QuestionTable() {
       loading: state.loading,
       questionGetListQuery: state.questionGetListQuery,
       selectedQuestionIds: state.selectedQuestionIds,
-      getQuestionList: state.getQuestionList,
       resetState: state.resetState,
       setOpenDeleteQuestionDialog: state.setOpenDeleteQuestionDialog,
       setSelectedQuestion: state.setSelectedQuestion,
@@ -68,7 +66,6 @@ export function QuestionTable() {
       id: query?.orderBy as string ?? 'arrange', 
       desc: query?.orderDirection === OrderDirection.DESC
     }])
-    getQuestionList();
     return () => {
       resetState();
     };
@@ -165,6 +162,7 @@ export function QuestionTable() {
 
   const QuestionActions = useCallback(
     ({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
+      const disableAction = isDisable || selectedQuestionIds.includes(row.original.id);
       return (
         <div className="flex gap-4">
           <button
@@ -172,15 +170,15 @@ export function QuestionTable() {
               setOpenQuestionFormDialog(true);
               setSelectedQuestion(row.original);
             }}
-            disabled={isDisable}
+            disabled={disableAction}
           className={cn(
-              !isDisable && 'hover:bg-primary-2',
+              !disableAction && 'hover:bg-primary-2',
               "flex size-[30px] rounded-full items-center justify-center group/edit"
             )}
           >
             <PencilIcon size={22}
               className={cn(
-                isDisable ? 'text-[#CECECE]'
+                disableAction ? 'text-[#CECECE]'
                 : 'cursor-pointer group-hover/edit:text-white')
               }
             />
@@ -191,15 +189,15 @@ export function QuestionTable() {
               setOpenDeleteQuestionDialog(true);
               setSelectedQuestion(row.original);
             }}
-            disabled={isDisable}
+            disabled={disableAction}
             className={cn(
-              !isDisable && 'hover:bg-destructive',
-              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
+              !disableAction && 'hover:bg-destructive',
+              "flex size-[30px] rounded-full items-center justify-center group/delete"
             )}
           >
             <TrashIcon size={22} 
               className={cn(
-                isDisable ? 'text-[#CECECE]'
+                disableAction ? 'text-[#CECECE]'
                 : 'cursor-pointer group-hover/delete:text-white')
               }
             />
@@ -207,7 +205,7 @@ export function QuestionTable() {
         </div>
       );
     },
-    [isDisable, setOpenDeleteQuestionDialog, setOpenQuestionFormDialog, setSelectedQuestion],
+    [isDisable, selectedQuestionIds, setOpenDeleteQuestionDialog, setOpenQuestionFormDialog, setSelectedQuestion],
   );
 
   const SelectCell = useCallback(({ row }: Readonly<CellContext<IQuestion, unknown>>) => {

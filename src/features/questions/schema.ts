@@ -13,7 +13,7 @@ export const questionFilterYupResolver = yupResolver(questionFilterSchema);
 
 const updateQuestionSchema = yup.object({
   question: shortStringSchema.required().label('question'),
-  description: shortStringSchema.required().label('romaji'),
+  description: shortStringSchema.optional().label('romaji'),
   subjectId: shortStringSchema.required().label('subject'),
   arrange: yup
     .number()

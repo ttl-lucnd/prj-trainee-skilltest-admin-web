@@ -65,7 +65,7 @@ export function SubjectTable() {
 
   const monthlyFeeCell = useCallback(
     ({ row }: Readonly<CellContext<ISubject, unknown>>) => {
-      return <TruncatedText text={t('subjects.price',{price: row.original.monthlyFee ?? 0})} />;
+      return <TruncatedText text={t('subjects.price',{price: (row.original.monthlyFee ?? 0).toLocaleString()})} />;
     },
     [t],
   );
