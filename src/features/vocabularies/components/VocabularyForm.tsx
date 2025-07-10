@@ -133,6 +133,7 @@ export function VocabularyForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('vocabulary')}
+            required
           />
           <InputText 
             key={'pronunciation'}
@@ -143,6 +144,7 @@ export function VocabularyForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('pronunciation')}
+            required
           />
           <InputTextArea
             key={'vocab-description'}
@@ -153,6 +155,7 @@ export function VocabularyForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('description')}
+            required
           />
           <ComboboxField
             key={'vocab-subjectId'}
@@ -166,6 +169,7 @@ export function VocabularyForm() {
               label: item.name,
               value: item.id,
             }))}
+            required
           />
           <UploadField
             key={'vocab-image'}

@@ -103,6 +103,7 @@ export function SyncSettingForm({
           onChange={()=>form.clearErrors('sheetLink')}
           customClassName='truncate'
           title={sheetLink}
+          required
           />
 
           <InputNumber 
@@ -114,6 +115,7 @@ export function SyncSettingForm({
           layout='vertical'
           className='w-full'
           onChange={()=> form.clearErrors('lastReadRow')}
+          required
           />
         </Form>
         <div className="w-full flex gap-2.5 justify-center mt-4 pb-0.5">

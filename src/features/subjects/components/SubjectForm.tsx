@@ -141,6 +141,7 @@ export function SubjectForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('name')}
+            required
           />
           <InputNumber 
             key={'monthlyFee'}
@@ -151,6 +152,7 @@ export function SubjectForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('monthlyFee')}
+            required
           />
           <UploadField
             key={'logo'}

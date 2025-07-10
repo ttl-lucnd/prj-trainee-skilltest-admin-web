@@ -137,6 +137,7 @@ export function QuestionForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('question')}
+            required
           />
           <InputText 
             key={'romaji'}
@@ -160,6 +161,7 @@ export function QuestionForm() {
               label: item.name,
               value: item.id,
             }))}
+            required
           />
           <ComboboxField
             key={'arrange'}
@@ -173,6 +175,7 @@ export function QuestionForm() {
               label: `${item}`,
               value: `${item}`,
             }))}
+            required
           />
           <SelectSingle
             key={'original'}
@@ -191,6 +194,7 @@ export function QuestionForm() {
               label: '',
               customLabel: <Badge variant={'error'}>False</Badge>
             }]}
+            required
           />
           <UploadField
             key={'question-image'}
@@ -230,6 +234,7 @@ export function QuestionForm() {
               label: '',
               customLabel: <XCrossIcon size={16}/>
             }]}
+            required
           />
         </Form>
 

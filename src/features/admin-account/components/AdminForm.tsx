@@ -118,6 +118,7 @@ export function AdminForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('email')}
+            required
           />
           <InputText 
             key={'name'}
@@ -128,6 +129,7 @@ export function AdminForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('name')}
+            required
           />
         </Form>
         <div className="w-full flex gap-2.5 justify-center mt-4 pb-0.5">
