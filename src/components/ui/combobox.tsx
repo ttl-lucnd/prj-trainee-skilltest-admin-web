@@ -51,10 +51,6 @@ export function Combobox({
   const [triggerWidth, setTriggerWidth] = React.useState<number | undefined>();
 
   const filteredOptions = React.useMemo(() => {
-    console.log('search:', search);
-    console.log('Options:', options);
-    console.log('filter: ', options.filter(item => item.label.toLowerCase().includes(search.toLowerCase())))
-    console.log('>>>>>>>>>>')
     return options.filter(item => item.label.toLowerCase().includes(search.toLowerCase()))
   },[options, search])
 
