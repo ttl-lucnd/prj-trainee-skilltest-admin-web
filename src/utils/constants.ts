@@ -52,6 +52,7 @@ export enum PageRouter {
   WORD_MANAGEMENT = '/word-management',
   ADMIN_ACCOUNTS = '/admin-accounts',
   SUBJECT_MANAGEMENT = '/subject-management',
+  SUBSCRIPTION_MANAGEMENT = '/subscription-management',
 }
 
 export enum Gender {
@@ -349,3 +350,8 @@ export enum AuthEventType {
 export const MIN_DATA_TABLE_ROW = 5;
 
 export const DELAY_GET_STATUS = 10000; // 10s delay
+
+export enum SubscriptionPlatform {
+  APPLE = 'apple',
+  GOOGLE = 'google',
+}

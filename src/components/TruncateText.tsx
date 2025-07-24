@@ -5,13 +5,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, CSSProperties } from 'react';
 
 type TruncatedTextProps = {
   text: string;
   className?: string;
   tooltipClassName?: string;
   isMultipleLines?: boolean;
+  style?: CSSProperties;
 };
 
 export function TruncatedText({
@@ -19,6 +20,7 @@ export function TruncatedText({
   className,
   tooltipClassName,
   isMultipleLines = false,
+  style,
 }: Readonly<TruncatedTextProps>) {
   const textRef = useRef<HTMLSpanElement>(null);
   const [isTruncated, setIsTruncated] = useState(false);
@@ -63,6 +65,7 @@ export function TruncatedText({
             !isMultipleLines && 'whitespace-nowrap',
             className,
           )}
+          style={style}
         >
           {text}
         </span>

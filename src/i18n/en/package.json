@@ -1,0 +1,31 @@
+{
+  "form": {
+    "name": "パッケージ名",
+    "platform": "ストア名",
+    "productId": "Product ID",
+    "price": "単価（税込）",
+    "durationDays": "会員期間",
+    "description": "備考",
+    "search": "検索"
+  },
+  "table": {
+    "name": "パッケージ名",
+    "platform": "ストア名",
+    "productId": "Product ID",
+    "price": "単価（税込）",
+    "duration": "会員期間",
+    "description": "備考",
+    "action": "アクション"
+  },
+  "delete": {
+    "title": "本当にこのパッケージを削除しますか？",
+    "error": "このパッケージに登録している顧客がいるため、削除できません。"
+  },
+  "title": {
+    "create": "パッケージを追加",
+    "update": "編集"
+  },
+  "error": {
+    "existed": "パッケージは既に存在します"
+  }
+}
