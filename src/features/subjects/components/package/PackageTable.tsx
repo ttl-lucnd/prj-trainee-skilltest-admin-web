@@ -58,7 +58,9 @@ export function PackageTable() {
 
   const platformCell = useCallback(
     ({ row }: Readonly<CellContext<IPackage, unknown>>) => {
-      return <TruncatedText text={row.original.platform} />;
+      return (
+        <TruncatedText text={t(`common.subscriptionPlatform.${row.original.platform}`)} />
+      );
     },
     [],
   );
@@ -154,7 +156,7 @@ export function PackageTable() {
   const columns: ColumnDef<IPackage>[] = useMemo(() => {
     return compact([
       {
-        header: t('common.number'),
+        header: () => <div className="text-center">{t('common.number')}</div>,
         accessorKey: 'index',
         cell: (props: CellContext<IPackage, unknown>) =>
           NumberCell({
@@ -168,31 +170,31 @@ export function PackageTable() {
         header: t('packages.table.name'),
         accessorKey: 'name',
         cell: nameCell,
-        size: 150,
+        size: 160,
       },
       {
         header: t('packages.table.platform'),
         accessorKey: 'platform',
         cell: platformCell,
-        size: 150,
+        size: 160,
       },
       {
         header: t('packages.table.productId'),
         accessorKey: 'productId',
         cell: productIdCell,
-        size: 150,
+        size: 160,
       },
       {
         header: t('packages.table.price'),
         accessorKey: 'price',
         cell: priceCell,
-        size: 150,
+        size: 160,
       },
       {
         header: t('packages.table.duration'),
         accessorKey: 'duration',
         cell: durationCell,
-        size: 150,
+        size: 160,
       },
       {
         header: t('packages.table.description'),

@@ -142,6 +142,7 @@ export function PackageForm() {
             required
           />
           <RadioGroup
+            key={'platform'}
             control={form.control}
             name="platform"
             isHorizontalItem

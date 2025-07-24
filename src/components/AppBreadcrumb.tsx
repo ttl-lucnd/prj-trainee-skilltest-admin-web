@@ -29,7 +29,7 @@ export function AppBreadcrumb({ items }: Readonly<AppBreadcrumbProps>) {
   const lastItem = filteredItems[filteredItems.length - 1];
   return (
     <>
-      <div className="flex items-end gap-2.5 w-auto">
+      <div className="flex items-center gap-2 w-auto">
         <Breadcrumb>
           <BreadcrumbList>
             {filteredItems.slice(0, filteredItems.length - 1).map((item) =>
@@ -46,7 +46,10 @@ export function AppBreadcrumb({ items }: Readonly<AppBreadcrumbProps>) {
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator>
-                    <ChevronRight className="text[#CBD5E1]" size={14} />
+                    <ChevronRight
+                      className="text-[#CBD5E1]"
+                      style={{ height: '1.25rem', width: '1.25rem' }}
+                    />
                   </BreadcrumbSeparator>
                 </Fragment>
               ) : null,

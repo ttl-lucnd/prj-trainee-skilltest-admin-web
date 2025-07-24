@@ -125,5 +125,10 @@
   "original": "オリジナル",
   "vocabulary": "単語",
   "pronunciation": "読み方",
-  "description": "説明文"
+  "description": "説明文",
+  "packageName": "パッケージ名",
+  "platform": "ストア名",
+  "productId": "Product ID",
+  "price": "単価（税込）",
+  "durationDays": "会員期間"
 }

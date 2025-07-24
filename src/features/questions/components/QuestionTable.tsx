@@ -3,7 +3,13 @@ import { DataTable } from '@/components/data-table';
 import { PencilIcon, TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
 import { DEFAULT_FIRST_PAGE, OrderBy, OrderDirection } from '@/utils/constants';
-import { CellContext, ColumnDef, ColumnSort, HeaderContext, SortingState } from '@tanstack/react-table';
+import {
+  CellContext,
+  ColumnDef,
+  ColumnSort,
+  HeaderContext,
+  SortingState,
+} from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -52,8 +58,11 @@ export function QuestionTable() {
     })),
   );
 
-  const [sorting, setSorting] = useState<SortingState>([{id: 'arrange', desc: false}])
-  const isDisable = useMemo(() => questionSetting?.status === SYNC_DATA_STATUS.PENDING, [questionSetting]);
+  const [sorting, setSorting] = useState<SortingState>([{ id: 'arrange', desc: false }]);
+  const isDisable = useMemo(
+    () => questionSetting?.status === SYNC_DATA_STATUS.PENDING,
+    [questionSetting],
+  );
 
   const {
     getQueryFromUrl: getQuestionQueryFromUrl,
@@ -62,26 +71,31 @@ export function QuestionTable() {
 
   useEffect(() => {
     const query = getQuestionQueryFromUrl();
-    setSorting([{
-      id: query?.orderBy as string ?? 'arrange', 
-      desc: query?.orderDirection === OrderDirection.DESC
-    }])
+    setSorting([
+      {
+        id: (query?.orderBy as string) ?? 'arrange',
+        desc: query?.orderDirection === OrderDirection.DESC,
+      },
+    ]);
     return () => {
       resetState();
     };
   }, []);
 
-    const handleSortingChange = useCallback(
+  const handleSortingChange = useCallback(
     (sort?: ColumnSort) => {
       const newQuery = {
         orderBy: sort?.id ?? OrderBy.CREATED_AT,
         orderDirection: sort?.desc ? OrderDirection.DESC : OrderDirection.ASC,
       };
 
-      setQuestionGetListQuery({
-        ...questionGetListQuery,
-        ...newQuery,
-      }, { reloadList: true });
+      setQuestionGetListQuery(
+        {
+          ...questionGetListQuery,
+          ...newQuery,
+        },
+        { reloadList: true },
+      );
       updateQuestionUrlWithQuery(newQuery);
     },
     [questionGetListQuery, setQuestionGetListQuery, updateQuestionUrlWithQuery],
@@ -103,9 +117,7 @@ export function QuestionTable() {
 
   const subjectCell = useCallback(
     ({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
-      return (
-        <TruncatedText text={row.original?.subject?.name ?? ''}/>
-      );
+      return <TruncatedText text={row.original?.subject?.name ?? ''} />;
     },
     [],
   );
@@ -119,18 +131,17 @@ export function QuestionTable() {
 
   const originalCell = useCallback(
     ({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
-      if(row.original.original) {
-        return <Badge variant={'success'}>True</Badge>
+      if (row.original.original) {
+        return <Badge variant={'success'}>True</Badge>;
       }
-        return <Badge variant={'error'}>False</Badge>
+      return <Badge variant={'error'}>False</Badge>;
     },
     [],
   );
 
   const imageCell = useCallback(
     ({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
-      return row.original.image 
-      ? 
+      return row.original.image ? (
         <div className="flex gap-4">
           <button
             type="button"
@@ -140,25 +151,19 @@ export function QuestionTable() {
               setSelectedQuestion(row.original);
             }}
           >
-              <Image 
-            src={row.original.image}
-            width={45}
-            height={45}
-            alt="question-image"
-          />
+            <Image src={row.original.image} width={45} height={45} alt="question-image" />
           </button>
         </div>
-      : <TruncatedText text={'---'} />;
+      ) : (
+        <TruncatedText text={'---'} />
+      );
     },
     [setOpenImageDetail, setSelectedQuestion],
   );
 
-  const answerCell = useCallback(
-    ({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
-      return row.original.answer ? <CircleIcon size={16}/> : <XCrossIcon size={16}/>
-    },
-    [],
-  );
+  const answerCell = useCallback(({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
+    return row.original.answer ? <CircleIcon size={16} /> : <XCrossIcon size={16} />;
+  }, []);
 
   const QuestionActions = useCallback(
     ({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
@@ -171,16 +176,18 @@ export function QuestionTable() {
               setSelectedQuestion(row.original);
             }}
             disabled={disableAction}
-          className={cn(
+            className={cn(
               !disableAction && 'hover:bg-primary-2',
-              "flex size-[30px] rounded-full items-center justify-center group/edit"
+              'flex size-[30px] rounded-full items-center justify-center group/edit',
             )}
           >
-            <PencilIcon size={22}
+            <PencilIcon
+              size={22}
               className={cn(
-                disableAction ? 'text-[#CECECE]'
-                : 'cursor-pointer group-hover/edit:text-white')
-              }
+                disableAction
+                  ? 'text-[#CECECE]'
+                  : 'cursor-pointer group-hover/edit:text-white',
+              )}
             />
           </button>
           <button
@@ -192,69 +199,83 @@ export function QuestionTable() {
             disabled={disableAction}
             className={cn(
               !disableAction && 'hover:bg-destructive',
-              "flex size-[30px] rounded-full items-center justify-center group/delete"
+              'flex size-[30px] rounded-full items-center justify-center group/delete',
             )}
           >
-            <TrashIcon size={22} 
+            <TrashIcon
+              size={22}
               className={cn(
-                disableAction ? 'text-[#CECECE]'
-                : 'cursor-pointer group-hover/delete:text-white')
-              }
+                disableAction
+                  ? 'text-[#CECECE]'
+                  : 'cursor-pointer group-hover/delete:text-white',
+              )}
             />
           </button>
         </div>
       );
     },
-    [isDisable, selectedQuestionIds, setOpenDeleteQuestionDialog, setOpenQuestionFormDialog, setSelectedQuestion],
+    [
+      isDisable,
+      selectedQuestionIds,
+      setOpenDeleteQuestionDialog,
+      setOpenQuestionFormDialog,
+      setSelectedQuestion,
+    ],
   );
 
-  const SelectCell = useCallback(({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
-    return (
-      <div className="flex gap-4">
-      <Checkbox
-        disabled={isDisable}
-        checked={selectedQuestionIds.includes(row.original.id)}
-        onCheckedChange={(value) => {
-          if (value) {
-            const newSelectedQuestionIds = [
-              ...selectedQuestionIds,
-              row.original.id,
-            ];
-            setSelectedQuestionIds(newSelectedQuestionIds);
-          } else {
-            const newSelectedQuestionIds = selectedQuestionIds.filter(
-              (id) => id !== row.original.id,
-            );
-            setSelectedQuestionIds(newSelectedQuestionIds);
-          }
-          row.toggleSelected(!!value);
-        }}
-        aria-label="Select row"
-      />
-      </div>
-    );
-  },[isDisable, selectedQuestionIds, setSelectedQuestionIds])
+  const SelectCell = useCallback(
+    ({ row }: Readonly<CellContext<IQuestion, unknown>>) => {
+      return (
+        <div className="flex gap-4">
+          <Checkbox
+            disabled={isDisable}
+            checked={selectedQuestionIds.includes(row.original.id)}
+            onCheckedChange={(value) => {
+              if (value) {
+                const newSelectedQuestionIds = [...selectedQuestionIds, row.original.id];
+                setSelectedQuestionIds(newSelectedQuestionIds);
+              } else {
+                const newSelectedQuestionIds = selectedQuestionIds.filter(
+                  (id) => id !== row.original.id,
+                );
+                setSelectedQuestionIds(newSelectedQuestionIds);
+              }
+              row.toggleSelected(!!value);
+            }}
+            aria-label="Select row"
+          />
+        </div>
+      );
+    },
+    [isDisable, selectedQuestionIds, setSelectedQuestionIds],
+  );
 
-    const SelectHeader = useCallback(({ table }: HeaderContext<IQuestion, unknown>) => {
-    return (
-      <div className="flex gap-4">
-      <Checkbox
-        disabled={isDisable || questionList.length === 0}
-        checked={selectedQuestionIds.length === questionList.length && selectedQuestionIds.length > 0}
-        onCheckedChange={(value) => {
-          if (value) {
-            const newSelectedQuestionIds = questionList.map(item => item.id);
-            setSelectedQuestionIds(newSelectedQuestionIds);
-          } else {
-            setSelectedQuestionIds([]);
-          }
-          table.toggleAllPageRowsSelected(!!value)
-        }}
-        aria-label="Select all"
-      />
-      </div>
-    );
-  },[isDisable, selectedQuestionIds, questionList, setSelectedQuestionIds])
+  const SelectHeader = useCallback(
+    ({ table }: HeaderContext<IQuestion, unknown>) => {
+      return (
+        <div className="flex gap-4">
+          <Checkbox
+            disabled={isDisable || questionList.length === 0}
+            checked={
+              selectedQuestionIds.length === questionList.length &&
+              selectedQuestionIds.length > 0
+            }
+            onCheckedChange={(value) => {
+              if (value) {
+                const newSelectedQuestionIds = questionList.map((item) => item.id);
+                setSelectedQuestionIds(newSelectedQuestionIds);
+              } else {
+                setSelectedQuestionIds([]);
+              }
+              table.toggleAllPageRowsSelected(!!value);
+            }}
+            aria-label="Select all"
+          />
+        </div>
+      );
+    },
+    [isDisable, selectedQuestionIds, questionList, setSelectedQuestionIds],
+  );
 
   const columns: ColumnDef<IQuestion>[] = useMemo(() => {
     return compact([
@@ -265,7 +286,7 @@ export function QuestionTable() {
         size: 60,
       },
       {
-        header: t('common.number'),
+        header: () => <div className="text-center">{t('common.number')}</div>,
         accessorKey: 'index',
         cell: (props) =>
           NumberCell({
@@ -296,8 +317,7 @@ export function QuestionTable() {
       {
         enableSorting: true,
         header: ({ column }) => (
-          <SortableHeader column={column} title={t('questions.table.arrange')} 
-          />
+          <SortableHeader column={column} title={t('questions.table.arrange')} />
         ),
         accessorKey: 'arrange',
         cell: arrangeCell,
@@ -342,15 +362,17 @@ export function QuestionTable() {
     SelectHeader,
   ]);
 
-  return <DataTable 
-    columns={columns} 
-    data={questionList} 
-    loading={loading} 
-    rowClassName={'h-16'} 
-    headerClassName={'bg-[#FBFDFF]'}
-    onSortingChange={handleSortingChange}
-    sorting={sorting}
-    setSorting={setSorting}
-    enableMultiRowSelection={true}
-  />;
+  return (
+    <DataTable
+      columns={columns}
+      data={questionList}
+      loading={loading}
+      rowClassName={'h-16'}
+      headerClassName={'bg-[#FBFDFF]'}
+      onSortingChange={handleSortingChange}
+      sorting={sorting}
+      setSorting={setSorting}
+      enableMultiRowSelection={true}
+    />
+  );
 }

@@ -179,7 +179,7 @@ export function SubjectTable() {
   const columns: ColumnDef<ISubject>[] = useMemo(() => {
     return compact([
       {
-        header: t('common.number'),
+        header: () => <div className="text-center">{t('common.number')}</div>,
         accessorKey: 'index',
         cell: (props: CellContext<ISubject, unknown>) =>
           NumberCell({
@@ -187,7 +187,7 @@ export function SubjectTable() {
             page: subjectGetListQuery.page ?? DEFAULT_FIRST_PAGE,
             limit: subjectGetListQuery.limit,
           }),
-        size: 80,
+        size: 60,
       },
       {
         header: t('subjects.table.subject'),

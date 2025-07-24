@@ -13,7 +13,7 @@ const createSubjectSchema = yup.object({
 export const createSubjectYupResolver = yupResolver<ISubjectFormBody>(createSubjectSchema);
 
 const createPackageSchema = yup.object({
-  name: shortStringSchema.required(),
+  name: shortStringSchema.required().label('packageName'),
   price: yup.number().min(1).max(MAX_INTEGER).required(),
   subjectId: shortStringSchema.required(),
   durationDays: yup.number().min(1).max(MAX_INTEGER).required(),
