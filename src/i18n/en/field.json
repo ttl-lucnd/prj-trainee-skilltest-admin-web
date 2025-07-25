@@ -91,5 +91,10 @@
   "original": "Original",
   "vocabulary": "Vocabulary",
   "pronunciation": "Pronunciation",
-  "description": "Description"
+  "description": "Description",
+  "packageName": "Package name",
+  "platform": "Platform",
+  "productId": "Product ID",
+  "price": "Price",
+  "durationDays": "Duration Days"
 }

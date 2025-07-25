@@ -1,4 +1,9 @@
-import { UserGroupIcon, VocabularyListIcon, QuestionListIcon, SubjectListIcon } from '@/components/icons';
+import {
+  UserGroupIcon,
+  VocabularyListIcon,
+  QuestionListIcon,
+  SubjectListIcon,
+} from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { PageRouter } from '@/utils/constants';
 import { useTranslations } from 'next-intl';
@@ -9,8 +14,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar
+  useSidebar,
 } from '../ui/sidebar';
+import { SubscriptionIcon } from '../icons/supscription';
 
 const items = [
   {
@@ -28,10 +34,15 @@ const items = [
     icon: UserGroupIcon,
     path: PageRouter.ADMIN_ACCOUNTS,
   },
-    {
+  {
     title: 'sidebar.subject_management',
     icon: SubjectListIcon,
     path: PageRouter.SUBJECT_MANAGEMENT,
+  },
+  {
+    title: 'sidebar.subscription_management',
+    icon: SubscriptionIcon,
+    path: PageRouter.SUBSCRIPTION_MANAGEMENT,
   },
 ];
 
@@ -53,10 +64,14 @@ export function AppMenu() {
     <SidebarMenu className={cn('px-4', !open && 'px-8')}>
       {items.map((item) => (
         <SidebarMenuItem key={item.title}>
-          <SidebarMenuButton asChild isActive={isActive(item.path)} tooltip={t(item.title)}>
+          <SidebarMenuButton
+            asChild
+            isActive={isActive(item.path)}
+            tooltip={t(item.title)}
+          >
             <Link href={item.path}>
               <item.icon />
-              <span className='text-[16px]'>{t(`${item.title}`)}</span>
+              <span className="text-[16px]">{t(`${item.title}`)}</span>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>

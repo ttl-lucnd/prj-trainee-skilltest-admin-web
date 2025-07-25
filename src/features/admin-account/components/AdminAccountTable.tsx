@@ -3,7 +3,7 @@ import { DataTable } from '@/components/data-table';
 import { PencilIcon, TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
 import { DEFAULT_FIRST_PAGE } from '@/utils/constants';
-import { CellContext, ColumnDef } from '@tanstack/react-table';
+import { CellContext, ColumnDef, HeaderContext } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -12,6 +12,7 @@ import { IAdminAccount } from '../interfaces';
 import { useAdminStore } from '../stores/useAdminStore';
 import { AdminRole } from '../constants';
 import { cn } from '@/lib/utils';
+import { IndexHeader } from '@/components/table/IndexHeader';
 
 export function AdminAccountTable() {
   const t = useTranslations();
@@ -51,23 +52,35 @@ export function AdminAccountTable() {
 
   const emailCell = useCallback(
     ({ row }: Readonly<CellContext<IAdminAccount, unknown>>) => {
-      return <TruncatedText text={row.original.email} className={row.original.role === AdminRole.SUPPER_ADMIN ? 'text-[#E9034E]' : ''}/>;
+      return (
+        <TruncatedText
+          text={row.original.email}
+          className={row.original.role === AdminRole.SUPPER_ADMIN ? 'text-[#E9034E]' : ''}
+        />
+      );
     },
     [],
   );
 
   const nameCell = useCallback(
     ({ row }: Readonly<CellContext<IAdminAccount, unknown>>) => {
-      return <TruncatedText text={row.original.name} className={row.original.role === AdminRole.SUPPER_ADMIN ? 'text-[#E9034E]' : ''}/>;
+      return (
+        <TruncatedText
+          text={row.original.name}
+          className={row.original.role === AdminRole.SUPPER_ADMIN ? 'text-[#E9034E]' : ''}
+        />
+      );
     },
     [],
   );
 
   const AdminActions = useCallback(
     ({ row }: Readonly<CellContext<IAdminAccount, unknown>>) => {
-      
-      const isDisableDelete = row.original.role === AdminRole.SUPPER_ADMIN || row.original.role === profile?.role;
-      const isSupAdmin = profile?.id === row.original.id && profile.role === AdminRole.SUPPER_ADMIN;
+      const isDisableDelete =
+        row.original.role === AdminRole.SUPPER_ADMIN ||
+        row.original.role === profile?.role;
+      const isSupAdmin =
+        profile?.id === row.original.id && profile.role === AdminRole.SUPPER_ADMIN;
       const isDisableEdit = isDisableDelete && !isSupAdmin;
       return (
         <div className="flex gap-3">
@@ -78,15 +91,17 @@ export function AdminAccountTable() {
             }}
             className={cn(
               !isDisableEdit && 'hover:bg-primary-2',
-              "flex size-[30px] rounded-full items-center justify-center group/edit"
+              'flex size-[30px] rounded-full items-center justify-center group/edit',
             )}
             disabled={isDisableEdit}
           >
-            <PencilIcon size={22}
+            <PencilIcon
+              size={22}
               className={cn(
-                isDisableEdit ? 'text-[#CECECE]'
-                : 'cursor-pointer group-hover/edit:text-white')
-              }
+                isDisableEdit
+                  ? 'text-[#CECECE]'
+                  : 'cursor-pointer group-hover/edit:text-white',
+              )}
             />
           </button>
           <button
@@ -96,15 +111,17 @@ export function AdminAccountTable() {
             }}
             className={cn(
               !isDisableDelete && 'hover:bg-destructive',
-              "flex size-[30px] rounded-full items-center justify-center group/delete"
+              'flex size-[30px] rounded-full items-center justify-center group/delete',
             )}
             disabled={isDisableDelete}
           >
-            <TrashIcon size={22} 
+            <TrashIcon
+              size={22}
               className={cn(
-                isDisableDelete ? 'text-[#CECECE]'
-                : 'cursor-pointer group-hover/delete:text-white')
-              }
+                isDisableDelete
+                  ? 'text-[#CECECE]'
+                  : 'cursor-pointer group-hover/delete:text-white',
+              )}
             />
           </button>
         </div>
@@ -116,7 +133,11 @@ export function AdminAccountTable() {
   const columns: ColumnDef<IAdminAccount>[] = useMemo(() => {
     return compact([
       {
-        header: t('common.number'),
+        header: (props: HeaderContext<IAdminAccount, unknown>) =>
+          IndexHeader({
+            ...props,
+            text: t('common.number'),
+          }),
         accessorKey: 'index',
         cell: (props: CellContext<IAdminAccount, unknown>) =>
           NumberCell({
@@ -137,26 +158,23 @@ export function AdminAccountTable() {
         accessorKey: 'name',
         cell: nameCell,
         size: 200,
-      },{
+      },
+      {
         header: t('adminAccount.table.action'),
         id: 'actions',
         size: 60,
         cell: AdminActions,
-      }
+      },
     ]);
-  }, [
-    t,
-    profile,
-    emailCell,
-    nameCell,
-    AdminActions,
-  ]);
+  }, [t, profile, emailCell, nameCell, AdminActions]);
 
-  return <DataTable 
-    columns={columns} 
-    data={adminList} 
-    loading={loading}
-    rowClassName={'h-16'} 
-    headerClassName={'bg-[#FBFDFF]'}
-  />;
+  return (
+    <DataTable
+      columns={columns}
+      data={adminList}
+      loading={loading}
+      rowClassName={'h-16'}
+      headerClassName={'bg-[#FBFDFF]'}
+    />
+  );
 }
