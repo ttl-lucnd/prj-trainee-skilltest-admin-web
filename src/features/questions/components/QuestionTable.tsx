@@ -25,6 +25,7 @@ import { useUpdateUrlWithQuery } from '@/utils/url';
 import { cn } from '@/lib/utils';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SYNC_DATA_STATUS } from '@/features/common/constants';
+import { IndexHeader } from '@/components/table/IndexHeader';
 
 export function QuestionTable() {
   const t = useTranslations();
@@ -286,7 +287,11 @@ export function QuestionTable() {
         size: 60,
       },
       {
-        header: () => <div className="text-center">{t('common.number')}</div>,
+        header: (props: HeaderContext<IQuestion, unknown>) =>
+          IndexHeader({
+            ...props,
+            text: t('common.number'),
+          }),
         accessorKey: 'index',
         cell: (props) =>
           NumberCell({

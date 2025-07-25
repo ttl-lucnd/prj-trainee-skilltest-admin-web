@@ -3,7 +3,7 @@ import { DataTable } from '@/components/data-table';
 import { PencilIcon, TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
 import { DEFAULT_FIRST_PAGE, PageRouter } from '@/utils/constants';
-import { CellContext, ColumnDef } from '@tanstack/react-table';
+import { CellContext, ColumnDef, HeaderContext } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -14,6 +14,7 @@ import Image from 'next/image';
 import { AdminRole } from '@/features/admin-account/constants';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { IndexHeader } from '@/components/table/IndexHeader';
 
 export function SubjectTable() {
   const t = useTranslations();
@@ -179,7 +180,11 @@ export function SubjectTable() {
   const columns: ColumnDef<ISubject>[] = useMemo(() => {
     return compact([
       {
-        header: () => <div className="text-center">{t('common.number')}</div>,
+        header: (props: HeaderContext<ISubject, unknown>) =>
+          IndexHeader({
+            ...props,
+            text: t('common.number'),
+          }),
         accessorKey: 'index',
         cell: (props: CellContext<ISubject, unknown>) =>
           NumberCell({

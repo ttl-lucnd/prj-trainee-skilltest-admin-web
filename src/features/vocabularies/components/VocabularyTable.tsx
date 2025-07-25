@@ -27,6 +27,7 @@ import { useUpdateUrlWithQuery } from '@/utils/url';
 import { cn } from '@/lib/utils';
 import { SYNC_DATA_STATUS } from '@/features/common/constants';
 import { Checkbox } from '@/components/ui/checkbox';
+import { IndexHeader } from '@/components/table/IndexHeader';
 
 function createMeaningCell(lang: TranslateLanguages) {
   const Cell = ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => (
@@ -399,7 +400,11 @@ export function VocabularyTable() {
         size: 60,
       },
       {
-        header: () => <div className="text-center">{t('common.number')}</div>,
+        header: (props: HeaderContext<IVocabulary, unknown>) =>
+          IndexHeader({
+            ...props,
+            text: t('common.number'),
+          }),
         accessorKey: 'index',
         cell: (props: any) =>
           NumberCell({

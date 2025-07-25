@@ -28,50 +28,46 @@ export function AppBreadcrumb({ items }: Readonly<AppBreadcrumbProps>) {
   const filteredItems = items.filter((item) => item.label);
   const lastItem = filteredItems[filteredItems.length - 1];
   return (
-    <>
-      <div className="flex items-center gap-2 w-auto">
-        <Breadcrumb>
-          <BreadcrumbList>
-            {filteredItems.slice(0, filteredItems.length - 1).map((item) =>
-              item.label ? (
-                <Fragment key={item.label}>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink className="text-body-md font-bold" asChild>
-                      <Link
-                        href={item.href ?? '/'}
-                        className="max-w-[200px] truncate text-textDefaultColor"
-                      >
-                        {item.isKeepOrigin ? item.label : t(`${item.label}`)}
-                      </Link>
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator>
-                    <ChevronRight
-                      className="text-[#CBD5E1]"
-                      style={{ height: '1.25rem', width: '1.25rem' }}
-                    />
-                  </BreadcrumbSeparator>
-                </Fragment>
-              ) : null,
-            )}
-            {lastItem.label && (
-              <Fragment>
+    <div className="flex items-center gap-2 w-auto">
+      <Breadcrumb>
+        <BreadcrumbList>
+          {filteredItems.slice(0, filteredItems.length - 1).map((item) =>
+            item.label ? (
+              <Fragment key={item.label}>
                 <BreadcrumbItem>
-                  <BreadcrumbPage>
-                    <TruncatedText
-                      className="max-w-[200px] text-body-md font-bold"
-                      style={{ color: '#2665EF' }}
-                      text={
-                        lastItem.isKeepOrigin ? lastItem.label : t(`${lastItem.label}`)
-                      }
-                    />
-                  </BreadcrumbPage>
+                  <BreadcrumbLink className="text-body-md font-bold" asChild>
+                    <Link
+                      href={item.href ?? '/'}
+                      className="max-w-[200px] truncate text-textDefaultColor"
+                    >
+                      {item.isKeepOrigin ? item.label : t(`${item.label}`)}
+                    </Link>
+                  </BreadcrumbLink>
                 </BreadcrumbItem>
+                <BreadcrumbSeparator>
+                  <ChevronRight
+                    className="text-[#CBD5E1]"
+                    style={{ height: '1.25rem', width: '1.25rem' }}
+                  />
+                </BreadcrumbSeparator>
               </Fragment>
-            )}
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-    </>
+            ) : null,
+          )}
+          {lastItem.label && (
+            <Fragment>
+              <BreadcrumbItem>
+                <BreadcrumbPage>
+                  <TruncatedText
+                    className="max-w-[200px] text-body-md font-bold"
+                    style={{ color: '#2665EF' }}
+                    text={lastItem.isKeepOrigin ? lastItem.label : t(`${lastItem.label}`)}
+                  />
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </Fragment>
+          )}
+        </BreadcrumbList>
+      </Breadcrumb>
+    </div>
   );
 }

@@ -3,7 +3,7 @@ import { DataTable } from '@/components/data-table';
 import { PencilIcon, TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
 import { DEFAULT_FIRST_PAGE } from '@/utils/constants';
-import { CellContext, ColumnDef } from '@tanstack/react-table';
+import { CellContext, ColumnDef, HeaderContext } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -12,6 +12,7 @@ import { IAdminAccount } from '../interfaces';
 import { useAdminStore } from '../stores/useAdminStore';
 import { AdminRole } from '../constants';
 import { cn } from '@/lib/utils';
+import { IndexHeader } from '@/components/table/IndexHeader';
 
 export function AdminAccountTable() {
   const t = useTranslations();
@@ -132,7 +133,11 @@ export function AdminAccountTable() {
   const columns: ColumnDef<IAdminAccount>[] = useMemo(() => {
     return compact([
       {
-        header: () => <div className="text-center">{t('common.number')}</div>,
+        header: (props: HeaderContext<IAdminAccount, unknown>) =>
+          IndexHeader({
+            ...props,
+            text: t('common.number'),
+          }),
         accessorKey: 'index',
         cell: (props: CellContext<IAdminAccount, unknown>) =>
           NumberCell({
