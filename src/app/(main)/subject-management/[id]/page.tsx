@@ -1,5 +1,10 @@
 import { Suspense } from 'react';
 import { PackagePage } from '@/features/subjects/pages/PackagePage';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '学科管理',
+};
 
 export default function Page() {
   return (

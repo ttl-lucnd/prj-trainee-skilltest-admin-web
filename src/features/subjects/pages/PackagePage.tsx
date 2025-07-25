@@ -40,6 +40,7 @@ export function PackagePage() {
       checkError(response);
     } else {
       setSelectedSubject(response.data);
+      document.title = response.data.name;
     }
   };
 
