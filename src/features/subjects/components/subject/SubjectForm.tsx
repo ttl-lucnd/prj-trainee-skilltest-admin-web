@@ -71,6 +71,8 @@ export function SubjectForm() {
     if (selectedSubject && isOpenSubjectFormDialog) {
       setFormType(FormType.UPDATE);
       getSubjectDetail();
+    } else {
+      setFormType(FormType.CREATE);
     }
   }, [isOpenSubjectFormDialog, selectedSubject, setFormType]);
 

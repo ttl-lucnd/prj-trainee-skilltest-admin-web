@@ -1,0 +1,28 @@
+{
+  "table": {
+    "name": "パッケージ名",
+    "prev1Week": "過去7日間",
+    "prev1Month": "過去30日間",
+    "prev3Months": "過去90日間",
+    "prev1Year": "過去365日間",
+    "total": "全期間"
+  },
+  "title": {
+    "apple": "App Storeの売上",
+    "google": "Google Play Storeの売上"
+  },
+  "saleTable": {
+    "email": "顧客のメール",
+    "name": "パッケージ名",
+    "platform": "ストア名",
+    "productId": "Product ID",
+    "amount": "金額",
+    "duration": "会員期間",
+    "startDate": "決済日",
+    "endDate": "次回自動更新日"
+  },
+  "filter": {
+    "platform": "ストア名",
+    "dateRange": "決済日で絞り込む"
+  }
+}

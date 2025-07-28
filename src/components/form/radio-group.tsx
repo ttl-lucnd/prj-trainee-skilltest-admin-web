@@ -77,7 +77,7 @@ export function RadioGroup({
               value={field.value}
               onValueChange={field.onChange}
               className={cn(
-                'flex flex-col gap-2 py-2',
+                'flex flex-col gap-8 py-2',
                 isHorizontalItem && 'flex flex-row',
                 !label && 'mt-2',
                 groupClassName,
@@ -95,7 +95,7 @@ export function RadioGroup({
                   <label
                     htmlFor={`${name}-${item.value}`}
                     className={cn(
-                      'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+                      'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer',
                       disabled && 'cursor-not-allowed opacity-70',
                     )}
                   >
