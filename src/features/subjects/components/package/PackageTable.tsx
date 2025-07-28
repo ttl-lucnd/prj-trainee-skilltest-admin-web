@@ -74,7 +74,11 @@ export function PackageTable() {
   );
 
   const priceCell = useCallback(({ row }: Readonly<CellContext<IPackage, unknown>>) => {
-    return <TruncatedText text={t('subjects.price', { price: row.original.price })} />;
+    return (
+      <TruncatedText
+        text={t('subjects.price', { price: (row.original?.price ?? 0).toLocaleString() })}
+      />
+    );
   }, []);
 
   const durationCell = useCallback(

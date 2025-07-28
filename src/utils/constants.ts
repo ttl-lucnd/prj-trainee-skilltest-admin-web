@@ -341,6 +341,7 @@ export enum DATE_TIME_FORMAT {
   YYYY_MM_DD_HYPHEN_HH_MM_COLON = 'YYYY-MM-DD HH:mm',
   YYYY_MM_DD = 'YYYYMMDD',
   MM_DD_HYPHEN = 'MM-DD',
+  JA_YYYY_MM_DD = 'YYYY年MM月DD日',
 }
 
 export enum AuthEventType {

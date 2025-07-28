@@ -5,29 +5,29 @@ import { useUpdateUrlWithQuery } from '@/utils/url';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useShallow } from 'zustand/react/shallow';
-import { useSubjectStore } from '../../stores/useSubjectStore';
+import { useSubscriptionStore } from '../../stores/useSubscriptionStore';
 import { BasicFilterForm } from '@/components/BasicFilterForm';
 import { AppBreadcrumb } from '@/components/AppBreadcrumb';
-export function SubjectFilterForm() {
+export function SubscriptionFilterForm() {
   const [isFiltering, setIsFiltering] = useState(false);
 
-  const { setSubjectGetListQuery, getSubjectList } = useSubjectStore(
+  const { setSubscriptionGetListQuery, getSubscriptionList } = useSubscriptionStore(
     useShallow((s) => ({
-      setSubjectGetListQuery: s.setSubjectGetListQuery,
-      getSubjectList: s.getSubjectList,
+      setSubscriptionGetListQuery: s.setSubscriptionGetListQuery,
+      getSubscriptionList: s.getSubscriptionList,
     })),
   );
   const form = useForm();
 
   const {
-    getQueryFromUrl: getSubjectQueryFromUrl,
-    updateUrlWithQuery: updateSubjectUrlWithQuery,
+    getQueryFromUrl: getSubscriptionQueryFromUrl,
+    updateUrlWithQuery: updateSubscriptionUrlWithQuery,
   } = useUpdateUrlWithQuery();
 
   useEffect(() => {
-    const query = getSubjectQueryFromUrl();
+    const query = getSubscriptionQueryFromUrl();
     form.reset(query);
-    setSubjectGetListQuery(query, { reloadList: false });
+    setSubscriptionGetListQuery(query, { reloadList: false });
   }, []);
 
   const onSubmit = async (data: any) => {
@@ -36,11 +36,14 @@ export function SubjectFilterForm() {
     try {
       const query = {
         ...data,
+        createdByIamUserIds: data.createdByIamUserIds?.map((item: string) =>
+          Number(item),
+        ),
         page: DEFAULT_FIRST_PAGE,
       };
-      setSubjectGetListQuery(query, { reloadList: false });
-      updateSubjectUrlWithQuery(query);
-      await getSubjectList();
+      setSubscriptionGetListQuery(query, { reloadList: false });
+      updateSubscriptionUrlWithQuery(query);
+      await getSubscriptionList();
     } catch {
       setIsFiltering(false);
     } finally {
@@ -52,7 +55,10 @@ export function SubjectFilterForm() {
     <div className="flex h-auto mt-0.5 mb-[16px] items-center">
       <AppBreadcrumb
         items={[
-          { label: 'sidebar.subject_management', href: PageRouter.SUBJECT_MANAGEMENT },
+          {
+            label: 'sidebar.subscription_management',
+            href: PageRouter.SUBSCRIPTION_MANAGEMENT,
+          },
         ]}
       />
       <BasicFilterForm form={form} onSubmit={(data) => onSubmit(data)} />

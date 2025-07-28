@@ -79,6 +79,8 @@ export function PackageForm() {
     if (selectedPackage && isOpenPackageFormDialog) {
       setFormType(FormType.UPDATE);
       getPackageDetail();
+    } else {
+      setFormType(FormType.CREATE);
     }
   }, [isOpenPackageFormDialog, selectedPackage, selectedSubject, setFormType]);
 
@@ -145,6 +147,7 @@ export function PackageForm() {
             key={'platform'}
             control={form.control}
             name="platform"
+            groupClassName="gap-8"
             isHorizontalItem
             label={t('packages.form.platform')}
             items={Object.values(SubscriptionPlatform).map((item) => ({

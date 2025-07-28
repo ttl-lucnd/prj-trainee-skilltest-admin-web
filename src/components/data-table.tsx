@@ -30,6 +30,9 @@ declare module '@tanstack/table-core' {
   interface ColumnMeta {
     rowSpan?: number;
     colSpan?: number;
+    headerClassName?: string;
+    width?: number;
+    cellClassName?: string;
   }
 }
 
@@ -245,6 +248,11 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 const rowSpan = header.column.columnDef.meta?.rowSpan;
+                const width = header.column.columnDef.meta?.width;
+                const commonPinningStyles = getCommonPinningStyles(
+                  header.column,
+                  shouldShowShadow,
+                );
                 if (
                   !header.isPlaceholder &&
                   rowSpan !== undefined &&
@@ -259,7 +267,8 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
                     colSpan={header.colSpan}
                     rowSpan={rowSpan}
                     style={{
-                      ...getCommonPinningStyles(header.column, shouldShowShadow),
+                      ...commonPinningStyles,
+                      width: width ?? commonPinningStyles.width,
                     }}
                     className={cn(
                       'bg-white',
@@ -267,6 +276,7 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
                       showBorderVertical &&
                         header.index !== headerGroup.headers.length - 1 &&
                         'border-r border-[#CBD5E1]',
+                      header.column.columnDef.meta?.headerClassName,
                     )}
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -298,6 +308,7 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
                         showBorderVertical &&
                           cell.column.getSize() !== 0 &&
                           'border-r border-[#CBD5E1]',
+                        cell.column.columnDef.meta?.cellClassName,
                       )}
                       style={{ ...getCommonPinningStyles(cell.column, shouldShowShadow) }}
                     >
@@ -319,7 +330,10 @@ export const DataTable = forwardRef<any, DataTableProps<any, any>>(function Data
             </>
           ) : (
             <TableRow className="hover:bg-transparent">
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell
+                colSpan={table.getAllLeafColumns().length}
+                className="h-24 text-center w-full"
+              >
                 <NoData />
               </TableCell>
             </TableRow>

@@ -58,19 +58,16 @@ export function SubjectTable() {
     };
   }, []);
 
-  const nameCell = useCallback(
-    ({ row }: Readonly<CellContext<ISubject, unknown>>) => {
-      return (
-        <Link
-          href={`${PageRouter.SUBJECT_MANAGEMENT}/${row.original.id}`}
-          className="cursor-pointer text-primary-2"
-        >
-          <TruncatedText text={row.original.name} />
-        </Link>
-      );
-    },
-    [setSelectedSubject],
-  );
+  const nameCell = useCallback(({ row }: Readonly<CellContext<ISubject, unknown>>) => {
+    return (
+      <Link
+        href={`${PageRouter.SUBJECT_MANAGEMENT}/${row.original.id}`}
+        className="cursor-pointer text-primary-2"
+      >
+        <TruncatedText text={row.original.name} />
+      </Link>
+    );
+  }, []);
 
   const logoCell = useCallback(
     ({ row }: Readonly<CellContext<ISubject, unknown>>) => {
