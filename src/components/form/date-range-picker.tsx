@@ -29,37 +29,35 @@ export function DateRangePickerField({
   ...props
 }: Readonly<DateRangePickerProps & DateRangePickerFieldProps & CalendarProps>) {
   return (
-    <>
-      <FormField
-        control={control}
-        name={name}
-        render={({ field, fieldState: { error: fieldError } }) => (
-          <FormItem className={cn(fieldError && 'text-destructive', className)}>
-            <FormFieldLayout
-              label={label}
-              required={required}
-              layout={layout}
-              hasError={!!fieldError}
-              errorMessage={fieldError?.message}
-              classNameLabel={classNameLabel}
-              className={cn(
-                fieldError
-                  ? 'border-destructive'
-                  : 'outline-none focus-within:ring-2 focus-within:ring-primary-2 focus-within:border-primary-2 shadow-none',
-                fieldContainerClassName,
-              )}
-            >
-              <DateRangePicker
-                {...props}
-                {...field}
-                status={fieldError ? 'error' : undefined}
-                value={field.value}
-                onChange={(date) => field.onChange(date)}
-              />
-            </FormFieldLayout>
-          </FormItem>
-        )}
-      />
-    </>
+    <FormField
+      control={control}
+      name={name}
+      render={({ field, fieldState: { error: fieldError } }) => (
+        <FormItem className={cn(fieldError && 'text-destructive', className)}>
+          <FormFieldLayout
+            label={label}
+            required={required}
+            layout={layout}
+            hasError={!!fieldError}
+            errorMessage={fieldError?.message}
+            classNameLabel={classNameLabel}
+            className={cn(
+              fieldError
+                ? 'border-destructive'
+                : 'outline-none focus-within:ring-2 focus-within:ring-primary-2 focus-within:border-primary-2 shadow-none',
+              fieldContainerClassName,
+            )}
+          >
+            <DateRangePicker
+              {...props}
+              {...field}
+              status={fieldError ? 'error' : undefined}
+              value={field.value}
+              onChange={(date) => field.onChange(date)}
+            />
+          </FormFieldLayout>
+        </FormItem>
+      )}
+    />
   );
 }

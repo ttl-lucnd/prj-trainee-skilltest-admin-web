@@ -234,6 +234,7 @@ export function BaseDateRangePicker({
           })
         ) : (
           <div
+            role="button"
             tabIndex={0}
             className={cn(
               'flex w-full p-1 rounded-md border border-primary-3 min-h-10 h-auto items-center justify-between bg-white hover:bg-white [&_svg]:pointer-events-auto',

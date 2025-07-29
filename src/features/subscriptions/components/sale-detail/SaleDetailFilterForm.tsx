@@ -82,7 +82,6 @@ export function SaleDetailFilterForm() {
     if (isFiltering) return;
     setIsFiltering(true);
     try {
-      console.log(data);
       const { dateRange, ...params } = data;
       const query: Record<string, unknown> = {
         ...params,
@@ -134,7 +133,7 @@ export function SaleDetailFilterForm() {
           control={form.control}
         />
         <DateRangePickerField
-          className="w-[310px] h-[40px]"
+          className="min-w-[310px] h-[40px]"
           name="dateRange"
           placeholder={t('subscriptions.filter.dateRange')}
           control={form.control}
