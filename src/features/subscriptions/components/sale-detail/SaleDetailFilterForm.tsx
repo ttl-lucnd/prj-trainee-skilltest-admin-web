@@ -16,6 +16,7 @@ import { ISubject } from '@/features/subjects/interfaces';
 import { subjectService } from '@/features/subjects/services/subject.service';
 import { MultiSelectField } from '@/components/form/multi-select';
 import { useTranslations } from 'next-intl';
+import { DateRangePickerField } from '@/components/form/date-range-picker';
 
 export function SaleDetailFilterForm() {
   const t = useTranslations();
@@ -62,7 +63,18 @@ export function SaleDetailFilterForm() {
 
   useEffect(() => {
     const query = getSaleDetailQueryFromUrl();
-    form.reset(query);
+    const { startDate, endDate, ...params } = query;
+    form.reset({
+      ...params,
+      dateRange:
+        !startDate && !endDate
+          ? undefined
+          : {
+              from: startDate,
+              to: endDate,
+            },
+    });
+
     setSaleDetailGetListQuery(query, { reloadList: false });
   }, []);
 
@@ -70,10 +82,15 @@ export function SaleDetailFilterForm() {
     if (isFiltering) return;
     setIsFiltering(true);
     try {
-      const query = {
-        ...data,
+      const { dateRange, ...params } = data;
+      const query: Record<string, unknown> = {
+        ...params,
         page: DEFAULT_FIRST_PAGE,
       };
+
+      query.startDate = dateRange ? (dateRange.from as Date).toISOString() : undefined;
+      query.endDate = dateRange ? (dateRange.to as Date).toISOString() : undefined;
+
       setSaleDetailGetListQuery(query, { reloadList: false });
       updateSaleDetailUrlWithQuery(query);
       await getSaleDetailList();
@@ -85,7 +102,7 @@ export function SaleDetailFilterForm() {
   };
 
   return (
-    <div className="flex h-auto mt-0.5 mb-[16px] items-center">
+    <div className="flex h-auto mt-0.5 mb-[16px] items-center gap-5">
       <AppBreadcrumb
         items={[
           {
@@ -99,16 +116,29 @@ export function SaleDetailFilterForm() {
           },
         ]}
       />
-      <BasicFilterForm form={form} onSubmit={(data) => onSubmit(data)}>
+      <BasicFilterForm
+        form={form}
+        onSubmit={(data) => onSubmit(data)}
+        searchBtn={true}
+        isFiltering={isFiltering}
+      >
         <MultiSelectField
           className="w-[170px] h-[40px]"
-          options={Object.keys(SubscriptionPlatform).map((item) => ({
-            label: `${item}`,
-            value: `${SubscriptionPlatform[item as keyof typeof SubscriptionPlatform]}`,
+          options={Object.values(SubscriptionPlatform).map((item) => ({
+            label: t(`common.subscriptionPlatform.${item}`),
+            value: `${item}`,
           }))}
           name="platform"
           placeholder={t('subscriptions.filter.platform')}
           control={form.control}
+        />
+        <DateRangePickerField
+          className="min-w-[310px] h-[40px]"
+          name="dateRange"
+          placeholder={t('subscriptions.filter.dateRange')}
+          control={form.control}
+          allowClear={true}
+          dateFormat={'yyyy年MM月dd日'}
         />
       </BasicFilterForm>
     </div>

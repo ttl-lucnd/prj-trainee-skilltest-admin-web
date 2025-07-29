@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { TimeOption } from './interfaces';
 import {
-  format,
   endOfMonth,
   endOfYear,
   setYear,
@@ -52,7 +51,7 @@ export function MonthYearPicker({
       const endM = endOfMonth(setMonthFns(value, i));
       if (minDate && endM < minDate) disabled = true;
       if (maxDate && startM > maxDate) disabled = true;
-      months.push({ value: i, label: format(new Date(0, i), 'MMM'), disabled });
+      months.push({ value: i, label: `${i + 1}月`, disabled });
     }
     return months;
   }, [value]);

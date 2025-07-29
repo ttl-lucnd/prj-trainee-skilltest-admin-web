@@ -5,20 +5,27 @@
  */
 'use client';
 
-import { addMonths, format, getYear, setYear, subMonths } from 'date-fns';
+import {
+  addMonths,
+  endOfDay,
+  format,
+  getYear,
+  setYear,
+  startOfDay,
+  subMonths,
+} from 'date-fns';
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { DayPicker, Matcher, TZDate } from 'react-day-picker';
+import { DateRange, DayPicker, Matcher, TZDate } from 'react-day-picker';
 
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { CloseIcon } from '../icons';
 import { MonthYearPicker } from './MonthYearPicker';
-import { TimePicker } from './TimePicker';
 import { getDateTimeFormat } from './helpers';
-import { DateTimePickerProps } from './interfaces';
+import { DateRangePickerProps } from './interfaces';
 
 export type CalendarProps = Omit<React.ComponentProps<typeof DayPicker>, 'mode'>;
 
@@ -33,17 +40,17 @@ const getTriggerClassName = ({
   size,
   status,
 }: {
-  displayValue?: Date;
+  displayValue?: DateRange;
   isNoBorder?: boolean;
   allowClear?: boolean;
-  value?: Date;
+  value?: DateRange;
   disabled?: boolean;
   classNames?: any;
   size?: string;
   status?: string;
 }) => {
   const baseClasses =
-    'flex w-full cursor-pointer items-center h-9 px-3 font-normal border border-textDefaultColor bg-white rounded-md text-sm shadow-sm';
+    'flex w-full cursor-pointer items-center h-9 px-3 font-normal bg-white rounded-md text-sm shadow-sm';
   const displayClasses = !displayValue ? 'text-primary-3' : '';
   const borderClasses = isNoBorder ? 'border-none' : '';
   const paddingClasses = !allowClear || !value ? 'pe-3' : '';
@@ -76,7 +83,7 @@ const getMonthYearPickerClassName = (monthYearPicker: boolean) => {
   );
 };
 
-export function BaseDateTimePicker({
+export function BaseDateRangePicker({
   value,
   onChange,
   renderTrigger,
@@ -88,7 +95,6 @@ export function BaseDateTimePicker({
   disabled,
   allowClear,
   classNames,
-  timePicker,
   placeholder,
   modal = false,
   dateFormat,
@@ -96,51 +102,46 @@ export function BaseDateTimePicker({
   isNoBorder = false,
   status,
   ...props
-}: DateTimePickerProps & CalendarProps & { isNoBorder?: boolean }) {
+}: DateRangePickerProps & CalendarProps & { isNoBorder?: boolean }) {
   const [open, setOpen] = useState(false);
   const [monthYearPicker, setMonthYearPicker] = useState<'month' | 'year' | false>(false);
   const initDate = useMemo(
-    () => new TZDate(value || new Date(), timezone),
+    () => new TZDate(value?.from || new Date(), timezone),
     [value, timezone],
   );
 
   const [month, setMonth] = useState<Date>(initDate);
-  const [date, setDate] = useState<Date>(initDate);
+  const [startDate, setStartDate] = useState<Date>(initDate);
+  const [endDate, setEndDate] = useState<Date>(initDate);
 
   const endMonth = useMemo(() => {
     return setYear(month, getYear(month) + 1);
   }, [month]);
   const minDate = useMemo(
-    () => (min ? new TZDate(min, timezone) : undefined),
+    () => (min ? startOfDay(new TZDate(min, timezone)) : undefined),
     [min, timezone],
   );
   const maxDate = useMemo(
-    () => (max ? new TZDate(max, timezone) : undefined),
+    () => (max ? endOfDay(new TZDate(max, timezone)) : undefined),
     [max, timezone],
   );
 
   const onDayChanged = useCallback(
-    (d: Date) => {
-      d.setHours(date.getHours(), date.getMinutes(), date.getSeconds());
-      if (min && d < min) {
-        d.setHours(min.getHours(), min.getMinutes(), min.getSeconds());
-      }
-      if (max && d > max) {
-        d.setHours(max.getHours(), max.getMinutes(), max.getSeconds());
-      }
-      setDate(d);
-      if (hideTime) {
-        onChange?.(d);
-        setOpen(false);
-      }
+    (d: DateRange) => {
+      setStartDate(startOfDay(d.from ?? initDate));
+      setEndDate(endOfDay(d.to ?? initDate));
     },
-    [hideTime, setDate, setMonth, onChange],
+    [setStartDate, setEndDate, onChange],
   );
 
   const onSubmit = useCallback(() => {
-    onChange?.(new Date(date));
+    if (!startDate || !endDate) {
+      onChange?.(undefined);
+    } else {
+      onChange?.({ from: startDate, to: endDate });
+    }
     setOpen(false);
-  }, [date, onChange]);
+  }, [startDate, endDate, onChange]);
 
   const onMonthYearChanged = useCallback(
     (d: Date, mode: 'month' | 'year') => {
@@ -162,27 +163,40 @@ export function BaseDateTimePicker({
 
   useEffect(() => {
     if (open) {
-      setDate(initDate);
-      setMonth(initDate);
+      setMonth(value?.from ?? initDate);
+      setStartDate(value?.from ?? initDate);
+      setEndDate(value?.to ?? initDate);
       setMonthYearPicker(false);
     }
-  }, [open, initDate]);
+  }, [open, initDate, value]);
 
   const displayValue = useMemo(() => {
-    if (!value && !open) return undefined;
-    return open ? date : initDate;
-  }, [date, value, open, initDate]);
+    if ((!value?.from || !value?.to) && !open) return undefined;
+    return { from: startDate, to: endDate };
+  }, [value, open]);
 
   const displayFormat = useMemo(() => {
     if (!displayValue) return placeholder;
-    return format(
-      displayValue,
+    const { from, to } = displayValue;
+    const start = format(
+      from,
       getDateTimeFormat({
         dateFormat,
         hideTime,
         use12HourFormat,
       }),
     );
+
+    const end = format(
+      to,
+      getDateTimeFormat({
+        dateFormat,
+        hideTime,
+        use12HourFormat,
+      }),
+    );
+
+    return `${start} - ${end}`;
   }, [displayValue, placeholder, hideTime, use12HourFormat, dateFormat]);
 
   const handleClearDate = (e: React.MouseEvent) => {
@@ -219,11 +233,18 @@ export function BaseDateTimePicker({
             setOpen,
           })
         ) : (
-          <div className={triggerClassName} data-testid="datetime-picker-trigger">
-            <div className="w-full flex justify-between items-center gap-1">
+          <div
+            tabIndex={0}
+            className={cn(
+              'flex w-full p-1 rounded-md border border-primary-3 min-h-10 h-auto items-center justify-between bg-white hover:bg-white [&_svg]:pointer-events-auto',
+              triggerClassName,
+            )}
+            data-testid="datetime-picker-trigger"
+          >
+            <div className="w-full flex justify-between items-center">
               {displayFormat}
               <div className="flex items-center gap-1">
-                {allowClear && value && (
+                {allowClear && displayValue && (
                   <button
                     disabled={disabled}
                     aria-label="Clear date"
@@ -232,7 +253,7 @@ export function BaseDateTimePicker({
                     <CloseIcon size={20} />
                   </button>
                 )}
-                <CalendarIcon className="size-4 text-primary-2" />
+                <CalendarIcon className="size-4 text-[#5D6B98]" />
               </div>
             </div>
           </div>
@@ -251,21 +272,21 @@ export function BaseDateTimePicker({
           </Button>
           <div className="text-body-lg font-bold ms-2 flex items-center justify-center cursor-pointer flex-1 py-2.5">
             <button
-              data-testid="datetime-picker-month"
-              onClick={() =>
-                setMonthYearPicker(monthYearPicker === 'month' ? false : 'month')
-              }
-            >
-              {format(month, 'MMMM')}
-            </button>
-            <button
               data-testid="datetime-picker-year"
               className="ms-1"
               onClick={() =>
                 setMonthYearPicker(monthYearPicker === 'year' ? false : 'year')
               }
             >
-              {format(month, 'yyyy')}
+              {format(month, 'yyyy年')}
+            </button>
+            <button
+              data-testid="datetime-picker-month"
+              onClick={() =>
+                setMonthYearPicker(monthYearPicker === 'month' ? false : 'month')
+              }
+            >
+              {`${month.getMonth() + 1}月`}
             </button>
           </div>
           <Button
@@ -281,8 +302,8 @@ export function BaseDateTimePicker({
         <div className="relative overflow-hidden">
           <DayPicker
             timeZone={timezone}
-            mode="single"
-            selected={value ? date : undefined}
+            mode="range"
+            selected={{ from: startDate, to: endDate }}
             onSelect={(d) => d && onDayChanged(d)}
             month={month}
             endMonth={endMonth}
@@ -305,12 +326,12 @@ export function BaseDateTimePicker({
               week: 'flex w-full justify-between mt-2',
               day: 'h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 rounded-1',
               day_button: cn(
-                'size-9 rounded-md p-0 font-normal aria-selected:opacity-100 hover:bg-primary-4 group-hover/selected:bg-primary',
+                'size-9 rounded-md p-0 font-normal aria-selected:opacity-100 hover:bg-primary-4 group-hover/selected:bg-primary-2 group-hover/selected:text-primary-foreground',
               ),
               range_end: 'day-range-end',
               selected:
-                'bg-primary text-primary-foreground  hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground rounded-l-md rounded-r-md group/selected',
-              today: 'bg-accent text-accent-foreground',
+                'bg-primary-2 text-primary-foreground  hover:text-primary-foreground focus:bg-primary-2 focus:text-primary-foreground rounded-l-md rounded-r-md group/selected',
+              today: 'bg-accent text-accent-foreground rounded-md',
               outside:
                 'day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',
               disabled: 'text-muted-foreground opacity-50',
@@ -334,35 +355,26 @@ export function BaseDateTimePicker({
             )}
           />
         </div>
-        <div className="flex flex-col gap-2 mt-2">
-          {!hideTime && (
-            <TimePicker
-              timePicker={timePicker}
-              value={date}
-              onChange={setDate}
-              use12HourFormat={use12HourFormat}
-              min={minDate}
-              max={maxDate}
-            />
-          )}
-          <div className="flex flex-row-reverse items-center justify-between">
-            {!hideTime && (
+        {!monthYearPicker && (
+          <div className="flex flex-col gap-2 mt-2">
+            <div className="flex flex-row-reverse items-center justify-between">
               <Button
-                className="ms-2 h-7 px-2"
+                size="sx"
+                className="ms-2 yt h-8 font-normal"
                 onClick={onSubmit}
                 data-testid="datetime-picker-submit"
               >
-                Done
+                設定
               </Button>
-            )}
-            {timezone && (
-              <div className="text-sm">
-                <span>Timezone:</span>
-                <span className="font-semibold ms-1">{timezone}</span>
-              </div>
-            )}
+              {timezone && (
+                <div className="text-sm">
+                  <span>Timezone:</span>
+                  <span className="font-semibold ms-1">{timezone}</span>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </PopoverContent>
     </Popover>
   );

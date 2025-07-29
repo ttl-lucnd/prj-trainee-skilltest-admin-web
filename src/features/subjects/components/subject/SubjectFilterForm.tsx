@@ -55,7 +55,11 @@ export function SubjectFilterForm() {
           { label: 'sidebar.subject_management', href: PageRouter.SUBJECT_MANAGEMENT },
         ]}
       />
-      <BasicFilterForm form={form} onSubmit={(data) => onSubmit(data)} />
+      <BasicFilterForm
+        form={form}
+        onSubmit={(data) => onSubmit(data)}
+        isFiltering={isFiltering}
+      />
     </div>
   );
 }

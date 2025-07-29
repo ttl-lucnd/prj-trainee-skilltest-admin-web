@@ -61,7 +61,11 @@ export function SubscriptionFilterForm() {
           },
         ]}
       />
-      <BasicFilterForm form={form} onSubmit={(data) => onSubmit(data)} />
+      <BasicFilterForm
+        form={form}
+        onSubmit={(data) => onSubmit(data)}
+        isFiltering={isFiltering}
+      />
     </div>
   );
 }

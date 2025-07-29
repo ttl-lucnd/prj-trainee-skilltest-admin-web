@@ -48,9 +48,7 @@ export function MultiSelectField({
       control={control}
       name={name}
       render={({ field, fieldState: { error: fieldError } }) => (
-        <FormItem className={cn(fieldError && 'text-destructive',
-          className
-        )}>
+        <FormItem className={cn(fieldError && 'text-destructive', className)}>
           <FormFieldLayout
             label={label}
             required={required}
@@ -59,8 +57,9 @@ export function MultiSelectField({
             description={description}
             errorMessage={fieldError?.message}
             className={cn(
-              fieldError ? 'border-destructive'
-              : 'outline-none focus-within:ring-2 focus-within:ring-primary-2 focus-within:border-primary-2 shadow-none',
+              fieldError
+                ? 'border-destructive'
+                : 'outline-none focus-within:ring-2 focus-within:ring-primary-2 focus-within:border-primary-2 shadow-none',
             )}
           >
             <MultiSelect
@@ -70,11 +69,7 @@ export function MultiSelectField({
               placeholder={placeholder}
               maxCount={maxCount}
               value={field.value}
-              className={cn(
-                'w-full',
-                size === 'sm' && 'min-h-8 p-0.5',
-                label && 'mt-2',
-              )}
+              className={cn('w-full', size === 'sm' && 'min-h-8 p-0.5', label && 'mt-2')}
               onValueChange={(values) => {
                 field.onChange(values);
                 onChange?.(values);
