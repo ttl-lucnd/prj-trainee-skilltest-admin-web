@@ -138,7 +138,7 @@ export function BaseDateRangePicker({
     if (!startDate || !endDate) {
       onChange?.(undefined);
     } else {
-      onChange?.({ from: startDate, to: endDate });
+      onChange?.({ from: startOfDay(startDate), to: endOfDay(endDate) });
     }
     setOpen(false);
   }, [startDate, endDate, onChange]);
@@ -241,7 +241,7 @@ export function BaseDateRangePicker({
             )}
             data-testid="datetime-picker-trigger"
           >
-            <div className="w-full flex justify-between items-center">
+            <div className="w-full flex justify-between items-center text-primary-5">
               {displayFormat}
               <div className="flex items-center gap-1">
                 {allowClear && displayValue && (

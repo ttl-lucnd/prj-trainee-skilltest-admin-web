@@ -177,6 +177,7 @@ export function PackageForm() {
             onChange={() => form.clearErrors('price')}
             suffix={t('common.priceUnit')}
             required
+            type="amount"
           />
           <InputNumber
             key={'durationDays'}

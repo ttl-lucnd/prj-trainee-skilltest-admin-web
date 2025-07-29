@@ -46,7 +46,7 @@ interface InputNumberProps {
   readonly className?: string;
   readonly classNameLabel?: string;
   readonly inputClassName?: string;
-  readonly type?: 'number' | 'phone' | 'version';
+  readonly type?: 'number' | 'phone' | 'version' | 'amount';
   readonly disabled?: boolean;
   readonly allowDecimal?: boolean;
   readonly size?: 'sm' | 'md';
@@ -148,7 +148,6 @@ export function InputNumber({
             layout === 'horizontal' && 'items-center gap-2',
             className,
           )}
-          
         >
           {label && (
             <FormLabel
@@ -173,7 +172,17 @@ export function InputNumber({
                   placeholder={placeholder}
                   aria-label={label}
                   {...field}
-                  value={field.value === 0 ? 0 : (field.value ?? '')}
+                  value={
+                    type === 'amount'
+                      ? field.value !== undefined &&
+                        field.value !== null &&
+                        field.value !== ''
+                        ? Number(field.value).toLocaleString()
+                        : ''
+                      : field.value === 0
+                        ? 0
+                        : (field.value ?? '')
+                  }
                   onFocus={handleFocus}
                   onBlur={() => {
                     handleBlur();
@@ -182,24 +191,49 @@ export function InputNumber({
                   allowClear={allowClear}
                   disabled={disabled}
                   onChange={(e) => {
-                    const raw = e?.target?.value ?? '';
+                    const input = e.target;
+                    const selectionStart = input.selectionStart;
+                    const preValue = field.value;
+
+                    let raw = e?.target?.value ?? '';
+                    if (type === 'amount') {
+                      raw = raw.replace(/,/g, '');
+                    }
                     if (!allowDecimal && (raw.includes('.') || raw.includes(','))) return;
                     const value = Number(raw);
-                    if (type === 'number') {
+                    if (type === 'number' || type === 'amount') {
                       if (max && value > max) {
                         field.onChange(+oldValue);
                         onChange?.(+oldValue);
                         return;
                       }
                     }
-                    setOldValue(e.target.value);
-                    field.onChange(e.target.value);
+                    setOldValue(type === 'amount' ? raw : e.target.value);
+                    field.onChange(
+                      type === 'amount' ? (raw === '' ? raw : value) : e.target.value,
+                    );
                     handleChange(e);
+
+                    // Đặt lại vị trí con trỏ sau khi format
+                    if (type === 'amount' && input && selectionStart !== null) {
+                      setTimeout(() => {
+                        const before = Number(preValue).toLocaleString();
+                        const after = Number(value).toLocaleString();
+                        const commaBefore = (before.match(/,/g) || []).length;
+                        const commaAfter = (after.match(/,/g) || []).length;
+                        const diff = commaAfter - commaBefore;
+                        input.setSelectionRange(
+                          selectionStart + diff,
+                          selectionStart + diff,
+                        );
+                      }, 0);
+                    }
                   }}
                   className={cn(
                     'noSpinnerClass pr-12',
-                    fieldError ? 'border-destructive focus-visible:ring-destructive'
-                    : 'outline-none focus:ring-1 focus:ring-primary-2 focus:border-primary-2 shadow-none',
+                    fieldError
+                      ? 'border-destructive focus-visible:ring-destructive'
+                      : 'outline-none focus:ring-1 focus:ring-primary-2 focus:border-primary-2 shadow-none',
                     size === 'sm' && 'h-8 py-1',
                     inputClassName,
                   )}
@@ -208,7 +242,6 @@ export function InputNumber({
                   maxLength={type === 'phone' ? INPUT_PHONE_MAX_LENGTH : maxLength}
                   onKeyDown={(e) => preventInput(e)}
                   onPaste={handlePaste}
-                  
                 />
                 {suffix && (
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
