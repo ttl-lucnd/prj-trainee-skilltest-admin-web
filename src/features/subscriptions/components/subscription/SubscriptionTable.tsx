@@ -100,7 +100,7 @@ export function SubscriptionTable() {
       cell: nameCell,
       meta: {
         rowSpan: 2,
-        width: 160,
+        width: 250,
       },
     }),
     ...Object.values(SubscriptionPlatform).map((platform) =>
