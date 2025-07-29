@@ -161,8 +161,10 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
     const [isAnimating, setIsAnimating] = React.useState(false);
     const [search, setSearch] = React.useState('');
     const filteredOptions = React.useMemo(() => {
-      return options.filter(item => item.label.toLowerCase().includes(search.toLowerCase()))
-    },[options, search])
+      return options.filter((item) =>
+        item.label.toLowerCase().includes(search.toLowerCase()),
+      );
+    }, [options, search]);
 
     const handleInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
       if (event.key === 'Enter') {
@@ -213,11 +215,11 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
     }, [value]);
 
     const maxCountTooltip: string[] = React.useMemo(() => {
-      const labelMap = new Map(options.map(item => [item.value, item.label]))
+      const labelMap = new Map(options.map((item) => [item.value, item.label]));
       const maxCountValues = selectedValues.slice(maxCount);
-      const tooltip = maxCountValues.map(item => labelMap.get(item) ?? '');
+      const tooltip = maxCountValues.map((item) => labelMap.get(item) ?? '');
       return tooltip;
-    }, [selectedValues, maxCount, options])
+    }, [selectedValues, maxCount, options]);
 
     return (
       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen} modal={modalPopover}>
@@ -248,7 +250,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                         style={{ animationDuration: `${animation}s` }}
                       >
                         {IconComponent && <IconComponent className="h-4 w-4 mr-2" />}
-                        <TruncatedText text={option?.label ?? ''}/>
+                        <TruncatedText text={option?.label ?? ''} />
                         <XCircle
                           className="ml-1 h-4 w-4 cursor-pointer"
                           onClick={(event) => {
@@ -272,7 +274,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                         >
                           <span
                             className={cn(
-                              'block w-full overflow-hidden text-ellipsis break-words'
+                              'block w-full overflow-hidden text-ellipsis break-words',
                             )}
                           >
                             {`+ ${selectedValues.length - maxCount}`}
@@ -287,17 +289,19 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                           />
                         </Badge>
                       </TooltipTrigger>
-                        <TooltipPortal>
-                          <TooltipContent
-                            className={cn(
-                              'break-words whitespace-normal max-w-xs md:max-w-md lg:max-w-lg',
-                            )}
-                          >
-                            <ul className="list-disc pl-4">
-                            {maxCountTooltip.map(item => <li key={item}>{item}</li>)}
-                            </ul>
-                          </TooltipContent>
-                        </TooltipPortal>
+                      <TooltipPortal>
+                        <TooltipContent
+                          className={cn(
+                            'break-words whitespace-normal max-w-xs md:max-w-md lg:max-w-lg',
+                          )}
+                        >
+                          <ul className="list-disc pl-4">
+                            {maxCountTooltip.map((item) => (
+                              <li key={item}>{item}</li>
+                            ))}
+                          </ul>
+                        </TooltipContent>
+                      </TooltipPortal>
                     </Tooltip>
                   )}
                 </div>
@@ -317,9 +321,15 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
               <div className="flex items-center justify-between w-full mx-auto">
                 <span className="text-body-md text-primary-5 mx-3">{placeholder}</span>
                 {isPopoverOpen ? (
-                  <ChevronUp size={20} className="cursor-pointer text-muted-foreground mx-1" />
+                  <ChevronUp
+                    size={20}
+                    className="cursor-pointer text-muted-foreground mx-1"
+                  />
                 ) : (
-                  <ChevronDown size={20} className="cursor-pointer text-muted-foreground mx-1" />
+                  <ChevronDown
+                    size={20}
+                    className="cursor-pointer text-muted-foreground mx-1"
+                  />
                 )}
               </div>
             )}
@@ -341,22 +351,26 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
               <CommandEmpty>
                 <NoData />
               </CommandEmpty>
-              <CommandGroup className='pb-0'>
-              <CommandItem key="all" onSelect={toggleAll} className={cn("cursor-pointer", !!search && 'hidden')}>
-                <div
-                  className={cn(
-                    'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary p-1',
-                    selectedValues.length === options.length
-                      ? 'bg-primary-2 border-none text-primary-foreground'
-                      : 'opacity-50 [&_svg]:invisible',
-                  )}
+              <CommandGroup className="pb-0">
+                <CommandItem
+                  key="all"
+                  onSelect={toggleAll}
+                  className={cn('cursor-pointer', !!search && 'hidden')}
                 >
-                  <CheckIcon className="h-4 w-4" />
-                </div>
-                <span>{t('common.selectAll')}</span>
-              </CommandItem>
+                  <div
+                    className={cn(
+                      'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary p-1',
+                      selectedValues.length === options.length
+                        ? 'bg-primary-2 border-none text-primary-foreground'
+                        : 'opacity-50 [&_svg]:invisible',
+                    )}
+                  >
+                    <CheckIcon className="h-4 w-4" />
+                  </div>
+                  <span>{t('common.selectAll')}</span>
+                </CommandItem>
               </CommandGroup>
-              <CommandGroup className='pt-0'>
+              <CommandGroup className="pt-0">
                 {specificOptions?.map((option, index) => {
                   const isSelected = selectedValues.includes(option.value);
                   return (
@@ -410,7 +424,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
                       {option.icon && (
                         <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                       )}
-                      <TruncatedText text={option.label}/>
+                      <TruncatedText text={option.label} />
                     </CommandItem>
                   );
                 })}
@@ -420,18 +434,18 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
           </Command>
           {selectedValues.length > 0 && (
             <>
-            <div className="border-b" />
-            <div className="flex items-center justify-between bg-white rounded-md p-1">
-              <button
-                type="button"
-                onClick={handleClear}
-                className={cn(
-                  "flex-1 justify-center cursor-pointer px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground rounded-md",
-                )}
-              >
-                {t('common.buttons.clear')}
-              </button>
-            </div>
+              <div className="border-b" />
+              <div className="flex items-center justify-between bg-white rounded-md p-1">
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className={cn(
+                    'flex-1 justify-center cursor-pointer px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground rounded-md',
+                  )}
+                >
+                  {t('common.buttons.clear')}
+                </button>
+              </div>
             </>
           )}
         </PopoverContent>

@@ -51,6 +51,7 @@ export function AdminFilterForm() {
     <BasicFilterForm
       className="mt-0.5 mb-[16px]"
       form={form}
+      isFiltering={isFiltering}
       onSubmit={(data) => onSubmit(data)}
     />
   );
