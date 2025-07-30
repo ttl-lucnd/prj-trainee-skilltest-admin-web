@@ -205,14 +205,14 @@ export function BaseDateRangePicker({
   useEffect(() => {
     if (open) {
       setMonth1(value?.from ?? initDate);
-      setMonth2(addMonths(month1, 1));
+      setMonth2(addMonths(value?.from ?? initDate, 1));
       setStartDate(value?.from);
       setEndDate(value?.to);
       setMonth1YearPicker(false);
       setMonth2YearPicker(false);
       setIsPickingStart(true);
     }
-  }, [open, month1, initDate, value]);
+  }, [open, initDate, value]);
 
   const displayValue = useMemo(() => {
     if ((!value?.from || !value?.to) && !open) return undefined;
