@@ -174,6 +174,8 @@ export function SaleDetailTable() {
     ]);
   }, [
     t,
+    IndexHeader,
+    NumberCell,
     emailCell,
     nameCell,
     platformCell,
