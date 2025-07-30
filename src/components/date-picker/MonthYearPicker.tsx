@@ -42,7 +42,7 @@ export function MonthYearPicker({
       years.push({ value: i, label: i.toString(), disabled });
     }
     return years;
-  }, [value]);
+  }, [value, minDate, maxDate]);
   const months = useMemo(() => {
     const months: TimeOption[] = [];
     for (let i = 0; i < MONTHS_IN_YEAR; i++) {
@@ -54,7 +54,7 @@ export function MonthYearPicker({
       months.push({ value: i, label: `${i + 1}月`, disabled });
     }
     return months;
-  }, [value]);
+  }, [value, minDate, maxDate]);
 
   const onYearChange = useCallback(
     (v: TimeOption) => {
