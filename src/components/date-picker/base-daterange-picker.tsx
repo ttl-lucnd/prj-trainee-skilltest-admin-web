@@ -8,10 +8,12 @@
 import {
   addMonths,
   endOfDay,
+  endOfMonth,
   format,
   getYear,
   setYear,
   startOfDay,
+  startOfMonth,
   subMonths,
 } from 'date-fns';
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
@@ -26,6 +28,7 @@ import { CloseIcon } from '../icons';
 import { MonthYearPicker } from './MonthYearPicker';
 import { getDateTimeFormat } from './helpers';
 import { DateRangePickerProps } from './interfaces';
+import { ja } from 'date-fns/locale';
 
 export type CalendarProps = Omit<React.ComponentProps<typeof DayPicker>, 'mode'>;
 
@@ -104,19 +107,30 @@ export function BaseDateRangePicker({
   ...props
 }: DateRangePickerProps & CalendarProps & { isNoBorder?: boolean }) {
   const [open, setOpen] = useState(false);
-  const [monthYearPicker, setMonthYearPicker] = useState<'month' | 'year' | false>(false);
+  const [month1YearPicker, setMonth1YearPicker] = useState<'month' | 'year' | false>(
+    false,
+  );
+  const [month2YearPicker, setMonth2YearPicker] = useState<'month' | 'year' | false>(
+    false,
+  );
+
   const initDate = useMemo(
     () => new TZDate(value?.from || new Date(), timezone),
     [value, timezone],
   );
 
-  const [month, setMonth] = useState<Date>(initDate);
-  const [startDate, setStartDate] = useState<Date>(initDate);
-  const [endDate, setEndDate] = useState<Date>(initDate);
+  const [month1, setMonth1] = useState<Date>(initDate);
+  const [month2, setMonth2] = useState<Date>(addMonths(initDate, 1));
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
+  const [isPickingStart, setIsPickingStart] = useState(true);
 
-  const endMonth = useMemo(() => {
-    return setYear(month, getYear(month) + 1);
-  }, [month]);
+  const endMonth1 = useMemo(() => {
+    return setYear(month1, getYear(month1) + 1);
+  }, [month1]);
+  const endMonth2 = useMemo(() => {
+    return setYear(month2, getYear(month2) + 1);
+  }, [month2]);
   const minDate = useMemo(
     () => (min ? startOfDay(new TZDate(min, timezone)) : undefined),
     [min, timezone],
@@ -127,57 +141,89 @@ export function BaseDateRangePicker({
   );
 
   const onDayChanged = useCallback(
-    (d: DateRange) => {
-      setStartDate(startOfDay(d.from ?? initDate));
-      setEndDate(endOfDay(d.to ?? initDate));
+    (d: DateRange | undefined, triggerDate: Date) => {
+      const from = startOfDay(triggerDate);
+
+      if (isPickingStart || (!isPickingStart && startDate && triggerDate < startDate)) {
+        setStartDate(from);
+        setEndDate(undefined);
+        setIsPickingStart(false);
+      } else {
+        const to = endOfDay(d?.to ?? triggerDate);
+        setEndDate(to);
+        setIsPickingStart(true);
+      }
     },
-    [setStartDate, setEndDate, onChange],
+    [isPickingStart, startDate, setIsPickingStart, setStartDate, setEndDate, onChange],
   );
 
   const onSubmit = useCallback(() => {
-    if (!startDate || !endDate) {
+    if (!startDate || !endDate || !isPickingStart) {
       onChange?.(undefined);
     } else {
-      onChange?.({ from: startDate, to: endDate });
+      onChange?.({ from: startOfDay(startDate), to: endOfDay(endDate) });
     }
     setOpen(false);
-  }, [startDate, endDate, onChange]);
+  }, [isPickingStart, startDate, endDate, onChange]);
 
-  const onMonthYearChanged = useCallback(
+  const onMonthYearChanged1 = useCallback(
     (d: Date, mode: 'month' | 'year') => {
-      setMonth(d);
+      setMonth1(d);
       if (mode === 'year') {
-        setMonthYearPicker('month');
+        setMonth1YearPicker('month');
       } else {
-        setMonthYearPicker(false);
+        setMonth1YearPicker(false);
       }
     },
-    [setMonth, setMonthYearPicker],
+    [setMonth1, setMonth1YearPicker],
   );
-  const onNextMonth = useCallback(() => {
-    setMonth(addMonths(month, 1));
-  }, [month]);
-  const onPrevMonth = useCallback(() => {
-    setMonth(subMonths(month, 1));
-  }, [month]);
+  const onNextMonth1 = useCallback(() => {
+    setMonth1(addMonths(month1, 1));
+  }, [month1]);
+  const onPrevMonth1 = useCallback(() => {
+    setMonth1(subMonths(month1, 1));
+  }, [month1]);
+
+  const onMonthYearChanged2 = useCallback(
+    (d: Date, mode: 'month' | 'year') => {
+      setMonth2(d);
+      if (mode === 'year') {
+        setMonth2YearPicker('month');
+      } else {
+        setMonth2YearPicker(false);
+      }
+    },
+    [setMonth2, setMonth2YearPicker],
+  );
+  const onNextMonth2 = useCallback(() => {
+    setMonth2(addMonths(month2, 1));
+  }, [month2]);
+  const onPrevMonth2 = useCallback(() => {
+    setMonth2(subMonths(month2, 1));
+  }, [month2]);
 
   useEffect(() => {
     if (open) {
-      setMonth(value?.from ?? initDate);
-      setStartDate(value?.from ?? initDate);
-      setEndDate(value?.to ?? initDate);
-      setMonthYearPicker(false);
+      setMonth1(value?.from ?? initDate);
+      setMonth2(addMonths(month1, 1));
+      setStartDate(value?.from);
+      setEndDate(value?.to);
+      setMonth1YearPicker(false);
+      setMonth2YearPicker(false);
+      setIsPickingStart(true);
     }
-  }, [open, initDate, value]);
+  }, [open, month1, initDate, value]);
 
   const displayValue = useMemo(() => {
     if ((!value?.from || !value?.to) && !open) return undefined;
-    return { from: startDate, to: endDate };
+    return { from: value?.from, to: value?.to };
   }, [value, open]);
 
   const displayFormat = useMemo(() => {
     if (!displayValue) return placeholder;
     const { from, to } = displayValue;
+    if (!from || !to) return '';
+
     const start = format(
       from,
       getDateTimeFormat({
@@ -218,7 +264,13 @@ export function BaseDateRangePicker({
   };
 
   const triggerClassName = getTriggerClassName(triggerProps);
-  const monthYearPickerClassName = getMonthYearPickerClassName(!!monthYearPicker);
+  const month1YearPickerClassName = getMonthYearPickerClassName(!!month1YearPicker);
+
+  const month2YearPickerClassName = getMonthYearPickerClassName(!!month2YearPicker);
+
+  const isDisableBtn = useMemo(() => {
+    return month1.getMonth() + 1 === month2.getMonth();
+  }, [month1, month2]);
 
   return (
     <Popover open={open} onOpenChange={!disabled ? setOpen : undefined} modal={modal}>
@@ -241,10 +293,15 @@ export function BaseDateRangePicker({
             )}
             data-testid="datetime-picker-trigger"
           >
-            <div className="w-full flex justify-between items-center">
-              {displayFormat}
+            <div
+              className={cn(
+                'w-full flex justify-between items-center',
+                !displayValue && 'text-primary-5',
+              )}
+            >
+              <span>{displayFormat}</span>
               <div className="flex items-center gap-1">
-                {allowClear && displayValue && (
+                {allowClear && displayValue?.from && displayValue?.to && (
                   <button
                     disabled={disabled}
                     aria-label="Clear date"
@@ -259,122 +316,242 @@ export function BaseDateRangePicker({
           </div>
         )}
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-2">
-        <div className="w-full flex items-center justify-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onPrevMonth}
-            className={cn(monthYearPicker ? 'hidden' : '')}
-            data-testid="datetime-picker-prev-month"
-          >
-            <ChevronLeftIcon />
-          </Button>
-          <div className="text-body-lg font-bold ms-2 flex items-center justify-center cursor-pointer flex-1 py-2.5">
-            <button
-              data-testid="datetime-picker-year"
-              className="ms-1"
-              onClick={() =>
-                setMonthYearPicker(monthYearPicker === 'year' ? false : 'year')
-              }
-            >
-              {format(month, 'yyyy年')}
-            </button>
-            <button
-              data-testid="datetime-picker-month"
-              onClick={() =>
-                setMonthYearPicker(monthYearPicker === 'month' ? false : 'month')
-              }
-            >
-              {`${month.getMonth() + 1}月`}
-            </button>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onNextMonth}
-            className={cn(monthYearPicker ? 'hidden' : '')}
-            data-testid="datetime-picker-next-month"
-          >
-            <ChevronRightIcon />
-          </Button>
-        </div>
-        <div className="relative overflow-hidden">
-          <DayPicker
-            timeZone={timezone}
-            mode="range"
-            selected={{ from: startDate, to: endDate }}
-            onSelect={(d) => d && onDayChanged(d)}
-            month={month}
-            endMonth={endMonth}
-            disabled={
-              [max ? { after: max } : null, min ? { before: min } : null].filter(
-                Boolean,
-              ) as Matcher[]
-            }
-            onMonthChange={setMonth}
-            classNames={{
-              dropdowns: 'flex w-full gap-2',
-              months: 'flex w-full h-fit',
-              month: 'flex flex-col w-full',
-              month_caption: 'hidden',
-              button_previous: 'hidden',
-              button_next: 'hidden',
-              month_grid: 'w-full border-collapse',
-              weekdays: 'flex justify-between mt-2',
-              weekday: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
-              week: 'flex w-full justify-between mt-2',
-              day: 'h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 rounded-1',
-              day_button: cn(
-                'size-9 rounded-md p-0 font-normal aria-selected:opacity-100 hover:bg-primary-4 group-hover/selected:bg-primary-2 group-hover/selected:text-primary-foreground',
-              ),
-              range_end: 'day-range-end',
-              selected:
-                'bg-primary-2 text-primary-foreground  hover:text-primary-foreground focus:bg-primary-2 focus:text-primary-foreground rounded-l-md rounded-r-md group/selected',
-              today: 'bg-accent text-accent-foreground rounded-md',
-              outside:
-                'day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',
-              disabled: 'text-muted-foreground opacity-50',
-              range_middle:
-                'aria-selected:bg-accent aria-selected:text-accent-foreground',
-              hidden: 'invisible',
-            }}
-            showOutsideDays={true}
-            {...props}
-          />
-          <div className={monthYearPickerClassName}></div>
-          <MonthYearPicker
-            value={month}
-            mode={monthYearPicker as any}
-            onChange={onMonthYearChanged}
-            minDate={minDate}
-            maxDate={maxDate}
-            className={cn(
-              'absolute top-0 left-0 bottom-0 right-0',
-              monthYearPicker ? '' : 'hidden',
-            )}
-          />
-        </div>
-        {!monthYearPicker && (
-          <div className="flex flex-col gap-2 mt-2">
-            <div className="flex flex-row-reverse items-center justify-between">
+      <PopoverContent className="w-auto p-2">
+        <div className="flex gap-5">
+          <div className="flex-col" key="startDate">
+            <div className="w-full flex items-center justify-center">
               <Button
-                size="sx"
-                className="ms-2 yt h-8 font-normal"
-                onClick={onSubmit}
-                data-testid="datetime-picker-submit"
+                variant="ghost"
+                size="icon"
+                onClick={onPrevMonth1}
+                className={cn(month1YearPicker ? 'hidden' : '')}
+                data-testid="datetime-picker-prev-month-1"
               >
-                設定
+                <ChevronLeftIcon />
               </Button>
-              {timezone && (
-                <div className="text-sm">
-                  <span>Timezone:</span>
-                  <span className="font-semibold ms-1">{timezone}</span>
-                </div>
-              )}
+              <div className="text-body-lg font-bold flex items-center justify-center cursor-pointer flex-1 py-2.5">
+                <button
+                  data-testid="datetime-picker-year"
+                  className="ms-1"
+                  onClick={() =>
+                    setMonth1YearPicker(month1YearPicker === 'year' ? false : 'year')
+                  }
+                >
+                  {format(month1, 'yyyy年')}
+                </button>
+                <button
+                  data-testid="datetime-picker-month"
+                  onClick={() =>
+                    setMonth1YearPicker(month1YearPicker === 'month' ? false : 'month')
+                  }
+                >
+                  {`${month1.getMonth() + 1}月`}
+                </button>
+              </div>
+              <Button
+                disabled={isDisableBtn}
+                variant="ghost"
+                size="icon"
+                onClick={onNextMonth1}
+                className={cn(
+                  month1YearPicker ? 'hidden' : '',
+                  isDisableBtn ? 'invisible' : '',
+                )}
+                data-testid="datetime-picker-next-month-1"
+              >
+                <ChevronRightIcon />
+              </Button>
+            </div>
+            <div className="relative overflow-hidden">
+              <DayPicker
+                locale={ja}
+                fixedWeeks
+                timeZone={timezone}
+                mode="range"
+                selected={{ from: startDate, to: endDate }}
+                onSelect={(d, triggerDate) => onDayChanged(d, triggerDate)}
+                month={month1}
+                endMonth={endMonth1}
+                disabled={
+                  [max ? { after: max } : null, min ? { before: min } : null].filter(
+                    Boolean,
+                  ) as Matcher[]
+                }
+                onMonthChange={setMonth1}
+                classNames={{
+                  dropdowns: 'flex w-full gap-2',
+                  months: 'flex w-full h-fit',
+                  month: 'flex flex-col w-full',
+                  month_caption: 'hidden',
+                  button_previous: 'hidden',
+                  button_next: 'hidden',
+                  month_grid: 'w-full border-collapse',
+                  weekdays: 'flex justify-between mt-2',
+                  weekday:
+                    'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
+                  week: 'flex w-full justify-between mt-2',
+                  day: 'h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 rounded-1',
+                  day_button: cn(
+                    'size-9 rounded-md p-0 font-normal aria-selected:opacity-100 hover:bg-primary-4 group-hover/selected:bg-primary-2 group-hover/selected:text-primary-foreground',
+                  ),
+                  range_start: 'rounded-l-md day-range-start',
+                  range_end:
+                    '[&:not(.day-range-start)]:rounded-l-none rounded-r-md day-range-end',
+                  selected:
+                    'rounded-l-md bg-primary-2 text-primary-foreground  hover:text-primary-foreground focus:bg-primary-2 focus:text-primary-foreground group/selected',
+                  today:
+                    'bg-accent text-accent-foreground [&:not([data-selected=true])]:rounded-md',
+                  outside:
+                    'day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',
+                  disabled: 'text-muted-foreground opacity-50',
+                  range_middle:
+                    'aria-selected:bg-accent aria-selected:text-accent-foreground',
+                  hidden: 'invisible',
+                }}
+                showOutsideDays={true}
+                {...props}
+              />
+              <div className={month1YearPickerClassName}></div>
+              <MonthYearPicker
+                value={month1}
+                mode={month1YearPicker as any}
+                onChange={onMonthYearChanged1}
+                minDate={minDate}
+                maxDate={endOfMonth(subMonths(month2, 1))}
+                className={cn(
+                  'absolute top-0 left-0 bottom-0 right-0',
+                  month1YearPicker ? '' : 'hidden',
+                )}
+              />
             </div>
           </div>
-        )}
+          <div className="flex-col" key="endDate">
+            <div className="w-full flex items-center justify-center">
+              <Button
+                disabled={isDisableBtn}
+                variant="ghost"
+                size="icon"
+                onClick={onPrevMonth2}
+                className={cn(
+                  month2YearPicker ? 'hidden' : '',
+                  isDisableBtn ? 'invisible' : '',
+                )}
+                data-testid="datetime-picker-prev-month-2"
+              >
+                <ChevronLeftIcon />
+              </Button>
+              <div className="text-body-lg font-bold flex items-center justify-center cursor-pointer flex-1 py-2.5">
+                <button
+                  data-testid="datetime-picker-year"
+                  className="ms-1"
+                  onClick={() =>
+                    setMonth2YearPicker(month2YearPicker === 'year' ? false : 'year')
+                  }
+                >
+                  {format(month2, 'yyyy年')}
+                </button>
+                <button
+                  data-testid="datetime-picker-month"
+                  onClick={() =>
+                    setMonth2YearPicker(month2YearPicker === 'month' ? false : 'month')
+                  }
+                >
+                  {`${month2.getMonth() + 1}月`}
+                </button>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={onNextMonth2}
+                className={cn(month2YearPicker ? 'hidden' : '')}
+                data-testid="datetime-picker-next-month-2"
+              >
+                <ChevronRightIcon />
+              </Button>
+            </div>
+            <div className="relative overflow-hidden">
+              <DayPicker
+                locale={ja}
+                fixedWeeks
+                timeZone={timezone}
+                mode="range"
+                selected={{ from: startDate, to: endDate }}
+                onSelect={(d, triggerDate) => onDayChanged(d, triggerDate)}
+                month={month2}
+                endMonth={endMonth2}
+                disabled={
+                  [max ? { after: max } : null, min ? { before: min } : null].filter(
+                    Boolean,
+                  ) as Matcher[]
+                }
+                onMonthChange={setMonth2}
+                classNames={{
+                  dropdowns: 'flex w-full gap-2',
+                  months: 'flex w-full h-fit',
+                  month: 'flex flex-col w-full',
+                  month_caption: 'hidden',
+                  button_previous: 'hidden',
+                  button_next: 'hidden',
+                  month_grid: 'w-full border-collapse',
+                  weekdays: 'flex justify-between mt-2',
+                  weekday:
+                    'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
+                  week: 'flex w-full justify-between mt-2',
+                  day: 'h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 rounded-1',
+                  day_button: cn(
+                    'size-9 rounded-md p-0 font-normal aria-selected:opacity-100 hover:bg-primary-4 group-hover/selected:bg-primary-2 group-hover/selected:text-primary-foreground',
+                  ),
+                  range_start: 'rounded-l-md day-range-start',
+                  range_end:
+                    '[&:not(.day-range-start)]:rounded-l-none rounded-r-md day-range-end',
+                  selected:
+                    'rounded-l-md bg-primary-2 text-primary-foreground  hover:text-primary-foreground focus:bg-primary-2 focus:text-primary-foreground group/selected',
+                  today:
+                    'bg-accent text-accent-foreground [&:not([data-selected=true])]:rounded-md',
+                  outside:
+                    'day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30',
+                  disabled: 'text-muted-foreground opacity-50',
+                  range_middle:
+                    'aria-selected:bg-accent aria-selected:text-accent-foreground',
+                  hidden: 'invisible',
+                }}
+                showOutsideDays={true}
+                {...props}
+              />
+              <div className={month2YearPickerClassName}></div>
+              <MonthYearPicker
+                value={month2}
+                mode={month2YearPicker as any}
+                onChange={onMonthYearChanged2}
+                minDate={startOfMonth(addMonths(month1, 1))}
+                maxDate={maxDate}
+                className={cn(
+                  'absolute top-0 left-0 bottom-0 right-0',
+                  month2YearPicker ? '' : 'hidden',
+                )}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2 mt-2 border-t pt-2">
+          <div className="flex flex-row-reverse items-center justify-between">
+            <Button
+              size="sx"
+              className="ms-2 px-4 h-8 font-normal"
+              onClick={onSubmit}
+              data-testid="datetime-picker-submit"
+            >
+              設定
+            </Button>
+            {timezone && (
+              <div className="text-sm">
+                <span>Timezone:</span>
+                <span className="font-semibold ms-1">{timezone}</span>
+              </div>
+            )}
+          </div>
+        </div>
       </PopoverContent>
     </Popover>
   );

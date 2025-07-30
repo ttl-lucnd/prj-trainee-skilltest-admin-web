@@ -2,15 +2,21 @@ import { TruncatedText } from '@/components/TruncateText';
 import { DataTable } from '@/components/data-table';
 import { NumberCell } from '@/components/table/NumberCell';
 import { DEFAULT_FIRST_PAGE, PageRouter, SubscriptionPlatform } from '@/utils/constants';
-import { CellContext, createColumnHelper, HeaderContext } from '@tanstack/react-table';
+import {
+  CellContext,
+  ColumnDef,
+  createColumnHelper,
+  HeaderContext,
+} from '@tanstack/react-table';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSubscriptionStore } from '../../stores/useSubscriptionStore';
 import { ISubscription, SubscriptionSummary } from '../../interfaces';
 import { IndexHeader } from '@/components/table/IndexHeader';
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/skeleton';
+import { compact } from 'lodash';
 
 export function SubscriptionTable() {
   const t = useTranslations();
@@ -75,61 +81,63 @@ export function SubscriptionTable() {
 
   const columnHelper = createColumnHelper<ISubscription>();
 
-  const columns = [
-    columnHelper.display({
-      id: 'index',
-      header: (props: HeaderContext<ISubscription, unknown>) =>
-        IndexHeader({
-          ...props,
-          text: t('common.number'),
-        }),
-      cell: (props: CellContext<ISubscription, unknown>) =>
-        NumberCell({
-          ...props,
-          page: subscriptionGetListQuery.page ?? DEFAULT_FIRST_PAGE,
-          limit: subscriptionGetListQuery.limit,
-        }),
-      meta: {
-        rowSpan: 2,
-        width: 80,
-      },
-    }),
-    columnHelper.display({
-      id: 'name',
-      header: t('subscriptions.table.name'),
-      cell: nameCell,
-      meta: {
-        rowSpan: 2,
-        width: 250,
-      },
-    }),
-    ...Object.values(SubscriptionPlatform).map((platform) =>
-      columnHelper.group({
-        id: platform,
-        header: t(`subscriptions.title.${platform}`),
+  const columns: ColumnDef<ISubscription>[] = useMemo(() => {
+    return compact([
+      columnHelper.display({
+        id: 'index',
+        header: (props: HeaderContext<ISubscription, unknown>) =>
+          IndexHeader({
+            ...props,
+            text: t('common.number'),
+          }),
+        cell: (props: CellContext<ISubscription, unknown>) =>
+          NumberCell({
+            ...props,
+            page: subscriptionGetListQuery.page ?? DEFAULT_FIRST_PAGE,
+            limit: subscriptionGetListQuery.limit,
+          }),
         meta: {
-          headerClassName: `${platform === 'apple' ? 'bg-[#BCD5F9]' : 'bg-[#C7BCF9]'} text-center outline outline-1 outline-[#CBD5E1]`,
-          width: 600,
+          rowSpan: 2,
+          width: 80,
         },
-
-        columns: [
-          ...Object.values(SubscriptionSummary).map((saleField, index) =>
-            columnHelper.display({
-              id: `${platform}_${saleField}`,
-              header: t(`subscriptions.table.${saleField}`),
-              cell: (props: CellContext<ISubscription, unknown>) =>
-                saleCell({ ...props, platform, saleField }),
-              meta: {
-                headerClassName: 'outline outline-1 outline-[#CBD5E1]',
-                cellClassName: index === 0 ? 'border-l-2' : '',
-                width: 120,
-              },
-            }),
-          ),
-        ],
       }),
-    ),
-  ];
+      columnHelper.display({
+        id: 'name',
+        header: t('subscriptions.table.name'),
+        cell: nameCell,
+        meta: {
+          rowSpan: 2,
+          width: 250,
+        },
+      }),
+      ...Object.values(SubscriptionPlatform).map((platform) =>
+        columnHelper.group({
+          id: platform,
+          header: t(`subscriptions.title.${platform}`),
+          meta: {
+            headerClassName: `${platform === 'apple' ? 'bg-[#BCD5F9]' : 'bg-[#C7BCF9]'} text-center outline outline-1 outline-[#CBD5E1]`,
+            width: 600,
+          },
+
+          columns: [
+            ...Object.values(SubscriptionSummary).map((saleField, index) =>
+              columnHelper.display({
+                id: `${platform}_${saleField}`,
+                header: t(`subscriptions.table.${saleField}`),
+                cell: (props: CellContext<ISubscription, unknown>) =>
+                  saleCell({ ...props, platform, saleField }),
+                meta: {
+                  headerClassName: 'outline outline-1 outline-[#CBD5E1]',
+                  cellClassName: index === 0 ? 'border-l-2' : '',
+                  width: 120,
+                },
+              }),
+            ),
+          ],
+        }),
+      ),
+    ]);
+  }, [t, columnHelper, IndexHeader, NumberCell, nameCell, saleCell]);
 
   return (
     <DataTable

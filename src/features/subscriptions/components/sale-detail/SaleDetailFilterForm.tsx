@@ -39,8 +39,21 @@ export function SaleDetailFilterForm() {
   );
 
   const getDetail = async () => {
+    const query = getSaleDetailQueryFromUrl();
+    const { startDate, endDate, ...params } = query;
+    form.reset({
+      ...params,
+      dateRange:
+        !startDate && !endDate
+          ? undefined
+          : {
+              from: startDate,
+              to: endDate,
+            },
+    });
     setSaleDetailGetListQuery({
       subjectId: String(id),
+      ...query,
     });
     const response: IBodyResponse<ISubject> = await subjectService._getDetail(String(id));
     if (!response.success) {
@@ -60,23 +73,6 @@ export function SaleDetailFilterForm() {
     getQueryFromUrl: getSaleDetailQueryFromUrl,
     updateUrlWithQuery: updateSaleDetailUrlWithQuery,
   } = useUpdateUrlWithQuery();
-
-  useEffect(() => {
-    const query = getSaleDetailQueryFromUrl();
-    const { startDate, endDate, ...params } = query;
-    form.reset({
-      ...params,
-      dateRange:
-        !startDate && !endDate
-          ? undefined
-          : {
-              from: startDate,
-              to: endDate,
-            },
-    });
-
-    setSaleDetailGetListQuery(query, { reloadList: false });
-  }, []);
 
   const onSubmit = async (data: any) => {
     if (isFiltering) return;

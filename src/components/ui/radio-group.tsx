@@ -25,20 +25,21 @@ const RadioGroupItem = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item> & {
     disabled?: boolean;
   }
->(({ className, disabled, ...props }, ref) => {
+>(({ className, disabled, checked, ...props }, ref) => {
   return (
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        'aspect-square h-4 w-4 rounded-full border border-[#CBD5E1] text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-        className,
+        'aspect-square h-4 w-4 rounded-full border text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+        checked ? 'border-primary-2' : 'border-[#CBD5E1]',
         disabled && 'border-primary-3 text-primary-3',
+        className,
       )}
       disabled={disabled}
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Circle className={'h-2 w-2 fill-primary-2 text-[#CBD5E1]'} />
+        <Circle className={'h-2 w-2 fill-primary-2 text-primary-2'} />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );
