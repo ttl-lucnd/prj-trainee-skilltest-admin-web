@@ -144,11 +144,7 @@ export function BaseDateRangePicker({
     (d: DateRange | undefined, triggerDate: Date) => {
       const from = startOfDay(triggerDate);
 
-      if (!isPickingStart && startDate && triggerDate < startDate) {
-        setStartDate(from);
-        setEndDate(undefined);
-        setIsPickingStart(false);
-      } else if (isPickingStart) {
+      if (isPickingStart || (!isPickingStart && startDate && triggerDate < startDate)) {
         setStartDate(from);
         setEndDate(undefined);
         setIsPickingStart(false);
