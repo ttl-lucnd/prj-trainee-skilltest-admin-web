@@ -47,8 +47,8 @@ export function SaleDetailFilterForm() {
         !startDate && !endDate
           ? undefined
           : {
-              from: startDate,
-              to: endDate,
+              from: new Date(startDate as string),
+              to: new Date(endDate as string),
             },
     });
     setSaleDetailGetListQuery({
