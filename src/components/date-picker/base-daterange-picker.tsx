@@ -229,7 +229,10 @@ export function BaseDateRangePicker({
       const to = value?.to;
 
       setMonth1(
-        from && to && from.getMonth() < to.getMonth()
+        from &&
+          to &&
+          from < to &&
+          !(from.getFullYear() === to.getFullYear() && from.getMonth() === to.getMonth())
           ? from
           : subMonths(to ?? initDate, 1),
       );
