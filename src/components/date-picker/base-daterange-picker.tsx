@@ -142,9 +142,10 @@ export function BaseDateRangePicker({
 
   const onDayChanged = useCallback(
     (d: DateRange | undefined, triggerDate: Date, index: 1 | 2) => {
-      if (index === 1) {
+      if (index === 1 && triggerDate.getMonth() !== month2.getMonth()) {
         setMonth1(triggerDate);
-      } else {
+      }
+      if (index === 2 && triggerDate.getMonth() !== month1.getMonth()) {
         setMonth2(triggerDate);
       }
 
@@ -165,7 +166,16 @@ export function BaseDateRangePicker({
         setIsPickingStart(true);
       }
     },
-    [isPickingStart, startDate, setIsPickingStart, setStartDate, setEndDate, onChange],
+    [
+      isPickingStart,
+      startDate,
+      month1,
+      month2,
+      setIsPickingStart,
+      setStartDate,
+      setEndDate,
+      onChange,
+    ],
   );
 
   const onSubmit = useCallback(() => {
