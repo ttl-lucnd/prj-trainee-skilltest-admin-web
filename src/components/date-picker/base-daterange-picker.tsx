@@ -119,8 +119,8 @@ export function BaseDateRangePicker({
     [value, timezone],
   );
 
-  const [month1, setMonth1] = useState<Date>(initDate);
-  const [month2, setMonth2] = useState<Date>(addMonths(initDate, 1));
+  const [month1, setMonth1] = useState<Date>(subMonths(initDate, 1));
+  const [month2, setMonth2] = useState<Date>(initDate);
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [isPickingStart, setIsPickingStart] = useState(true);
@@ -141,16 +141,27 @@ export function BaseDateRangePicker({
   );
 
   const onDayChanged = useCallback(
-    (d: DateRange | undefined, triggerDate: Date) => {
-      const from = startOfDay(triggerDate);
+    (d: DateRange | undefined, triggerDate: Date, index: 1 | 2) => {
+      if (index === 1) {
+        setMonth1(triggerDate);
+      } else {
+        setMonth2(triggerDate);
+      }
 
-      if (isPickingStart || (!isPickingStart && startDate && triggerDate < startDate)) {
+      if (isPickingStart) {
+        const from = startOfDay(triggerDate);
         setStartDate(from);
         setEndDate(undefined);
         setIsPickingStart(false);
       } else {
+        const from = startOfDay(d?.from ?? triggerDate);
         const to = endOfDay(d?.to ?? triggerDate);
+        setStartDate(from);
         setEndDate(to);
+        if (from.getMonth() !== to.getMonth()) {
+          setMonth1(from);
+          setMonth2(to);
+        }
         setIsPickingStart(true);
       }
     },
@@ -204,10 +215,17 @@ export function BaseDateRangePicker({
 
   useEffect(() => {
     if (open) {
-      setMonth1(value?.from ?? initDate);
-      setMonth2(addMonths(value?.from ?? initDate, 1));
-      setStartDate(value?.from);
-      setEndDate(value?.to);
+      const from = value?.from;
+      const to = value?.to;
+
+      setMonth1(
+        from && to && from.getMonth() < to.getMonth()
+          ? from
+          : subMonths(to ?? initDate, 1),
+      );
+      setMonth2(to ?? initDate);
+      setStartDate(from);
+      setEndDate(to);
       setMonth1YearPicker(false);
       setMonth2YearPicker(false);
       setIsPickingStart(true);
@@ -369,7 +387,7 @@ export function BaseDateRangePicker({
                 timeZone={timezone}
                 mode="range"
                 selected={{ from: startDate, to: endDate }}
-                onSelect={(d, triggerDate) => onDayChanged(d, triggerDate)}
+                onSelect={(d, triggerDate) => onDayChanged(d, triggerDate, 1)}
                 month={month1}
                 endMonth={endMonth1}
                 disabled={
@@ -476,7 +494,7 @@ export function BaseDateRangePicker({
                 timeZone={timezone}
                 mode="range"
                 selected={{ from: startDate, to: endDate }}
-                onSelect={(d, triggerDate) => onDayChanged(d, triggerDate)}
+                onSelect={(d, triggerDate) => onDayChanged(d, triggerDate, 2)}
                 month={month2}
                 endMonth={endMonth2}
                 disabled={
