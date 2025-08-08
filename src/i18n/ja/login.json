@@ -1,5 +1,5 @@
 {
-    "appName": "技能検定基礎級",
-    "adminScreen": "管理システム",
-    "loginWithGoogle": "Googleメールでログイン"
+  "appName": "技能実習検定",
+  "adminScreen": "管理システム",
+  "loginWithGoogle": "Googleメールでログイン"
 }
