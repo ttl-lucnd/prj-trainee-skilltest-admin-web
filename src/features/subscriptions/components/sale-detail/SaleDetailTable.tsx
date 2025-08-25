@@ -74,12 +74,10 @@ export function SaleDetailTable() {
   );
 
   const durationCell = useCallback(
-    ({ row }: Readonly<CellContext<ISaleDetail, unknown>>) => {
-      const startDate = dayjs(row.original?.actionAt).startOf('day')
-      const endDate = dayjs(row.original?.endDate).add(1,'day').startOf('day')
+    () => {
       return (
         <TruncatedText
-          text={`${endDate.diff(startDate, 'day')}${t('common.date.day')}`}
+          text={`30${t('common.date.day')}`}
         />
       );
     },
@@ -99,7 +97,7 @@ export function SaleDetailTable() {
 
   const endDateCell = useCallback(
     ({ row }: Readonly<CellContext<ISaleDetail, unknown>>) => {
-      const endDate = dayjs(row.original?.endDate).add(1,'day').startOf('day')
+      const endDate = dayjs(row.original?.actionAt).add(30,'day')
       return (
         <TruncatedText
           text={endDate.format(DATE_TIME_FORMAT.JA_YYYY_MM_DD)}
