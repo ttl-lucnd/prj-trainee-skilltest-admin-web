@@ -18,13 +18,23 @@ export interface ISubscription extends SubscriptionPlatformSummaries {
     name: string;
 }
 
+export enum SubscriptionStatusLogType {
+    PURCHASE = 'purchase',
+    RESTORE = 'restore',
+    RENEWAL = 'renewal',
+    CANCELLATION = 'cancellation',
+    EXPIRED = 'expired',
+    REFUNDED = 'refunded',
+    UNKNOWN = 'unknown',
+}
+
 export interface ISaleDetail {
     id: string;
     userId: string,
     userSubscriptionId: string,
     subjectSubscriptionPackageId: string,
     platform: SubscriptionPlatform,
-    type: string,
+    type: SubscriptionStatusLogType,
     actionAt: Date,
     email: string,
     amount: number,
