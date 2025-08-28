@@ -9,7 +9,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import { useSaleDetailStore } from '../../stores/useSaleDetailStore';
 import { IndexHeader } from '@/components/table/IndexHeader';
-import { ISaleDetail } from '../../interfaces';
+import { ISaleDetail, SubscriptionStatusLogType } from '../../interfaces';
 import dayjs from 'dayjs';
 
 export function SaleDetailTable() {
@@ -73,16 +73,9 @@ export function SaleDetailTable() {
     [],
   );
 
-  const durationCell = useCallback(
-    () => {
-      return (
-        <TruncatedText
-          text={`30${t('common.date.day')}`}
-        />
-      );
-    },
-    [],
-  );
+  const durationCell = useCallback(() => {
+    return <TruncatedText text={`30${t('common.date.day')}`} />;
+  }, []);
 
   const startDateCell = useCallback(
     ({ row }: Readonly<CellContext<ISaleDetail, unknown>>) => {
@@ -97,15 +90,17 @@ export function SaleDetailTable() {
 
   const endDateCell = useCallback(
     ({ row }: Readonly<CellContext<ISaleDetail, unknown>>) => {
-      const endDate = dayjs(row.original?.actionAt).add(30,'day')
-      return (
-        <TruncatedText
-          text={endDate.format(DATE_TIME_FORMAT.JA_YYYY_MM_DD)}
-        />
-      );
+      const endDate = dayjs(row.original?.actionAt).add(30, 'day');
+      return <TruncatedText text={endDate.format(DATE_TIME_FORMAT.JA_YYYY_MM_DD)} />;
     },
     [],
   );
+
+  const logCell = useCallback(({ row }: Readonly<CellContext<ISaleDetail, unknown>>) => {
+    const key =
+      row.original?.type === SubscriptionStatusLogType.REFUNDED ? 'refund' : 'purchase';
+    return <TruncatedText text={t(`subscriptions.logType.${key}`)} />;
+  }, []);
 
   const columns: ColumnDef<ISaleDetail>[] = useMemo(() => {
     return compact([
@@ -172,6 +167,12 @@ export function SaleDetailTable() {
         cell: endDateCell,
         size: 180,
       },
+      {
+        header: t('subscriptions.saleTable.log'),
+        accessorKey: 'log',
+        cell: logCell,
+        size: 180,
+      },
     ]);
   }, [
     t,
@@ -185,6 +186,7 @@ export function SaleDetailTable() {
     durationCell,
     startDateCell,
     endDateCell,
+    logCell,
   ]);
 
   return (

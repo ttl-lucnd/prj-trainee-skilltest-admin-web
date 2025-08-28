@@ -19,10 +19,15 @@
     "amount": "金額",
     "duration": "会員期間",
     "startDate": "決済日",
-    "endDate": "次回自動更新日"
+    "endDate": "次回自動更新日",
+    "log": "決済状態"
   },
   "filter": {
     "platform": "ストア名",
     "dateRange": "決済日で絞り込む"
+  },
+  "logType": {
+    "purchase": "決済成功",
+    "refund": "返金済み"
   }
 }
