@@ -1,0 +1,57 @@
+'use client';
+
+import { InputText } from '@/components/form/input';
+import { Form } from '@/components/ui/form';
+import { SearchIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { UseFormReturn } from 'react-hook-form';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
+export function BasicFilterForm({
+  form,
+  onSubmit,
+  searchBtn = false,
+  children,
+  isFiltering = false,
+  className,
+} : {
+  readonly form: UseFormReturn,
+  readonly onSubmit: (data: any) => Promise<void>,
+  readonly searchBtn?: boolean,
+  readonly isFiltering?: boolean,
+  readonly children?: React.ReactNode,
+  readonly className?: string,
+}) {
+  const t = useTranslations();
+
+  return (
+    <Form {...form}>
+      <form className={cn("flex gap-2.5 items-end justify-end ms-[auto]", className)} onSubmit={form.handleSubmit(onSubmit)}>
+        {children}
+        <InputText
+          name="keyword"
+          size="md"
+          placeholder={t('common.searchPlaceholder')}
+          className="max-w-[250px]"
+          label=""
+          control={form.control}
+          suffixIcon={<SearchIcon size={22} />}
+          onSuffixIconClick={!searchBtn ? form.handleSubmit(onSubmit): undefined}
+          onKeyDown={(e) => {
+            if(e.key !== 'Enter') return;
+            const keyword = form.watch('keyword') ?? '';
+            const trimmed = keyword.trim();
+            if (trimmed !== keyword) {
+              form.setValue('keyword', trimmed)
+            }
+          }}
+        />
+        {searchBtn && <Button 
+          onClick={form.handleSubmit(onSubmit)}
+          disabled={isFiltering}
+        >{t('common.buttons.filter_view')}</Button>
+        }
+      </form>
+    </Form>
+  );
+}

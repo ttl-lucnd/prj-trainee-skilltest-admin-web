@@ -1,0 +1,45 @@
+{
+  "form": {
+    "title":"データ取得設定",
+    "updateTitle": "データを編集",
+    "sheetLink": "データ取得リンク",
+    "lastReadRow": "同期済み最終行",
+    "vocabulary": "単語",
+    "subjectId": "学科",
+    "pronunciation": "読み方",
+    "description": "説明文",
+    "image": "画像"
+  },
+  "filter": {
+    "subject": "学科で絞り込む",
+    "arrange": "アレンジ"
+  },
+  "table": {
+    "vocabulary": "単語",
+    "pronunciation": "読み方",
+    "description": "説明文",
+    "subject": "学科",
+    "image": "図",
+    "action": "削除",
+    "meaning_vi": "意味（ベトナム語）",
+    "description_vi": "説明文（ベトナム語）",
+    "meaning_en": "意味（英語）",
+    "description_en": "説明文（英語）",
+    "meaning_zh": "意味（中国語）",
+    "description_zh": "説明文（中国語）",
+    "meaning_ko": "意味（韓国語）",
+    "description_ko": "説明文（韓国語）",
+    "meaning_id": "意味（インドネシア語）",
+    "description_id": "説明文（インドネシア語）",
+    "meaning_tl": "意味（フィリピン語）",
+    "description_tl": "説明文（フィリピン語）",
+    "meaning_th": "意味（タイ語）",
+    "description_th": "説明文（タイ語）"
+  },
+  "delete": {
+    "title": "本当にこの質問を削除しますか？"
+  }, 
+  "error": {
+    "sheetLink": "データ取得リンクの形式が正しくありません"
+  }
+}

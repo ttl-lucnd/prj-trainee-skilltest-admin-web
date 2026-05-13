@@ -1,0 +1,81 @@
+import {
+  UserGroupIcon,
+  VocabularyListIcon,
+  QuestionListIcon,
+  SubjectListIcon,
+} from '@/components/icons';
+import { cn } from '@/lib/utils';
+import { PageRouter } from '@/utils/constants';
+import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useCallback } from 'react';
+import {
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from '../ui/sidebar';
+import { SubscriptionIcon } from '../icons/supscription';
+
+const items = [
+  {
+    icon: QuestionListIcon,
+    title: 'sidebar.quiz_management',
+    path: PageRouter.QUIZ_MANAGEMENT,
+  },
+  {
+    icon: VocabularyListIcon,
+    title: 'sidebar.word_management',
+    path: PageRouter.WORD_MANAGEMENT,
+  },
+  {
+    title: 'sidebar.admin_account',
+    icon: UserGroupIcon,
+    path: PageRouter.ADMIN_ACCOUNTS,
+  },
+  {
+    title: 'sidebar.subject_management',
+    icon: SubjectListIcon,
+    path: PageRouter.SUBJECT_MANAGEMENT,
+  },
+  {
+    title: 'sidebar.subscription_management',
+    icon: SubscriptionIcon,
+    path: PageRouter.SUBSCRIPTION_MANAGEMENT,
+  },
+];
+
+export function AppMenu() {
+  const { open } = useSidebar();
+  const pathname = usePathname();
+  const t = useTranslations();
+
+  const isActive = useCallback(
+    (url: string): boolean => {
+      if (!url || url === '#') return false;
+      const normalizedTarget = url.endsWith('/') ? url : `${url}/`;
+      const normalizedPathname = pathname.endsWith('/') ? pathname : `${pathname}/`;
+      return normalizedPathname.startsWith(normalizedTarget);
+    },
+    [pathname],
+  );
+  return (
+    <SidebarMenu className={cn('px-4', !open && 'px-8')}>
+      {items.map((item) => (
+        <SidebarMenuItem key={item.title}>
+          <SidebarMenuButton
+            asChild
+            isActive={isActive(item.path)}
+            tooltip={t(item.title)}
+          >
+            <Link href={item.path}>
+              <item.icon />
+              <span className="text-[16px]">{t(`${item.title}`)}</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
+  );
+}

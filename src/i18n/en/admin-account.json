@@ -1,0 +1,23 @@
+{
+  "form": {
+    "name": "名称",
+    "email": "メール",
+    "search": "検索"
+  },
+  "table": {
+    "number": "番号",
+    "email": "メールアドレス",
+    "staff_name": "名称",
+    "action": "アクション"
+  },
+  "delete": {
+    "title": "本当にこの管理者を削除しますか？"
+  },
+  "title": {
+    "create": "管理者を追加",
+    "update": "編集"
+  },
+    "error": {
+    "mailExisted": "メールアドレスは既に存在します。もう一度お試しください。"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "form": {
+    "subject": "学科",
+    "monthlyFee": "月額",
+    "logo": "ロゴ",
+    "image": "画像",
+    "create_message": "※追加ボタンを押すと、学科名、ロゴ、画像が適用されて、アプリに反映されます。",
+    "update_message": "※保存ボタンを押すと、学科名、ロゴ、画像が適用されて、アプリに反映されます。",
+    "search": "検索"
+  },
+  "table": {
+    "subject": "学科",
+    "monthlyFee": "月額会員料金",
+    "logo": "ロゴ",
+    "image": "画像",
+    "action": "アクション"
+  },
+  "price": "{price}円",
+  "delete": {
+    "title": "本当にこの学科を削除しますか？",
+    "error": "この学科には関連する質問や単語が存在するため、削除できません。"
+  },
+    "title": {
+    "create": "学科を追加",
+    "update": "編集"
+  },
+  "error": {
+    "existed": "科目は既に存在します",
+    "nameExisted": "科目は既に存在します。もう一度お試しください。"
+  }
+}

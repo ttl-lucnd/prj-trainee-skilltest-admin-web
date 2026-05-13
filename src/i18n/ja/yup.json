@@ -1,0 +1,62 @@
+{
+  "mixed": {
+    "default": "{path}が無効です",
+    "required": "{path}は必須です",
+    "defined": "{path}を定義してください",
+    "notNull": "{path}は必須です",
+    "oneOf": "{path}は次のいずれかの値でなければなりません: {values}",
+    "notOneOf": "{path}は、次の値を取ることはできません: {values}",
+    "notType": "{path}は必須です",
+    "notTypeMixed": "{path}は設定された型と一致する必要があります",
+    "file_size_exceeded": "{maxSize}MB以内のファイルにしてください。",
+    "imageFileType": "{path}有効なタイプではありません"
+  },
+  "string": {
+    "length": "{path}は{length}文字で入力してください",
+    "min": "{path}は{min}文字以上で入力してください",
+    "max": "{path}は{max}文字以下で入力してください",
+    "matches": "{path}は次の形式と一致する必要があります: \"{regex}\"",
+    "email": "有効なメールアドレスではありません",
+    "phoneNumber": "Invalid phone number format",
+    "url": "{path}は有効なURLを入力してください",
+    "uuid": "{path}は有効なUUIDを入力してください",
+    "trim": "{path}は前後に空白をいれないでください",
+    "lowercase": "{path}は小文字で入力してください",
+    "uppercase": "{path}は大文字で入力してください",
+    "phone": "{path}は有効な電話番号を入力してください",
+    "isPostalCode": "{path} は0-9の数字とマイナス記号 (-) のみ入力できます",
+    "isAlphaNumeric": "{path}はアルファベットか数字で入力してください",
+    "hasNoSpecialCharacters": "{path}には特殊文字を含めることはできません",
+    "isDomain": "{path}が不正な形式でした。",
+    "identifier": "{path}には小文字または数字のみを含める必要があります",
+    "isIpList": "有効なIPではありません",
+    "isUrl": "有効なリンクではありません",
+    "isHTML": "有効なHTMLではありません"
+  },
+  "number": {
+    "min": "{path}は{min}以上の数字を入力してください",
+    "max": "{path}は{max}以下の値を入力してください",
+    "lessThan": "{path}は{less}以下の値を入力してください",
+    "moreThan": "{path}は{more}以上の値を入力してください",
+    "positive": "{path}は正の数である必要があります",
+    "negative": "{path}は負の数である必要があります",
+    "integer": "{path}は整数である必要があります",
+    "maxInteger": "{path}が大きすぎます。もう一度やり直してください。",
+    "pointPositive": "ポイントの値を見直してください"
+  },
+  "date": {
+    "min": "{path}は{min}より後の値を設定してください",
+    "max": "{path}は{max}より前の値を設定してください"
+  },
+  "object": {
+    "noUnknown": "{path}には未指定のキーが含まれています: {unknown}"
+  },
+  "array": {
+    "min": "{path}は{min}個以上のアイテムを入力してください",
+    "max": "{path}は{max}個以下のアイテムを入力してください",
+    "length": "{path}は{length}個のアイテムを入力してください"
+  },
+  "boolean": {
+    "isValue": "{path}は{value}である必要があります"
+  }
+}

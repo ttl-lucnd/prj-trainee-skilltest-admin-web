@@ -1,0 +1,15 @@
+{
+  "notFound": {
+    "title": "404",
+    "messageWithButton": "Could not find requested resource",
+    "messageWithoutButton": "Sorry, we couldn't find this page.",
+    "description": "But don't worry, you can find plenty of other things on our application.",
+    "button": "Go to dashboard"
+  },
+  "forbidden": {
+    "title": "403",
+    "message": "Access to this page is restricted",
+    "description": "Please check with the site admin if you believe this is a mistake.",
+    "button": "Go to dashboard"
+  }
+}

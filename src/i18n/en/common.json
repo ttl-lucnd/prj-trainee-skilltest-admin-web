@@ -1,0 +1,131 @@
+{
+  "date": {
+    "year": "Year",
+    "month": "Month",
+    "day": "Day"
+  },
+  "priceUnit": "円",
+  "gender": {
+    "male": "Male",
+    "female": "Female",
+    "others": "Others"
+  },
+  "string_filter": {
+    "matches": "Matches",
+    "includes": "Includes",
+    "excludes": "Excludes",
+    "no_data": "No Data",
+    "data_available": "Data Available"
+  },
+  "number_filter": {
+    "more_than_or_equal": "More Than or Equal",
+    "less_than_or_equal": "Less Than or Equal",
+    "equal": "Equal",
+    "less_than": "Less Than"
+  },
+  "date_filter": {
+    "more_than_or_equal": "More Than or Equal",
+    "less_than_or_equal": "Less Than or Equal",
+    "equal": "Equal"
+  },
+  "boolean_option": {
+    "yes": "Yes",
+    "no": "No"
+  },
+  "pagination": {
+    "search_result": "Search Results",
+    "items_count": "items",
+    "items_per_page": {
+      "10": "10 items",
+      "100": "100 items",
+      "200": "200 items",
+      "300": "300 items"
+    },
+    "navigation": {
+      "first": "≪",
+      "previous": "＜",
+      "next": "＞",
+      "last": "≫"
+    }
+  },
+  "buttons": {
+    "add": "Add",
+    "clear": "Clear",
+    "cancel": "Cancel",
+    "stop": "Stop",
+    "filter_view": "Filter",
+    "delete": "Delete",
+    "save": "Save",
+    "back": "Back",
+    "register": "Register",
+    "close": "Close",
+    "download": "Download",
+    "filter_view_full": "Filter View Full",
+    "setting_url": "データ取得設定",
+    "sync_data": "データを更新",
+    "translate": "翻訳",
+    "ok": "同期",
+    "bulk_delete": "一括削除"
+  },
+  "messages": {
+    "error": "Error",
+    "login_success": "ログイン成功！",
+    "logout_success": "ログアウト成功！",
+    "create_success": "Created successfully",
+    "update_success": "Updated successfully",
+    "create_failed": "Failed to create",
+    "update_failed": "Failed to update",
+    "delete_success": "Deleted successfully",
+    "delete_failed": "Failed to delete",
+    "data_sync": "Data is being synchronized, please wait a few moments.",
+    "data_translate": "Data is being tranlated, please wait a few moments.",
+    "notification_not_supported": "This browser does not support notifications.",
+    "require_notification_permission": "Please allow notifications to receive updates.",
+    "export_request_success": "CSV export request sent. You will be notified when it is ready.",
+    "download_csv": "Your CSV file is ready. To download, click here",
+    "settingNotfound": "Please click the \"データを編集\" button to set data",
+    "sync_data_error_at": "{row}行目の画像が同期用メールに共有されていないため、同期を中断しました。"
+  },
+  "file": {
+    "max_size": "Max size: {maxSize}MB"
+  },
+  "noData": "No Data",
+  "editInformation": "Edit Information",
+  "pick_a_date": "Pick a date",
+  "update_content": "Update content",
+  "updated_by": "Updated by",
+  "updated_at": "Updated at",
+  "delete_confirmation": "Are you sure you want to delete?",
+  "file_registration": "File Registration",
+  "file_size_exceeded": "Please make the file within {maxSize}MB.",
+  "number": "No.",
+  "image": "Image",
+  "content": "Content",
+  "video": "Video",
+  "viewFullText": "View Full Text",
+  "actions": "Actions",
+  "pointTypes": {
+    "normal": "Normal",
+    "bonus": "Bonus"
+  },
+  "searchPlaceholder": "Search...",
+  "selectAll": "Select All",
+  "not_set": "Not Set",
+  "sync_data_at_format": "MMM YYYY HH:mm",
+  "sync_data_at": "最終データ更新日時：",
+  "no_sync_data": "まだデータがありません",
+  "sync_data_status": {
+    "pending": "データ同期中",
+    "complete": "データ同期完了",
+    "permission_denied": "スプレッドシートへのアクセスが拒否された",
+    "server_error": "サーバーエラーが発生した",
+    "translating": "データ翻訳中",
+    "translate_complete": "データ翻訳完了"
+  },
+  "maxMonthlyFee": "月額料金が上限を超えています",
+  "sync_data_alert": "同期を行うためには、データが含まれているスプレッドシートおよびスプレッドシート内に添付された画像が保存されているドライブの両方に対して、同期用に設定されたメールアドレスに閲覧権限以上を共有している必要があります。",
+  "subscriptionPlatform": {
+    "google": "Google Play Store",
+    "apple": "App Store"
+  }
+}
