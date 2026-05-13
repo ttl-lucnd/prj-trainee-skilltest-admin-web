@@ -13,7 +13,6 @@ test.describe('Authentication — protected routes', () => {
 
   test('admin accounts redirects unauthenticated users to login', async ({ page }) => {
     await page.goto('/admin-accounts');
-
     await expect(page).toHaveURL(/\/login$/);
     await expect(page.getByRole('heading', { name: '技能実習検定' })).toBeVisible();
   });
