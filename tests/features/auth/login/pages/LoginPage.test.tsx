@@ -56,10 +56,6 @@ describe('LoginPage', () => {
 
   it('hiển thị nút đăng nhập Google (login.loginWithGoogle)', () => {
     render(<LoginPage />);
-
-    console.log('tesst-commit');
-    console.log('1');
-    console.log('test-commit');
     
     expect(
       screen.getByRole('button', { name: /Googleメールでログイン/i }),
