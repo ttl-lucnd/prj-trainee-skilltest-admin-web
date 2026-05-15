@@ -1,0 +1,8 @@
+# .reviewbot.yml
+enabled: true
+ignore:
+  - dist/**
+  - coverage/**
+ai:
+  instructions: |
+    Focus on async issues and test flakiness.
