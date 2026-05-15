@@ -59,6 +59,7 @@ describe('LoginPage', () => {
 
     console.log('tesst-commit');
     console.log('1');
+    console.log('test-commit');
     
     expect(
       screen.getByRole('button', { name: /Googleメールでログイン/i }),
