@@ -3,7 +3,6 @@ enabled: true
 ignore:
   - dist/**
   - coverage/**
-  - lucnd/**
 ai:
   instructions: |
     Focus on async issues and test flakiness.
