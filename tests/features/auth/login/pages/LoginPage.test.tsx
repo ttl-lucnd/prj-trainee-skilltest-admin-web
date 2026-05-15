@@ -58,7 +58,8 @@ describe('LoginPage', () => {
     render(<LoginPage />);
 
     console.log('tesst-commit');
-
+    console.log('1');
+    
     expect(
       screen.getByRole('button', { name: /Googleメールでログイン/i }),
     ).toBeInTheDocument();
