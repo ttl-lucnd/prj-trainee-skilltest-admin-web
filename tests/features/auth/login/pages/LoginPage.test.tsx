@@ -58,6 +58,7 @@ describe('LoginPage', () => {
     render(<LoginPage />);
 
     console.log('tesst-commit');
+    console.log('hehe');
     
 
     expect(
