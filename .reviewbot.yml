@@ -43,7 +43,8 @@ ai:
 scanners:
   parallel_with_llm: true
   semgrep:
-    enabled: false
+    enabled: true
+    configs: p/javascript
     # If semgrep is installed on the worker:
     # enabled: true
     # configs: p/javascript
