@@ -50,13 +50,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : 'button';
     return !hidden && (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          loading && "hover:bg-button-secondary focus:bg-button-secondary cursor-default"
+        )}
         ref={ref}
         disabled={loading || props.disabled}
         {...props}
       >
-        {props.children}
-        {loading && <LoadingCircleIcon className="animate-spin" />}
+        {loading ? <LoadingCircleIcon className="animate-spin" size={24}/> : props.children}
       </Comp>
     );
   },
