@@ -3,7 +3,7 @@
 import { DEFAULT_FIRST_PAGE, DELAY_GET_STATUS } from '@/utils/constants';
 import { useUpdateUrlWithQuery } from '@/utils/url';
 import { useTranslations } from 'next-intl';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useShallow } from 'zustand/react/shallow';
 import { questionFilterYupResolver } from '../schema';
@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import { cn } from '@/lib/utils';
 import { BasicFilterForm } from '@/components/BasicFilterForm';
 import { SYNC_DATA_STATUS } from '@/features/common/constants';
+import { toast } from '@/hooks/use-toast';
 export function QuestionFilterForm() {
   const t = useTranslations();
   const [isFiltering, setIsFiltering] = useState(false);
@@ -43,11 +44,17 @@ export function QuestionFilterForm() {
     const currentStatus = questionSetting?.status;
 
     if (prevStatus === SYNC_DATA_STATUS.PENDING && currentStatus !== SYNC_DATA_STATUS.PENDING) {
+      if(currentStatus === SYNC_DATA_STATUS.DRIVE_DENIED){
+        toast({
+          title: t('common.messages.sync_data_error_at', {row: (questionSetting?.lastReadRow ?? 0) + 1}),
+          variant:'destructive',
+        })
+      }
       getQuestionList();
     }
 
     prevStatusRef.current = currentStatus;
-  }, [questionSetting?.status]);
+  }, [questionSetting]);
 
   useEffect(() => {
     const query = getQuestionQueryFromUrl();
@@ -80,24 +87,27 @@ export function QuestionFilterForm() {
     }
   };
 
-  const syncDataInfo = () => {
+  const syncDataInfo = useMemo(() => {
     return <div className='flex flex-col max-w-full flex-1'>
-      {questionSetting?.lastSyncDataAt &&
+      
       <div className='flex flex-wrap'>
         {t('common.sync_data_at')}
-        <p className='text-[#E9034E]'>{dayjs(questionSetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))}</p>
+        <p className='text-[#E9034E]'>{
+          questionSetting?.lastSyncDataAt 
+          ? dayjs(questionSetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))
+          : t('common.no_sync_data')
+        }</p>
       </div>
-      }
       {questionSetting?.status && <p className='text-[#E9034E]'>{t(`common.sync_data_status.${questionSetting.status}`)}</p>}
     </div>
-  }
+  },[questionSetting])
 
   return (
     <div className={cn(
       'flex flex-wrap w-full items-start gap-2.5 mt-0.5 mb-[16px]',
       questionSetting? 'justify-between' : 'justify-end'
     )}>
-    {questionSetting && syncDataInfo()}
+    {syncDataInfo}
     <BasicFilterForm
       form={form}
       onSubmit={(data) => onSubmit(data)}

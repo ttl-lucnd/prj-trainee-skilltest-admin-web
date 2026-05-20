@@ -3,6 +3,7 @@ import { ApiService } from '@/plugins/axios/api';
 import { IBodyResponse, IGetListResponse } from '@/utils/interfaces';
 import {
   IVocabulary,
+  IVocabularyFormBody,
   IVocabularyGetListQuery,
 } from '../interfaces';
 import { ISyncSettingBody, ISyncSettingDetail } from '@/features/common/interface';
@@ -26,6 +27,20 @@ class VocabularyService extends ApiService {
 
   syncData(): Promise<IBodyResponse<unknown>> {
     return this.client.post(`${this.baseUrl}/sync-data`)
+  }
+
+  updateVocabulary(id: string, data: IVocabularyFormBody): Promise<IBodyResponse<IVocabulary>> {
+    return this._update(id, data)
+  }
+
+  bulkDelete(ids: string[]): Promise<IBodyResponse<any>> {
+    return this.client.delete(`${this.baseUrl}/bulk-delete`, {
+      data: { ids }
+    })
+  }
+
+  translate(): Promise<IBodyResponse<any>> {
+    return this.client.post(`${this.baseUrl}/translate`)
   }
 }
 

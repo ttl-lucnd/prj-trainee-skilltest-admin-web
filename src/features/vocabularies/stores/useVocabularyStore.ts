@@ -12,6 +12,8 @@ interface States {
   isOpenImageDetail: boolean;
   isOpenDescriptionDetail: boolean;
   isOpenSyncDataDialog: boolean;
+  isOpenVocabularyFormDialog: boolean;
+  isOpenBulkDeleteDialog: boolean;
   vocabularyGetListQuery: IVocabularyGetListQuery;
   totalItems: number;
   vocabularyList: IVocabulary[];
@@ -19,6 +21,7 @@ interface States {
   subjectDropdownList: ISubjectDropdown[];
   selectedVocabulary: IVocabulary | null;
   selectedDescription: string;
+  selectedVocabularyIds: string[];
   vocabularySetting: ISyncSettingDetail | null;
 }
 
@@ -29,6 +32,8 @@ interface Actions {
   setOpenSyncDataDialog: (open: boolean) => void;
   setOpenImageDetail: (open: boolean) => void;
   setOpenDescriptionDetail: (open: boolean) => void;
+  setOpenVocabularyFormDialog: (open: boolean) => void;
+  setOpenBulkDeleteDialog: (open: boolean) => void;
   setVocabularyGetListQuery: (
     query: IVocabularyGetListQuery,
     opt?: { reloadList?: boolean },
@@ -44,6 +49,7 @@ interface Actions {
   setSelectedVocabulary: (admin: IVocabulary | null) => void;
   getVocabularySetting: () => Promise<void>;
   resetState: () => void;
+  setSelectedVocabularyIds: (selectedVocabularyIds: string[]) => void;
 }
 
 const initialState: States = {
@@ -52,6 +58,8 @@ const initialState: States = {
   isOpenImageDetail: false,
   isOpenDescriptionDetail: false,
   isOpenSyncDataDialog: false,
+  isOpenVocabularyFormDialog: false,
+  isOpenBulkDeleteDialog: false,
   vocabularyGetListQuery: {
     ...DEFAULT_GET_LIST_QUERY,
     orderBy: VocabularyOrderBy.VOCABULARY_ORIGINALLANGUAGE,
@@ -64,6 +72,7 @@ const initialState: States = {
   selectedVocabulary: null,
   selectedDescription: '',
   vocabularySetting: null,
+  selectedVocabularyIds: [],
 };
 
 // useAdminStore
@@ -76,6 +85,8 @@ export const useVocabularyStore = create<States & Actions>((set, get) => ({
   setOpenSyncDataDialog: (open: boolean) => set({ isOpenSyncDataDialog: open }),
   setOpenImageDetail: (open: boolean) => set({ isOpenImageDetail: open }),
   setOpenDescriptionDetail: (open: boolean) => set({ isOpenDescriptionDetail: open }),
+  setOpenVocabularyFormDialog: (open: boolean) => set({ isOpenVocabularyFormDialog: open }),
+  setOpenBulkDeleteDialog: (open: boolean) => set({ isOpenBulkDeleteDialog: open }),
   setVocabularyGetListQuery: (query: IVocabularyGetListQuery, opt?: { reloadList?: boolean }) => {
     set((state) => ({
       vocabularyGetListQuery: { ...state.vocabularyGetListQuery, ...query },
@@ -91,7 +102,7 @@ export const useVocabularyStore = create<States & Actions>((set, get) => ({
   setTotalItems: (totalItems: number) => set({ totalItems }),
   getVocabularyList: async () => {
     try {
-      set(() => ({ loading: true }));
+      set(() => ({ loading: true, selectedVocabularyIds: [] }));
       const response = await vocabularyService.getVocabularyList(get().vocabularyGetListQuery);
       set(() => ({
         vocabularyList: response?.data?.items ?? [],
@@ -120,4 +131,5 @@ export const useVocabularyStore = create<States & Actions>((set, get) => ({
     }));
   },
   resetState: () => set({ ...initialState }),
+  setSelectedVocabularyIds: (selectedVocabularyIds: string[]) => set({ selectedVocabularyIds }),
 }));

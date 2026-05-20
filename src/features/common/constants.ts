@@ -46,4 +46,7 @@ export enum SYNC_DATA_STATUS {
   COMPLETE = 'complete',
   PERMISSION_DENIED = 'permission_denied',
   SERVER_ERROR = 'server_error',
+  DRIVE_DENIED = "drive_denied",
+  TRANSLATING = "translating",
+  TRANSLATE_COMPLETE = "translate_complete",
 };

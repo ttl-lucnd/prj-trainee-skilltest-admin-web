@@ -3,6 +3,7 @@ import { ApiService } from '@/plugins/axios/api';
 import { IBodyResponse, IGetListResponse } from '@/utils/interfaces';
 import {
   IQuestion,
+  IQuestionFormBody,
   IQuestionGetListQuery,
 } from '../interfaces';
 import { ISyncSettingBody, ISyncSettingDetail } from '@/features/common/interface';
@@ -26,6 +27,16 @@ class QuestionService extends ApiService {
 
   syncData(): Promise<IBodyResponse<unknown>> {
     return this.client.post(`${this.baseUrl}/sync-data`)
+  }
+
+  updateQuestion(id: string, data: IQuestionFormBody): Promise<IBodyResponse<IQuestion>> {
+    return this._update(id, data)
+  }
+
+  bulkDelete(ids: string[]): Promise<IBodyResponse<any>> {
+    return this.client.delete(`${this.baseUrl}/bulk-delete`, {
+      data: { ids }
+    })
   }
 }
 
