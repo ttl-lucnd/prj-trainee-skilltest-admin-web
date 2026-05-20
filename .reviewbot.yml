@@ -9,6 +9,11 @@ enabled: true
 
 review:
   auto_review: true
+  skip_if_draft: true
+  require_manual_trigger: true
+  trigger_phrases:
+    - /reviewbot
+    - /review-bot
 
 ignore:
   - "**/node_modules/**"
