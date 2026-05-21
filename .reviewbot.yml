@@ -49,7 +49,7 @@ scanners:
   parallel_with_llm: true
   semgrep:
     enabled: true
-    configs: p/javascript
+    configs: p/typescript,p/javascript
     # If semgrep is installed on the worker:
     # enabled: true
     # configs: p/javascript
