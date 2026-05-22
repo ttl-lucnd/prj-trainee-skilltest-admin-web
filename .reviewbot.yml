@@ -54,3 +54,15 @@ scanners:
     # enabled: true
     # configs: p/javascript
     max_findings: 80
+
+# Block merge until Reviewbot finishes (requires branch protection — see docs/reviewbot-merge-gate.md).
+merge_gate:
+  enabled: true
+  check_name: Reviewbot
+  require_review_complete: true
+  pass:
+    fail_on_severity_label: [blocking]
+    max_findings:
+      critical: 0
+      blocking: 0
+    min_score: 70
