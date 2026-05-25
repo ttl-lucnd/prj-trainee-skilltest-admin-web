@@ -43,8 +43,12 @@ export function QuestionFilterForm() {
     const prevStatus = prevStatusRef.current;
     const currentStatus = questionSetting?.status;
 
-    if (prevStatus === SYNC_DATA_STATUS.PENDING && currentStatus !== SYNC_DATA_STATUS.PENDING) {
-      if(currentStatus === SYNC_DATA_STATUS.DRIVE_DENIED){
+    if(currentStatus === SYNC_DATA_STATUS.PENDING) {
+      prevStatusRef.current = currentStatus;
+      return;
+    }
+    if (prevStatus !== currentStatus) {
+      if(currentStatus === SYNC_DATA_STATUS.DRIVE_DENIED && prevStatus === SYNC_DATA_STATUS.PENDING){
         toast({
           title: t('common.messages.sync_data_error_at', {row: (questionSetting?.lastReadRow ?? 0) + 1}),
           variant:'destructive',

@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 import { BasicFilterForm } from '@/components/BasicFilterForm';
 import { SYNC_DATA_STATUS } from '@/features/common/constants';
+import { toast } from '@/hooks/use-toast';
 export function VocabularyFilterForm() {
   const t = useTranslations();
   const [isFiltering, setIsFiltering] = useState(false);
@@ -41,14 +42,22 @@ export function VocabularyFilterForm() {
     const prevStatus = prevStatusRef.current;
     const currentStatus = vocabularySetting?.status;
 
-    if ((prevStatus === SYNC_DATA_STATUS.PENDING && currentStatus !== SYNC_DATA_STATUS.PENDING) 
-      || (prevStatus === SYNC_DATA_STATUS.TRANSLATING && currentStatus !== SYNC_DATA_STATUS.TRANSLATING)
-    ) {
+    if(currentStatus === SYNC_DATA_STATUS.PENDING || currentStatus === SYNC_DATA_STATUS.TRANSLATING) {
+      prevStatusRef.current = currentStatus;
+      return;
+    }
+    if (prevStatus !== currentStatus) {
+      if(currentStatus === SYNC_DATA_STATUS.DRIVE_DENIED && prevStatus === SYNC_DATA_STATUS.PENDING){
+        toast({
+          title: t('common.messages.sync_data_error_at', {row: (vocabularySetting?.lastReadRow ?? 0) + 1}),
+          variant:'destructive',
+        })
+      }
       getVocabularyList();
     }
 
     prevStatusRef.current = currentStatus;
-  }, [vocabularySetting?.status]);
+  }, [vocabularySetting]);
 
   useEffect(() => {
     const query = getVocabularyQueryFromUrl();

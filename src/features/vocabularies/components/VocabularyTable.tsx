@@ -232,6 +232,7 @@ export function VocabularyTable() {
               !isDisable && 'hover:bg-primary-2',
               "flex size-[30px] rounded-full items-center justify-center group/edit"
             )}
+            disabled={isDisable}
           >
             <PencilIcon size={22}
               className={cn(
@@ -246,6 +247,7 @@ export function VocabularyTable() {
               setOpenDeleteVocabularyDialog(true);
               setSelectedVocabulary(row.original);
             }}
+            disabled={isDisable}
             className={cn(
               !isDisable && 'hover:bg-destructive',
               "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
