@@ -1,12 +1,13 @@
 'use client';
 
-import { DEFAULT_FIRST_PAGE } from '@/utils/constants';
+import { DEFAULT_FIRST_PAGE, PageRouter } from '@/utils/constants';
 import { useUpdateUrlWithQuery } from '@/utils/url';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useShallow } from 'zustand/react/shallow';
-import { useSubjectStore } from '../stores/useSubjectStore';
+import { useSubjectStore } from '../../stores/useSubjectStore';
 import { BasicFilterForm } from '@/components/BasicFilterForm';
+import { AppBreadcrumb } from '@/components/AppBreadcrumb';
 export function SubjectFilterForm() {
   const [isFiltering, setIsFiltering] = useState(false);
 
@@ -30,14 +31,11 @@ export function SubjectFilterForm() {
   }, []);
 
   const onSubmit = async (data: any) => {
-    if(isFiltering) return;
+    if (isFiltering) return;
     setIsFiltering(true);
     try {
       const query = {
         ...data,
-        createdByIamUserIds: data.createdByIamUserIds?.map((item: string) =>
-          Number(item),
-        ),
         page: DEFAULT_FIRST_PAGE,
       };
       setSubjectGetListQuery(query, { reloadList: false });
@@ -51,10 +49,13 @@ export function SubjectFilterForm() {
   };
 
   return (
-    <BasicFilterForm 
-      className='mt-0.5 mb-[16px]'
-      form={form}
-      onSubmit={(data) => onSubmit(data)}
-    />
+    <div className="flex h-auto mt-0.5 mb-[16px] items-center">
+      <AppBreadcrumb
+        items={[
+          { label: 'sidebar.subject_management', href: PageRouter.SUBJECT_MANAGEMENT },
+        ]}
+      />
+      <BasicFilterForm form={form} onSubmit={(data) => onSubmit(data)} />
+    </div>
   );
 }

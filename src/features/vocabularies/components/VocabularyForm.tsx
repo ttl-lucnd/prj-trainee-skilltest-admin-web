@@ -15,9 +15,9 @@ import { UploadField } from '@/components/form/upload';
 import { DEFAULT_MAX_SIZE } from '@/utils';
 import { cn } from '@/lib/utils';
 import { fileApiService } from '@/features/common/service/file.api.service';
-import { SelectSingle } from '@/components/form/select-single';
 import { vocabularyService } from '../services/vocabulary.service';
 import { InputTextArea } from '@/components/form/input-text-area';
+import { ComboboxField } from '@/components/form/combobox';
 
 export function VocabularyForm() {
   const t = useTranslations();
@@ -60,7 +60,7 @@ export function VocabularyForm() {
       }
     };
 
-    if(selectedVocabulary) {
+    if(selectedVocabulary && isOpenVocabularyFormDialog) {
       getVocabularyDetail();
     } 
   }, [isOpenVocabularyFormDialog, selectedVocabulary]);
@@ -119,7 +119,7 @@ export function VocabularyForm() {
       onOpenChange={setOpenVocabularyFormDialog}
       showCloseButton={false}
       title={t('questions.form.updateTitle')} 
-      className="max-w-[500px] max-h-[calc(100vh-10px)] pb-0"
+      className="max-w-[500px] max-h-[calc(100vh-2rem)] pb-0"
       headerClassName='block'
     >
       <div className="flex flex-col items-start justify-end gap-2.5 pb-2">
@@ -133,6 +133,7 @@ export function VocabularyForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('vocabulary')}
+            required
           />
           <InputText 
             key={'pronunciation'}
@@ -143,6 +144,7 @@ export function VocabularyForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('pronunciation')}
+            required
           />
           <InputTextArea
             key={'vocab-description'}
@@ -153,8 +155,9 @@ export function VocabularyForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('description')}
+            required
           />
-          <SelectSingle
+          <ComboboxField
             key={'vocab-subjectId'}
             name="subjectId" 
             control={form.control} 
@@ -166,6 +169,7 @@ export function VocabularyForm() {
               label: item.name,
               value: item.id,
             }))}
+            required
           />
           <UploadField
             key={'vocab-image'}

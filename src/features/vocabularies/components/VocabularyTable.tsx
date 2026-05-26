@@ -3,12 +3,23 @@ import { DataTable } from '@/components/data-table';
 import { PencilIcon, TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
 import { DEFAULT_FIRST_PAGE, OrderDirection } from '@/utils/constants';
-import { CellContext, ColumnDef, ColumnSort, HeaderContext, SortingState } from '@tanstack/react-table';
+import {
+  CellContext,
+  ColumnDef,
+  ColumnSort,
+  HeaderContext,
+  SortingState,
+} from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { IVocabulary, TranslatedContent, TranslateLanguages, VocabularyOrderBy } from '../interfaces';
+import {
+  IVocabulary,
+  TranslatedContent,
+  TranslateLanguages,
+  VocabularyOrderBy,
+} from '../interfaces';
 import { useVocabularyStore } from '../stores/useVocabularyStore';
 import { SortableHeader } from '@/components/table/SortableHeader';
 import Image from 'next/image';
@@ -16,6 +27,7 @@ import { useUpdateUrlWithQuery } from '@/utils/url';
 import { cn } from '@/lib/utils';
 import { SYNC_DATA_STATUS } from '@/features/common/constants';
 import { Checkbox } from '@/components/ui/checkbox';
+import { IndexHeader } from '@/components/table/IndexHeader';
 
 function createMeaningCell(lang: TranslateLanguages) {
   const Cell = ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => (
@@ -26,49 +38,43 @@ function createMeaningCell(lang: TranslateLanguages) {
 }
 
 function createDescriptionCell(
-  lang: TranslateLanguages, 
-  setOpenDescriptionDetail: (open: boolean)=> void,
-  setSelectedDescription: (text: string) => void
+  lang: TranslateLanguages,
+  setOpenDescriptionDetail: (open: boolean) => void,
+  setSelectedDescription: (text: string) => void,
 ) {
   const Cell = ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
-      const text = row.original?.description[lang as keyof TranslatedContent] ?? '';
-      return  <div className="flex gap-4">
-          <button
-            type="button"
-            className="overflow-hidden flex items-center cursor-pointer"
-            onClick={() => {
-              setOpenDescriptionDetail(true);
-              setSelectedDescription(text);
-            }}
-          >
-            <span
-              className={cn(
-                'block w-full overflow-hidden text-ellipsis break-words',
-              )}
-            >
-              {text}
-            </span>
-          </button>
-        </div>;
-  }
+    const text = row.original?.description[lang as keyof TranslatedContent] ?? '';
+    return (
+      <div className="flex gap-4">
+        <button
+          type="button"
+          className="overflow-hidden flex items-center cursor-pointer"
+          onClick={() => {
+            setOpenDescriptionDetail(true);
+            setSelectedDescription(text);
+          }}
+        >
+          <span className={cn('block w-full overflow-hidden text-ellipsis break-words')}>
+            {text}
+          </span>
+        </button>
+      </div>
+    );
+  };
   Cell.displayName = `DescriptionCell_${lang}`;
   return Cell;
 }
 
-function createMeaningSortHeader (
+function createMeaningSortHeader(
   lang: TranslateLanguages,
   t: ReturnType<typeof useTranslations>,
 ) {
   const MeaningSortHeader = ({ column }: { column: any }) => (
-    <SortableHeader
-      column={column}
-      title={t(`vocabularies.table.meaning_${lang}`)}
-    />
+    <SortableHeader column={column} title={t(`vocabularies.table.meaning_${lang}`)} />
   );
   MeaningSortHeader.displayName = `MeaningSortHeader_${lang}`;
   return MeaningSortHeader;
-};
-
+}
 
 export function VocabularyTable() {
   const t = useTranslations();
@@ -78,7 +84,6 @@ export function VocabularyTable() {
     vocabularyList,
     loading,
     vocabularyGetListQuery,
-    getVocabularyList,
     resetState,
     setOpenDeleteVocabularyDialog,
     setSelectedVocabulary,
@@ -95,7 +100,6 @@ export function VocabularyTable() {
       vocabularyList: state.vocabularyList,
       loading: state.loading,
       vocabularyGetListQuery: state.vocabularyGetListQuery,
-      getVocabularyList: state.getVocabularyList,
       resetState: state.resetState,
       setOpenDeleteVocabularyDialog: state.setOpenDeleteVocabularyDialog,
       setSelectedVocabulary: state.setSelectedVocabulary,
@@ -108,9 +112,15 @@ export function VocabularyTable() {
     })),
   );
 
-  const [sorting, setSorting] = useState<SortingState>([{id: 'VOCABULARY_ORIGINALLANGUAGE', desc: false}])
-    const isDisable = useMemo(() => vocabularySetting?.status === SYNC_DATA_STATUS.PENDING || vocabularySetting?.status === SYNC_DATA_STATUS.TRANSLATING
-    , [vocabularySetting]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'VOCABULARY_ORIGINALLANGUAGE', desc: false },
+  ]);
+  const isDisable = useMemo(
+    () =>
+      vocabularySetting?.status === SYNC_DATA_STATUS.PENDING ||
+      vocabularySetting?.status === SYNC_DATA_STATUS.TRANSLATING,
+    [vocabularySetting],
+  );
 
   const {
     getQueryFromUrl: getVocabularyQueryFromUrl,
@@ -119,27 +129,36 @@ export function VocabularyTable() {
 
   useEffect(() => {
     const query = getVocabularyQueryFromUrl();
-    setSorting([{
-      id: (query?.orderBy as string)?.toUpperCase()?.replace('.', '_') ?? 'VOCABULARY_ORIGINALLANGUAGE', 
-      desc: query?.orderDirection === OrderDirection.DESC
-    }])
-    getVocabularyList();
+    setSorting([
+      {
+        id:
+          (query?.orderBy as string)?.toUpperCase()?.replace('.', '_') ??
+          'VOCABULARY_ORIGINALLANGUAGE',
+        desc: query?.orderDirection === OrderDirection.DESC,
+      },
+    ]);
     return () => {
       resetState();
     };
   }, []);
 
-    const handleSortingChange = useCallback(
+  const handleSortingChange = useCallback(
     (sort?: ColumnSort) => {
       const newQuery = {
-        orderBy: VocabularyOrderBy[sort?.id as keyof typeof VocabularyOrderBy ?? 'VOCABULARY_ORIGINALLANGUAGE'],
+        orderBy:
+          VocabularyOrderBy[
+            (sort?.id as keyof typeof VocabularyOrderBy) ?? 'VOCABULARY_ORIGINALLANGUAGE'
+          ],
         orderDirection: sort?.desc ? OrderDirection.DESC : OrderDirection.ASC,
       };
 
-      setVocabularyGetListQuery({
-        ...vocabularyGetListQuery,
-        ...newQuery,
-      }, { reloadList: true });
+      setVocabularyGetListQuery(
+        {
+          ...vocabularyGetListQuery,
+          ...newQuery,
+        },
+        { reloadList: true },
+      );
       updateVocabularyUrlWithQuery(newQuery);
     },
     [vocabularyGetListQuery, setVocabularyGetListQuery, updateVocabularyUrlWithQuery],
@@ -162,7 +181,8 @@ export function VocabularyTable() {
   const originalDescriptionCell = useCallback(
     ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
       const text = row.original?.description?.originalLanguage ?? '';
-      return  <div className="flex gap-4">
+      return (
+        <div className="flex gap-4">
           <button
             type="button"
             className="overflow-hidden flex items-center cursor-pointer"
@@ -172,31 +192,27 @@ export function VocabularyTable() {
             }}
           >
             <span
-              className={cn(
-                'block w-full overflow-hidden text-ellipsis break-words',
-              )}
+              className={cn('block w-full overflow-hidden text-ellipsis break-words')}
             >
               {text}
             </span>
           </button>
-        </div>;
+        </div>
+      );
     },
     [setSelectedDescription, setOpenDescriptionDetail],
   );
 
   const subjectCell = useCallback(
     ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
-      return (
-        <TruncatedText text={row.original.subject?.name ?? ''}/>
-      );
+      return <TruncatedText text={row.original.subject?.name ?? ''} />;
     },
     [],
   );
 
   const imageCell = useCallback(
     ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
-      return row.original.image 
-      ? 
+      return row.original.image ? (
         <div className="flex gap-4">
           <button
             type="button"
@@ -206,21 +222,24 @@ export function VocabularyTable() {
               setSelectedVocabulary(row.original);
             }}
           >
-              <Image 
-            src={row.original.image}
-            width={45}
-            height={45}
-            alt="vocabulary-image"
-          />
+            <Image
+              src={row.original.image}
+              width={45}
+              height={45}
+              alt="vocabulary-image"
+            />
           </button>
         </div>
-      : <TruncatedText text={'---'} />;
+      ) : (
+        <TruncatedText text={'---'} />
+      );
     },
     [setOpenImageDetail, setSelectedVocabulary],
   );
 
   const VocabularyActions = useCallback(
     ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
+      const disableAction = isDisable || selectedVocabularyIds.includes(row.original.id);
       return (
         <div className="flex gap-4">
           <button
@@ -228,17 +247,19 @@ export function VocabularyTable() {
               setOpenVocabularyFormDialog(true);
               setSelectedVocabulary(row.original);
             }}
-          className={cn(
-              !isDisable && 'hover:bg-primary-2',
-              "flex size-[30px] rounded-full items-center justify-center group/edit"
+            className={cn(
+              !disableAction && 'hover:bg-primary-2',
+              'flex size-[30px] rounded-full items-center justify-center group/edit',
             )}
-            disabled={isDisable}
+            disabled={disableAction}
           >
-            <PencilIcon size={22}
+            <PencilIcon
+              size={22}
               className={cn(
-                isDisable ? 'text-[#CECECE]'
-                : 'cursor-pointer group-hover/edit:text-white')
-              }
+                disableAction
+                  ? 'text-[#CECECE]'
+                  : 'cursor-pointer group-hover/edit:text-white',
+              )}
             />
           </button>
           <button
@@ -247,28 +268,36 @@ export function VocabularyTable() {
               setOpenDeleteVocabularyDialog(true);
               setSelectedVocabulary(row.original);
             }}
-            disabled={isDisable}
+            disabled={disableAction}
             className={cn(
-              !isDisable && 'hover:bg-destructive',
-              "flex cursor-pointer size-[30px] rounded-full items-center justify-center group/delete"
+              !disableAction && 'hover:bg-destructive',
+              'flex size-[30px] rounded-full items-center justify-center group/delete',
             )}
           >
-            <TrashIcon size={22} 
+            <TrashIcon
+              size={22}
               className={cn(
-                isDisable ? 'text-[#CECECE]'
-                : 'cursor-pointer group-hover/delete:text-white')
-              }
+                disableAction
+                  ? 'text-[#CECECE]'
+                  : 'cursor-pointer group-hover/delete:text-white',
+              )}
             />
           </button>
         </div>
       );
     },
-    [isDisable, setOpenDeleteVocabularyDialog, setOpenVocabularyFormDialog, setSelectedVocabulary],
+    [
+      isDisable,
+      selectedVocabularyIds,
+      setOpenDeleteVocabularyDialog,
+      setOpenVocabularyFormDialog,
+      setSelectedVocabulary,
+    ],
   );
-  
-  const translateCol = useMemo((): ColumnDef<IVocabulary>[] =>{
+
+  const translateCol = useMemo((): ColumnDef<IVocabulary>[] => {
     const headers = Object.entries(TranslateLanguages).flatMap(([key, lang]) => [
-        {
+      {
         header: createMeaningSortHeader(lang, t),
         accessorKey: `VOCABULARY_${key}`,
         enableSorting: true,
@@ -279,72 +308,88 @@ export function VocabularyTable() {
         header: t(`vocabularies.table.description_${lang}`),
         accessorKey: `description_${lang}`,
         enableSorting: true,
-        cell: createDescriptionCell(lang, setOpenDescriptionDetail, setSelectedDescription),
+        cell: createDescriptionCell(
+          lang,
+          setOpenDescriptionDetail,
+          setSelectedDescription,
+        ),
         size: 200,
       },
-      ]
-    );
+    ]);
 
     return headers;
-  },[createDescriptionCell, createMeaningCell, createMeaningSortHeader, setSelectedDescription, setOpenDescriptionDetail])
+  }, [
+    createDescriptionCell,
+    createMeaningCell,
+    createMeaningSortHeader,
+    setSelectedDescription,
+    setOpenDescriptionDetail,
+  ]);
 
   const vocabularySortHeader = (props: { column: any }) => (
-          <SortableHeader column={props.column} title={t('vocabularies.table.vocabulary') } 
-          />
-        );
-  
-  const pronunciationSortHeader = (props: { column: any }) => (
-          <SortableHeader column={props.column} title={t('vocabularies.table.pronunciation') } 
-          />
-        );
+    <SortableHeader column={props.column} title={t('vocabularies.table.vocabulary')} />
+  );
 
-  const SelectCell = useCallback(({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
-    return (
-      <div className="flex gap-4">
-      <Checkbox
-        disabled={isDisable}
-        checked={selectedVocabularyIds.includes(row.original.id)}
-        onCheckedChange={(value) => {
-          if (value) {
-            const newSelectedQuestionIds = [
-              ...selectedVocabularyIds,
-              row.original.id,
-            ];
-            setSelectedVocabularyIds(newSelectedQuestionIds);
-          } else {
-            const newSelectedQuestionIds = selectedVocabularyIds.filter(
-              (id) => id !== row.original.id,
-            );
-            setSelectedVocabularyIds(newSelectedQuestionIds);
-          }
-          row.toggleSelected(!!value);
-        }}
-        aria-label="Select row"
-      />
-      </div>
-    );
-  },[isDisable, selectedVocabularyIds, setSelectedVocabularyIds])
-  
-    const SelectHeader = useCallback(({ table }: HeaderContext<IVocabulary, unknown>) => {
-    return (
-      <div className="flex gap-4">
-      <Checkbox
-        disabled={isDisable || vocabularyList.length === 0}
-        checked={selectedVocabularyIds.length === vocabularyList.length && selectedVocabularyIds.length > 0}
-        onCheckedChange={(value) => {
-          if (value) {
-            const newSelectedQuestionIds = vocabularyList.map(item => item.id);
-            setSelectedVocabularyIds(newSelectedQuestionIds);
-          } else {
-            setSelectedVocabularyIds([]);
-          }
-          table.toggleAllPageRowsSelected(!!value)
-        }}
-        aria-label="Select all"
-      />
-      </div>
-    );
-  },[isDisable, selectedVocabularyIds, vocabularyList, setSelectedVocabularyIds])
+  const pronunciationSortHeader = (props: { column: any }) => (
+    <SortableHeader column={props.column} title={t('vocabularies.table.pronunciation')} />
+  );
+
+  const SelectCell = useCallback(
+    ({ row }: Readonly<CellContext<IVocabulary, unknown>>) => {
+      return (
+        <div className="flex gap-4">
+          <Checkbox
+            disabled={isDisable}
+            checked={selectedVocabularyIds.includes(row.original.id)}
+            onCheckedChange={(value) => {
+              if (value) {
+                const newSelectedQuestionIds = [
+                  ...selectedVocabularyIds,
+                  row.original.id,
+                ];
+                setSelectedVocabularyIds(newSelectedQuestionIds);
+              } else {
+                const newSelectedQuestionIds = selectedVocabularyIds.filter(
+                  (id) => id !== row.original.id,
+                );
+                setSelectedVocabularyIds(newSelectedQuestionIds);
+              }
+              row.toggleSelected(!!value);
+            }}
+            aria-label="Select row"
+          />
+        </div>
+      );
+    },
+    [isDisable, selectedVocabularyIds, setSelectedVocabularyIds],
+  );
+
+  const SelectHeader = useCallback(
+    ({ table }: HeaderContext<IVocabulary, unknown>) => {
+      return (
+        <div className="flex gap-4">
+          <Checkbox
+            disabled={isDisable || vocabularyList.length === 0}
+            checked={
+              selectedVocabularyIds.length === vocabularyList.length &&
+              selectedVocabularyIds.length > 0
+            }
+            onCheckedChange={(value) => {
+              if (value) {
+                const newSelectedQuestionIds = vocabularyList.map((item) => item.id);
+                setSelectedVocabularyIds(newSelectedQuestionIds);
+              } else {
+                setSelectedVocabularyIds([]);
+              }
+              table.toggleAllPageRowsSelected(!!value);
+            }}
+            aria-label="Select all"
+          />
+        </div>
+      );
+    },
+    [isDisable, selectedVocabularyIds, vocabularyList, setSelectedVocabularyIds],
+  );
 
   const columns: ColumnDef<IVocabulary>[] = useMemo(() => {
     return compact([
@@ -355,7 +400,11 @@ export function VocabularyTable() {
         size: 60,
       },
       {
-        header: t('common.number'),
+        header: (props: HeaderContext<IVocabulary, unknown>) =>
+          IndexHeader({
+            ...props,
+            text: t('common.number'),
+          }),
         accessorKey: 'index',
         cell: (props: any) =>
           NumberCell({
@@ -421,15 +470,17 @@ export function VocabularyTable() {
     SelectHeader,
   ]);
 
-  return <DataTable 
-    columns={columns} 
-    data={vocabularyList} 
-    loading={loading} 
-    rowClassName={'h-16'} 
-    headerClassName={'bg-[#FBFDFF]'}
-    onSortingChange={handleSortingChange}
-    sorting={sorting}
-    setSorting={setSorting}
-    enableMultiRowSelection={true}
-  />;
+  return (
+    <DataTable
+      columns={columns}
+      data={vocabularyList}
+      loading={loading}
+      rowClassName={'h-16'}
+      headerClassName={'bg-[#FBFDFF]'}
+      onSortingChange={handleSortingChange}
+      sorting={sorting}
+      setSorting={setSorting}
+      enableMultiRowSelection={true}
+    />
+  );
 }

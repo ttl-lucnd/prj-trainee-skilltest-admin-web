@@ -20,6 +20,10 @@ import subjectJa from './ja/subject.json';
 import subjectEn from './en/subject.json';
 import vocabulariesJa from './ja/vocabularies.json';
 import vocabulariesEn from './en/vocabularies.json';
+import packageJa from './ja/package.json';
+import packageEn from './en/package.json';
+import subscriptionJa from './ja/subscription.json';
+import subscriptionEn from './en/subscription.json';
 
 const messages = {
   ja: {
@@ -34,6 +38,8 @@ const messages = {
     questions: questionsJa,
     subjects: subjectJa,
     vocabularies: vocabulariesJa,
+    packages: packageJa,
+    subscriptions: subscriptionJa,
   },
   en: {
     login: loginEn,
@@ -47,6 +53,8 @@ const messages = {
     questions: questionsEn,
     subjects: subjectEn,
     vocabularies: vocabulariesEn,
+    packages: packageEn,
+    subscriptions: subscriptionEn,
   },
 };
 

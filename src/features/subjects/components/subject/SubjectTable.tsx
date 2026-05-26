@@ -2,17 +2,19 @@ import { TruncatedText } from '@/components/TruncateText';
 import { DataTable } from '@/components/data-table';
 import { PencilIcon, TrashIcon } from '@/components/icons';
 import { NumberCell } from '@/components/table/NumberCell';
-import { DEFAULT_FIRST_PAGE } from '@/utils/constants';
-import { CellContext, ColumnDef } from '@tanstack/react-table';
+import { DEFAULT_FIRST_PAGE, PageRouter } from '@/utils/constants';
+import { CellContext, ColumnDef, HeaderContext } from '@tanstack/react-table';
 import { compact } from 'lodash';
 import { useTranslations } from 'next-intl';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { useSubjectStore } from '../stores/useSubjectStore';
-import { ISubject } from '../interfaces';
+import { useSubjectStore } from '../../stores/useSubjectStore';
+import { ISubject } from '../../interfaces';
 import Image from 'next/image';
 import { AdminRole } from '@/features/admin-account/constants';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { IndexHeader } from '@/components/table/IndexHeader';
 
 export function SubjectTable() {
   const t = useTranslations();
@@ -43,7 +45,7 @@ export function SubjectTable() {
       setSelectedSubject: state.setSelectedSubject,
       setOpenImageDetail: state.setOpenImageDetail,
       setSelectedImage: state.setSelectedImage,
-      getProfile:state.getProfile,
+      getProfile: state.getProfile,
       setOpenSubjectMessageDialog: state.setOpenSubjectMessageDialog,
     })),
   );
@@ -56,24 +58,20 @@ export function SubjectTable() {
     };
   }, []);
 
-  const nameCell = useCallback(
-    ({ row }: Readonly<CellContext<ISubject, unknown>>) => {
-      return <TruncatedText text={row.original.name} />;
-    },
-    [],
-  );
-
-  const monthlyFeeCell = useCallback(
-    ({ row }: Readonly<CellContext<ISubject, unknown>>) => {
-      return <TruncatedText text={t('subjects.price',{price: row.original.monthlyFee ?? 0})} />;
-    },
-    [t],
-  );
+  const nameCell = useCallback(({ row }: Readonly<CellContext<ISubject, unknown>>) => {
+    return (
+      <Link
+        href={`${PageRouter.SUBJECT_MANAGEMENT}/${row.original.id}`}
+        className="cursor-pointer text-primary-2"
+      >
+        <TruncatedText text={row.original.name} />
+      </Link>
+    );
+  }, []);
 
   const logoCell = useCallback(
     ({ row }: Readonly<CellContext<ISubject, unknown>>) => {
-      return row.original.logo 
-      ? 
+      return row.original.logo ? (
         <div className="flex gap-4">
           <button
             type="button"
@@ -83,23 +81,19 @@ export function SubjectTable() {
               setSelectedImage(row.original.logo);
             }}
           >
-              <Image
-            src={row.original.logo}
-            width={45}
-            height={45}
-            alt="subject-logo"
-          />
+            <Image src={row.original.logo} width={45} height={45} alt="subject-logo" />
           </button>
         </div>
-      : <TruncatedText text={'---'} />;
+      ) : (
+        <TruncatedText text={'---'} />
+      );
     },
     [setSelectedImage, setOpenImageDetail],
   );
 
   const imageCell = useCallback(
     ({ row }: Readonly<CellContext<ISubject, unknown>>) => {
-      return row.original.image 
-      ? 
+      return row.original.image ? (
         <div className="flex gap-4">
           <button
             type="button"
@@ -109,15 +103,12 @@ export function SubjectTable() {
               setSelectedImage(row.original.image);
             }}
           >
-              <Image 
-            src={row.original.image}
-            width={45}
-            height={45}
-            alt="subject-image"
-          />
+            <Image src={row.original.image} width={45} height={45} alt="subject-image" />
           </button>
         </div>
-      : <TruncatedText text={'---'} />;
+      ) : (
+        <TruncatedText text={'---'} />
+      );
     },
     [setSelectedImage, setOpenImageDetail],
   );
@@ -132,51 +123,65 @@ export function SubjectTable() {
               setOpenSubjectFormDialog(true);
               setSelectedSubject(row.original);
             }}
-          className={cn(
+            className={cn(
               !isDisable && 'hover:bg-primary-2',
-              "flex size-[30px] rounded-full items-center justify-center group/edit"
+              'flex size-[30px] rounded-full items-center justify-center group/edit',
             )}
             disabled={isDisable}
           >
-            <PencilIcon size={22}
+            <PencilIcon
+              size={22}
               className={cn(
-                isDisable ? 'text-[#CECECE]'
-                : 'cursor-pointer group-hover/edit:text-white')
-              }
+                isDisable
+                  ? 'text-[#CECECE]'
+                  : 'cursor-pointer group-hover/edit:text-white',
+              )}
             />
           </button>
           <button
             onClick={() => {
               setSelectedSubject(row.original);
-              if(row.original?.haveQuestion || row.original?.haveVocabulary) {
-              setOpenSubjectMessageDialog(true);
+              if (row.original?.haveQuestion || row.original?.haveVocabulary) {
+                setOpenSubjectMessageDialog(true);
               } else {
-              setOpenDeleteSubjectDialog(true);
+                setOpenDeleteSubjectDialog(true);
               }
             }}
             className={cn(
               !isDisable && 'hover:bg-destructive',
-              "flex size-[30px] rounded-full items-center justify-center group/delete"
+              'flex size-[30px] rounded-full items-center justify-center group/delete',
             )}
             disabled={isDisable}
           >
-            <TrashIcon size={22} 
+            <TrashIcon
+              size={22}
               className={cn(
-                isDisable ? 'text-[#CECECE]'
-                : 'cursor-pointer group-hover/delete:text-white')
-              }
+                isDisable
+                  ? 'text-[#CECECE]'
+                  : 'cursor-pointer group-hover/delete:text-white',
+              )}
             />
           </button>
         </div>
       );
     },
-    [profile, setOpenSubjectFormDialog, setOpenDeleteSubjectDialog, setSelectedSubject, setOpenSubjectMessageDialog],
+    [
+      profile,
+      setOpenSubjectFormDialog,
+      setOpenDeleteSubjectDialog,
+      setSelectedSubject,
+      setOpenSubjectMessageDialog,
+    ],
   );
 
   const columns: ColumnDef<ISubject>[] = useMemo(() => {
     return compact([
       {
-        header: t('common.number'),
+        header: (props: HeaderContext<ISubject, unknown>) =>
+          IndexHeader({
+            ...props,
+            text: t('common.number'),
+          }),
         accessorKey: 'index',
         cell: (props: CellContext<ISubject, unknown>) =>
           NumberCell({
@@ -184,50 +189,42 @@ export function SubjectTable() {
             page: subjectGetListQuery.page ?? DEFAULT_FIRST_PAGE,
             limit: subjectGetListQuery.limit,
           }),
-        size: 50,
+        size: 60,
       },
       {
         header: t('subjects.table.subject'),
         accessorKey: 'name',
         cell: nameCell,
-        size: 150,
+        size: 200,
       },
       {
-        header: t('subjects.table.monthlyFee'),
-        accessorKey: 'monthlyFee',
-        cell: monthlyFeeCell,
-        size: 150,
-      },{
         header: t('subjects.table.logo'),
         accessorKey: 'logo',
         cell: logoCell,
-        size: 150,
-      },{
+        size: 200,
+      },
+      {
         header: t('subjects.table.image'),
         accessorKey: 'image',
         cell: imageCell,
-        size: 150,
-      },{
+        size: 200,
+      },
+      {
         header: t('subjects.table.action'),
         id: 'actions',
         size: 80,
         cell: SubjectActions,
-      }
+      },
     ]);
-  }, [
-    t,
-    nameCell,
-    monthlyFeeCell,
-    logoCell,
-    imageCell,
-    SubjectActions,
-  ]);
+  }, [t, nameCell, logoCell, imageCell, SubjectActions]);
 
-  return <DataTable 
-    columns={columns} 
-    data={subjectList} 
-    loading={loading}
-    rowClassName={'h-16'} 
-    headerClassName={'bg-[#FBFDFF]'}
-  />;
+  return (
+    <DataTable
+      columns={columns}
+      data={subjectList}
+      loading={loading}
+      rowClassName={'h-16'}
+      headerClassName={'bg-[#FBFDFF]'}
+    />
+  );
 }

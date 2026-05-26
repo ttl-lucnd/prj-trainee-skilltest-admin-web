@@ -30,15 +30,11 @@ export function AdminFilterForm() {
   }, []);
 
   const onSubmit = async (data: any) => {
-    if(isFiltering) return;
+    if (isFiltering) return;
     setIsFiltering(true);
     try {
-      
       const query = {
         ...data,
-        createdByIamUserIds: data.createdByIamUserIds?.map((item: string) =>
-          Number(item),
-        ),
         page: DEFAULT_FIRST_PAGE,
       };
       setAdminGetListQuery(query, { reloadList: false });
@@ -52,8 +48,8 @@ export function AdminFilterForm() {
   };
 
   return (
-    <BasicFilterForm 
-      className='mt-0.5 mb-[16px]'
+    <BasicFilterForm
+      className="mt-0.5 mb-[16px]"
       form={form}
       onSubmit={(data) => onSubmit(data)}
     />

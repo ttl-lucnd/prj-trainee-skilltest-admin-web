@@ -52,6 +52,7 @@ export enum PageRouter {
   WORD_MANAGEMENT = '/word-management',
   ADMIN_ACCOUNTS = '/admin-accounts',
   SUBJECT_MANAGEMENT = '/subject-management',
+  SUBSCRIPTION_MANAGEMENT = '/subscription-management',
 }
 
 export enum Gender {
@@ -340,6 +341,7 @@ export enum DATE_TIME_FORMAT {
   YYYY_MM_DD_HYPHEN_HH_MM_COLON = 'YYYY-MM-DD HH:mm',
   YYYY_MM_DD = 'YYYYMMDD',
   MM_DD_HYPHEN = 'MM-DD',
+  JA_YYYY_MM_DD = 'YYYY年MM月DD日',
 }
 
 export enum AuthEventType {
@@ -349,3 +351,8 @@ export enum AuthEventType {
 export const MIN_DATA_TABLE_ROW = 5;
 
 export const DELAY_GET_STATUS = 10000; // 10s delay
+
+export enum SubscriptionPlatform {
+  APPLE = 'apple',
+  GOOGLE = 'google',
+}

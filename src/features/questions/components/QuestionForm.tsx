@@ -19,6 +19,7 @@ import { fileApiService } from '@/features/common/service/file.api.service';
 import { SelectSingle } from '@/components/form/select-single';
 import { Badge } from '@/components/ui/badge';
 import { CircleIcon, XCrossIcon } from '@/components/icons';
+import { ComboboxField } from '@/components/form/combobox';
 export function QuestionForm() {
   const t = useTranslations();
   const { subjectDropdownList, arrangeDropdownList, selectedQuestion, isOpenQuestionFormDialog, setOpenQuestionFormDialog, getQuestionList } = useQuestionStore(
@@ -63,7 +64,7 @@ export function QuestionForm() {
       }
     };
 
-    if(selectedQuestion) {
+    if(selectedQuestion && isOpenQuestionFormDialog) {
       getQuestionDetail();
     } 
   }, [isOpenQuestionFormDialog, selectedQuestion]);
@@ -122,7 +123,7 @@ export function QuestionForm() {
       onOpenChange={setOpenQuestionFormDialog}
       showCloseButton={false}
       title={t('questions.form.updateTitle')} 
-      className="max-w-[500px] max-h-[calc(100vh-10px)] pb-0"
+      className="max-w-[500px] max-h-[calc(100vh-2rem)] pb-0"
       headerClassName='block'
     >
       <div className="flex flex-col items-start justify-end gap-2.5 pb-2">
@@ -136,6 +137,7 @@ export function QuestionForm() {
             layout='vertical'
             className='w-full'
             onChange={() => form.clearErrors('question')}
+            required
           />
           <InputText 
             key={'romaji'}
@@ -147,7 +149,7 @@ export function QuestionForm() {
             className='w-full'
             onChange={() => form.clearErrors('description')}
           />
-          <SelectSingle
+          <ComboboxField
             key={'question-subjectId'}
             name="subjectId" 
             control={form.control} 
@@ -159,8 +161,9 @@ export function QuestionForm() {
               label: item.name,
               value: item.id,
             }))}
+            required
           />
-          <SelectSingle
+          <ComboboxField
             key={'arrange'}
             name="arrange" 
             control={form.control} 
@@ -172,6 +175,7 @@ export function QuestionForm() {
               label: `${item}`,
               value: `${item}`,
             }))}
+            required
           />
           <SelectSingle
             key={'original'}
@@ -190,6 +194,7 @@ export function QuestionForm() {
               label: '',
               customLabel: <Badge variant={'error'}>False</Badge>
             }]}
+            required
           />
           <UploadField
             key={'question-image'}
@@ -229,6 +234,7 @@ export function QuestionForm() {
               label: '',
               customLabel: <XCrossIcon size={16}/>
             }]}
+            required
           />
         </Form>
 

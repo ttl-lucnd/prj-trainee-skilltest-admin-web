@@ -18,7 +18,13 @@ export function VocabularyFilterForm() {
   const t = useTranslations();
   const [isFiltering, setIsFiltering] = useState(false);
 
-  const { subjectDropdownList, vocabularySetting, setVocabularyGetListQuery, getVocabularyList, getVocabularySetting } = useVocabularyStore(
+  const {
+    subjectDropdownList,
+    vocabularySetting,
+    setVocabularyGetListQuery,
+    getVocabularyList,
+    getVocabularySetting,
+  } = useVocabularyStore(
     useShallow((s) => ({
       vocabularySetting: s.vocabularySetting,
       subjectDropdownList: s.subjectDropdownList,
@@ -42,16 +48,24 @@ export function VocabularyFilterForm() {
     const prevStatus = prevStatusRef.current;
     const currentStatus = vocabularySetting?.status;
 
-    if(currentStatus === SYNC_DATA_STATUS.PENDING || currentStatus === SYNC_DATA_STATUS.TRANSLATING) {
+    if (
+      currentStatus === SYNC_DATA_STATUS.PENDING ||
+      currentStatus === SYNC_DATA_STATUS.TRANSLATING
+    ) {
       prevStatusRef.current = currentStatus;
       return;
     }
     if (prevStatus !== currentStatus) {
-      if(currentStatus === SYNC_DATA_STATUS.DRIVE_DENIED && prevStatus === SYNC_DATA_STATUS.PENDING){
+      if (
+        currentStatus === SYNC_DATA_STATUS.DRIVE_DENIED &&
+        prevStatus === SYNC_DATA_STATUS.PENDING
+      ) {
         toast({
-          title: t('common.messages.sync_data_error_at', {row: (vocabularySetting?.lastReadRow ?? 0) + 1}),
-          variant:'destructive',
-        })
+          title: t('common.messages.sync_data_error_at', {
+            row: (vocabularySetting?.lastReadRow ?? 0) + 1,
+          }),
+          variant: 'destructive',
+        });
       }
       getVocabularyList();
     }
@@ -63,19 +77,51 @@ export function VocabularyFilterForm() {
     const query = getVocabularyQueryFromUrl();
     form.reset(query);
     setVocabularyGetListQuery(query, { reloadList: false });
-    getVocabularySetting();
-    const interval = setInterval(() => {
-      getVocabularySetting();
-    }, DELAY_GET_STATUS);
-
-    return () => clearInterval(interval)
   }, []);
 
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  useEffect(() => {
+    function startInterval() {
+      if (intervalRef.current) return;
+      intervalRef.current = setInterval(() => {
+        getVocabularySetting();
+      }, DELAY_GET_STATUS);
+    }
+
+    function stopInterval() {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    }
+
+    if (navigator.onLine) {
+      getVocabularySetting();
+      startInterval();
+    }
+
+    function handleOnline() {
+      getVocabularySetting();
+      startInterval();
+    }
+    function handleOffline() {
+      stopInterval();
+    }
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      stopInterval();
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [getVocabularySetting]);
+
   const onSubmit = async (data: any) => {
-    if(isFiltering) return;
+    if (isFiltering) return;
     setIsFiltering(true);
     try {
-      
       const query = {
         ...data,
         page: DEFAULT_FIRST_PAGE,
@@ -90,42 +136,53 @@ export function VocabularyFilterForm() {
     }
   };
 
-   const syncDataInfo = useMemo(() => {
-      return <div className='flex flex-col min-w-[200px]'>
-        <div className='flex flex-wrap'>
+  const syncDataInfo = useMemo(() => {
+    return (
+      <div className="flex flex-col min-w-[200px]">
+        <div className="flex flex-wrap">
           {t('common.sync_data_at')}
-          <p className='text-[#E9034E]'>{vocabularySetting?.lastSyncDataAt
-          ? dayjs(vocabularySetting?.lastSyncDataAt ?? "").format(t('common.sync_data_at_format'))
-          : t('common.no_sync_data')
-          }</p>
+          <p className="text-[#E9034E]">
+            {vocabularySetting?.lastSyncDataAt
+              ? dayjs(vocabularySetting?.lastSyncDataAt ?? '').format(
+                  t('common.sync_data_at_format'),
+                )
+              : t('common.no_sync_data')}
+          </p>
         </div>
-        {vocabularySetting?.status && <p className='text-[#E9034E]'>{t(`common.sync_data_status.${vocabularySetting.status}`)}</p>}
+        {vocabularySetting?.status && (
+          <p className="text-[#E9034E]">
+            {t(`common.sync_data_status.${vocabularySetting.status}`)}
+          </p>
+        )}
       </div>
-    }, [vocabularySetting])
+    );
+  }, [vocabularySetting]);
 
   return (
-    <div className={cn(
-      'flex flex-wrap w-full items-start gap-x-10 gap-y-2.5 mt-0.5 mb-[16px]',
-      vocabularySetting? 'justify-between' : 'justify-end'
-    )}>
-    {syncDataInfo}
-    <BasicFilterForm
-      form={form}
-      onSubmit={(data) => onSubmit(data)}
-      searchBtn={true}
-      isFiltering={isFiltering}
+    <div
+      className={cn(
+        'flex flex-wrap w-full items-start gap-x-10 gap-y-2.5 mt-0.5 mb-[16px]',
+        vocabularySetting ? 'justify-between' : 'justify-end',
+      )}
     >
-      <MultiSelectField
-        className="w-[183px] h-[40px]"
-        options={subjectDropdownList.map(item => ({
-          label: item.name,
-          value: item.id,
-        }))}
-        name='subjectIds'
-        placeholder={t('vocabularies.filter.subject')}
-        control={form.control}
-      />
-    </BasicFilterForm>
+      {syncDataInfo}
+      <BasicFilterForm
+        form={form}
+        onSubmit={(data) => onSubmit(data)}
+        searchBtn={true}
+        isFiltering={isFiltering}
+      >
+        <MultiSelectField
+          className="w-[183px] h-[40px]"
+          options={subjectDropdownList.map((item) => ({
+            label: item.name,
+            value: item.id,
+          }))}
+          name="subjectIds"
+          placeholder={t('vocabularies.filter.subject')}
+          control={form.control}
+        />
+      </BasicFilterForm>
     </div>
   );
 }
